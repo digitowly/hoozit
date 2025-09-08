@@ -1,0 +1,13 @@
+$thumbnail-size: 300px;
+
+.thumbnail {
+  width: $thumbnail-size;
+  height: $thumbnail-size;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+}

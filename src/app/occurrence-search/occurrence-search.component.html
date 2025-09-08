@@ -1,0 +1,9 @@
+<form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+  <div>
+    <input type="text" placeholder="Search..." formControlName="query" />
+    @if (query?.invalid && (query?.dirty || query?.touched)) {
+    <p>error</p>
+    }
+  </div>
+  <button type="submit" [disabled]="!searchForm.valid">search</button>
+</form>

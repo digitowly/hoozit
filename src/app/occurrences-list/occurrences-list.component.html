@@ -1,0 +1,10 @@
+<div>
+  <!-- <input type="text" placeholder="Search..." (input)="handleInput($event)" /> -->
+  <ul>
+    @for (occurrence of occurrences(); track $index) {
+    <li (click)="handleClick(occurrence)">
+      <app-occurrence-item [occurrence]="occurrence"></app-occurrence-item>
+    </li>
+    }
+  </ul>
+</div>
