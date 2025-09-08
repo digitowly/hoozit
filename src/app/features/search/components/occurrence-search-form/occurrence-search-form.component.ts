@@ -12,16 +12,16 @@ import {
   of,
   switchMap,
 } from 'rxjs';
-import { VerdexService } from '../services/verdex.service';
-import { OccurrenceResponse } from '../model/occurrence';
+import { VerdexService } from '../../../../services/verdex.service';
+import { OccurrenceResponse } from '../../../../model/occurrence';
 
 @Component({
-  selector: 'app-occurrence-search',
+  selector: 'occurrence-search-form',
   imports: [ReactiveFormsModule],
-  templateUrl: './occurrence-search.component.html',
-  styleUrl: './occurrence-search.component.scss',
+  templateUrl: './occurrence-search-form.component.html',
+  styleUrl: './occurrence-search-form.component.scss',
 })
-export class OccurrenceSearchComponent {
+export class OccurrenceSearchFormComponent {
   searchForm = new FormGroup({
     query: new FormControl<string>('', [
       Validators.required,

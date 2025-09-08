@@ -1,25 +1,11 @@
-import { Component, signal } from '@angular/core';
-import { Occurrence, OccurrenceResponse } from './model/occurrence';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { OccurrenceSearchComponent } from './occurrence-search/occurrence-search.component';
-import { OccurrencesListComponent } from './occurrences-list/occurrences-list.component';
+import { OccurrenceSearchComponent } from './features/search/components/occurrence-search/occurrence-search.component';
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, OccurrenceSearchComponent, OccurrencesListComponent],
+  imports: [FormsModule, OccurrenceSearchComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'habinaut-angular';
-  occurrences = signal<Occurrence[] | null>(null);
-  activeOccurrence: Occurrence | null = null;
-
-  setOccurrences(occurrenceResponse: OccurrenceResponse) {
-    this.occurrences.set(occurrenceResponse.data);
-  }
-
-  handleOccurrenceClicked(occurrence: Occurrence) {
-    this.activeOccurrence = occurrence;
-  }
-}
+export class AppComponent {}

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Occurrence } from '../model/occurrence';
+import { Occurrence } from '../../../../model/occurrence';
 
 @Component({
-  selector: 'app-occurrence-item',
+  selector: 'occurrence-item',
   imports: [],
   templateUrl: './occurrence-item.component.html',
   styleUrl: './occurrence-item.component.scss',

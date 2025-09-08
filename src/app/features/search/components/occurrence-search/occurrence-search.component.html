@@ -1,0 +1,8 @@
+<p>occurrence-search works!</p>
+
+<p>active occurrence: {{ activeOccurrence?.name }}</p>
+<occurrence-search-form (onSearch)="setOccurrences($event)" />
+<occurrences-list
+  [occurrences]="occurrences() ?? []"
+  (occurrenceClicked)="handleOccurrenceClicked($event)"
+/>

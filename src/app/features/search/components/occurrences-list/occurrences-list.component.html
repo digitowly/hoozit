@@ -1,0 +1,9 @@
+<div>
+  <ul>
+    @for (occurrence of occurrences(); track $index) {
+    <li (click)="handleClick(occurrence)">
+      <occurrence-item [occurrence]="occurrence"></occurrence-item>
+    </li>
+    }
+  </ul>
+</div>

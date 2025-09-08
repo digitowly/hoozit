@@ -1,0 +1,29 @@
+$thumbnail-size: 70px;
+
+.occurrence-item {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  height: $thumbnail-size;
+
+  .details {
+    margin-left: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 0.5;
+  }
+
+  .thumbnail {
+    width: $thumbnail-size;
+    height: $thumbnail-size;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+  }
+}
