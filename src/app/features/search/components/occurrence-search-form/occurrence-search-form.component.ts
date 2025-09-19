@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, effect, EventEmitter, Output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,6 +9,7 @@ import {
   catchError,
   debounceTime,
   distinctUntilChanged,
+  finalize,
   of,
   switchMap,
 } from 'rxjs';
@@ -31,7 +32,21 @@ export class OccurrenceSearchFormComponent {
 
   @Output() onSearch = new EventEmitter<OccurrenceResponse>();
 
-  constructor(private verdexService: VerdexService) {}
+  constructor(private verdexService: VerdexService) {
+    effect(() => {
+      this.query?.valueChanges
+        .pipe(
+          debounceTime(300),
+          distinctUntilChanged(),
+          switchMap((term) => {
+            return this.handleSearch(term);
+          })
+        )
+        .subscribe((response) => {
+          this.onSearch.emit(response);
+        });
+    });
+  }
 
   get query() {
     return this.searchForm.get('query');
@@ -54,20 +69,12 @@ export class OccurrenceSearchFormComponent {
     return this.verdexService.findOccurrences(term).pipe(
       catchError((error) => {
         console.error('search error:', error);
+        this.searchForm.setErrors({
+          requestError: 'Service is currently not available',
+        });
         return of({ data: [] });
-      })
+      }),
+      finalize(() => this.searchForm.markAsPristine())
     );
-  }
-
-  ngOnInit() {
-    this.query?.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap((term) => this.handleSearch(term))
-      )
-      .subscribe((response) => {
-        this.onSearch.emit(response);
-      });
   }
 }

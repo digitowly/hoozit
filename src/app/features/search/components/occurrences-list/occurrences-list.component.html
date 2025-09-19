@@ -1,4 +1,7 @@
 <div>
+  @if (isLoading()) {
+  <p>Loading...</p>
+  } @else {
   <ul>
     @for (occurrence of occurrences(); track $index) {
     <li (click)="handleClick(occurrence)">
@@ -6,4 +9,5 @@
     </li>
     }
   </ul>
+  }
 </div>

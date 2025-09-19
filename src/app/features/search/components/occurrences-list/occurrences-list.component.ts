@@ -1,6 +1,14 @@
-import { Component, EventEmitter, input, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  input,
+  effect,
+  Output,
+  signal,
+} from '@angular/core';
 import { Occurrence } from '../../../../model/occurrence';
 import { OccurrenceItemComponent } from '../occurrence-item/occurrence-item.component';
+import { VerdexService } from '../../../../services/verdex.service';
 
 @Component({
   selector: 'occurrences-list',
@@ -10,6 +18,14 @@ import { OccurrenceItemComponent } from '../occurrence-item/occurrence-item.comp
 })
 export class OccurrencesListComponent {
   occurrences = input<Occurrence[]>([]);
+  isLoading = signal<boolean>(false);
+
+  constructor(private verdexService: VerdexService) {
+    effect(() => {
+      this.isLoading.set(this.verdexService.isLoading());
+    });
+  }
+
   @Output() occurrenceClicked = new EventEmitter<Occurrence>();
 
   handleClick(occurrence: Occurrence) {

@@ -1,9 +1,21 @@
-<form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
-  <div>
-    <input type="text" placeholder="Search..." formControlName="query" />
-    @if (query?.invalid && (query?.dirty || query?.touched)) {
+<div (click)="searchInput.focus()">
+  <form class="search-form" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+    <input
+      #searchInput
+      class="search-input"
+      type="text"
+      placeholder="Search..."
+      formControlName="query"
+    />
+    <!-- @if (query?.invalid && (query?.dirty || query?.touched)) {
     <p>error</p>
-    }
-  </div>
-  <button type="submit" [disabled]="!searchForm.valid">search</button>
-</form>
+    } -->
+    <button type="submit" [disabled]="!searchForm.valid || searchForm.pending">
+      search
+    </button>
+  </form>
+  <p>{{ searchForm.pending }}</p>
+  @if (searchForm.hasError("requestError") ) {
+  {{ searchForm.getError("requestError") }}
+  }
+</div>
