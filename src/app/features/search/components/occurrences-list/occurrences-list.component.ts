@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { Occurrence } from '../../../../model/occurrence';
 import { OccurrenceItemComponent } from '../occurrence-item/occurrence-item.component';
-import { VerdexService } from '../../../../services/verdex.service';
+import { VerdexService } from '../../../../services/verdex/verdex.service';
+import { ActiveOccurrenceService } from '../../../../services/active-occurrence/active-occurrence.service';
 
 @Component({
   selector: 'occurrences-list',
@@ -20,15 +21,16 @@ export class OccurrencesListComponent {
   occurrences = input<Occurrence[]>([]);
   isLoading = signal<boolean>(false);
 
-  constructor(private verdexService: VerdexService) {
+  constructor(
+    private verdexService: VerdexService,
+    private activeOccurrenceService: ActiveOccurrenceService
+  ) {
     effect(() => {
       this.isLoading.set(this.verdexService.isLoading());
     });
   }
 
-  @Output() occurrenceClicked = new EventEmitter<Occurrence>();
-
   handleClick(occurrence: Occurrence) {
-    this.occurrenceClicked.emit(occurrence);
+    this.activeOccurrenceService.setActiveOccurrence(occurrence);
   }
 }

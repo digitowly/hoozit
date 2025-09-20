@@ -13,7 +13,7 @@ import {
   of,
   switchMap,
 } from 'rxjs';
-import { VerdexService } from '../../../../services/verdex.service';
+import { VerdexService } from '../../../../services/verdex/verdex.service';
 import { OccurrenceResponse } from '../../../../model/occurrence';
 
 @Component({
@@ -46,6 +46,10 @@ export class OccurrenceSearchFormComponent {
           this.onSearch.emit(response);
         });
     });
+
+    effect(() => {
+      this.searchForm.setErrors({ requestError: this.verdexService.error() });
+    });
   }
 
   get query() {
@@ -66,15 +70,6 @@ export class OccurrenceSearchFormComponent {
     if (!this.query?.valid || !term) {
       return of({ data: [] });
     }
-    return this.verdexService.findOccurrences(term).pipe(
-      catchError((error) => {
-        console.error('search error:', error);
-        this.searchForm.setErrors({
-          requestError: 'Service is currently not available',
-        });
-        return of({ data: [] });
-      }),
-      finalize(() => this.searchForm.markAsPristine())
-    );
+    return this.verdexService.findOccurrences(term);
   }
 }

@@ -4,7 +4,7 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { VerdexService } from './verdex.service';
-import { OccurrenceResponse } from '../model/occurrence';
+import { OccurrenceResponse } from '../../model/occurrence';
 import { provideHttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs';
 

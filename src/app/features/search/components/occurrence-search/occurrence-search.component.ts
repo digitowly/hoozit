@@ -12,13 +12,8 @@ import { OccurrenceSearchFormComponent } from '../occurrence-search-form/occurre
 export class OccurrenceSearchComponent {
   title = 'habinaut-angular';
   occurrences = signal<Occurrence[] | null>(null);
-  activeOccurrence: Occurrence | null = null;
 
   setOccurrences(occurrenceResponse: OccurrenceResponse) {
     this.occurrences.set(occurrenceResponse.data);
-  }
-
-  handleOccurrenceClicked(occurrence: Occurrence) {
-    this.activeOccurrence = occurrence;
   }
 }
