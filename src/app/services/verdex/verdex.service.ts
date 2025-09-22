@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { OccurrenceResponse } from '../../model/occurrence';
-import { catchError, finalize, of } from 'rxjs';
+import { catchError, finalize, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,7 @@ export class VerdexService {
 
   constructor(private http: HttpClient) {}
 
-  findOccurrences(name: string) {
+  getOccurrences(name: string): Observable<OccurrenceResponse> {
     this.isLoading.set(true);
     const url = `${this.apiUrl}/animals/search?q=${name}&lang=de`;
     return this.http.get<OccurrenceResponse>(url, this.httpOptions).pipe(

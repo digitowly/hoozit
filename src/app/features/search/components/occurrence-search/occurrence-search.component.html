@@ -1,8 +1,4 @@
 <div class="occurrence-search">
-  <div class="search-container">
-    <occurrence-search-form (onSearch)="setOccurrences($event)" />
-  </div>
-  <div class="results-container">
-    <occurrences-list [occurrences]="occurrences() ?? []" />
-  </div>
+  <occurrence-search-form (onSearch)="setOccurrences($event)" />
+  <occurrences-list [occurrences]="occurrences()" />
 </div>

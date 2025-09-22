@@ -1,21 +1,10 @@
 .occurrence-search {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  position: relative;
-
-  .search-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 1rem;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+  padding: 1rem;
+  background: white;
 
   .results-container {
-    margin-top: 4.5rem;
     padding: 0.5rem;
   }
 }

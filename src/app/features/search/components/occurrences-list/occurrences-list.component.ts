@@ -5,6 +5,7 @@ import {
   effect,
   Output,
   signal,
+  computed,
 } from '@angular/core';
 import { Occurrence } from '../../../../model/occurrence';
 import { OccurrenceItemComponent } from '../occurrence-item/occurrence-item.component';
@@ -19,16 +20,15 @@ import { ActiveOccurrenceService } from '../../../../services/active-occurrence/
 })
 export class OccurrencesListComponent {
   occurrences = input<Occurrence[]>([]);
-  isLoading = signal<boolean>(false);
+
+  isVisible = computed(
+    () => this.occurrences().length > 0 || this.verdexService?.isLoading()
+  );
 
   constructor(
-    private verdexService: VerdexService,
+    public verdexService: VerdexService,
     private activeOccurrenceService: ActiveOccurrenceService
-  ) {
-    effect(() => {
-      this.isLoading.set(this.verdexService.isLoading());
-    });
-  }
+  ) {}
 
   handleClick(occurrence: Occurrence) {
     this.activeOccurrenceService.setActiveOccurrence(occurrence);

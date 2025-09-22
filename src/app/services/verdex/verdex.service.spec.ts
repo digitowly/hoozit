@@ -33,7 +33,7 @@ describe('VerdexService', () => {
     expect(service.isLoading()).toBe(false);
 
     service
-      .findOccurrences('test')
+      .getOccurrences('test')
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);

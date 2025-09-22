@@ -1,5 +1,6 @@
+@if (isVisible()) {
 <div class="occurrences-list">
-  @if (isLoading()) {
+  @if (verdexService.isLoading()) {
   <p>Loading...</p>
   } @else {
   <ul>
@@ -11,3 +12,4 @@
   </ul>
   }
 </div>
+}

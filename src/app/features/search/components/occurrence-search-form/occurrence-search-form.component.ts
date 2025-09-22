@@ -13,8 +13,8 @@ import {
   of,
   switchMap,
 } from 'rxjs';
-import { VerdexService } from '../../../../services/verdex/verdex.service';
 import { OccurrenceResponse } from '../../../../model/occurrence';
+import { VerdexService } from '../../../../services/verdex/verdex.service';
 
 @Component({
   selector: 'occurrence-search-form',
@@ -70,6 +70,6 @@ export class OccurrenceSearchFormComponent {
     if (!this.query?.valid || !term) {
       return of({ data: [] });
     }
-    return this.verdexService.findOccurrences(term);
+    return this.verdexService.getOccurrences(term);
   }
 }
