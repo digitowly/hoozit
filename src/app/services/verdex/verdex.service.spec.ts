@@ -52,4 +52,58 @@ describe('VerdexService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
+
+  it('should handle network error', (done) => {
+    service.getOccurrences('test').subscribe((res) => {
+      expect(res).toEqual({ data: [] });
+      expect(service.error()).toBe(
+        'Network error: Please check your connection'
+      );
+      done();
+    });
+
+    const req = httpMock.expectOne(
+      'http://localhost:8082/api/animals/search?q=test&lang=de'
+    );
+    req.error(new ProgressEvent('Network error'), { status: 0 });
+  });
+
+  it('should handle client error', (done) => {
+    service.getOccurrences('test').subscribe((res) => {
+      expect(res).toEqual({ data: [] });
+      expect(service.error()).toBe('Client error: Invalid request');
+      done();
+    });
+
+    const req = httpMock.expectOne(
+      'http://localhost:8082/api/animals/search?q=test&lang=de'
+    );
+    req.flush({}, { status: 400, statusText: 'Bad Request' });
+  });
+
+  it('should handle server error', (done) => {
+    service.getOccurrences('test').subscribe((res) => {
+      expect(res).toEqual({ data: [] });
+      expect(service.error()).toBe('Server error: Please try again later');
+      done();
+    });
+
+    const req = httpMock.expectOne(
+      'http://localhost:8082/api/animals/search?q=test&lang=de'
+    );
+    req.flush({}, { status: 500, statusText: 'Internal Server Error' });
+  });
+
+  it('should handle other errors', (done) => {
+    service.getOccurrences('test').subscribe((res) => {
+      expect(res).toEqual({ data: [] });
+      expect(service.error()).toBe('Services is currently unavailable');
+      done();
+    });
+
+    const req = httpMock.expectOne(
+      'http://localhost:8082/api/animals/search?q=test&lang=de'
+    );
+    req.flush({}, { status: 300, statusText: 'Multiple Choices' });
+  });
 });
