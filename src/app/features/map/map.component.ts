@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import * as L from 'leaflet';
+import { UserLocationService } from '../../services/user/user-location/user-location.service';
 
 @Component({
   selector: 'map',
@@ -8,10 +9,34 @@ import * as L from 'leaflet';
   styleUrl: './map.component.scss',
 })
 export class MapComponent {
-  ngAfterViewInit() {
-    const map = L.map('map').setView([51.505, -0.09], 13);
+  private map: L.Map | null = null;
+
+  constructor(private userLocation: UserLocationService) {
+    effect(() => {
+      this.userLocation.getLocation();
+    });
+
+    effect(() => {
+      if (this.userLocation.coordinate()) {
+        this.initMap();
+      }
+    });
+  }
+
+  private initMap(): void {
+    if (this.map) {
+      this.map.remove();
+    }
+    this.map = L.map('map').setView(
+      [
+        this.userLocation.coordinate().latitude,
+        this.userLocation.coordinate().longitude,
+      ],
+      17
+    );
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(
-      map
+      this.map
     );
   }
 }

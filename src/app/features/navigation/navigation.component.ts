@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { OccurrenceSearchComponent } from '../search/components/occurrence-search/occurrence-search.component';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'navigation',
@@ -8,4 +8,6 @@ import { RouterLink } from '@angular/router';
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
 })
-export class NavigationComponent {}
+export class NavigationComponent {
+  public readonly router = inject(Router);
+}

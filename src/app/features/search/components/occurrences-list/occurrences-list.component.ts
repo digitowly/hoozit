@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  input,
-  effect,
-  Output,
-  signal,
-  computed,
-} from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
 import { Occurrence } from '../../../../model/occurrence';
 import { OccurrenceItemComponent } from '../occurrence-item/occurrence-item.component';
 import { VerdexService } from '../../../../services/verdex/verdex.service';
@@ -25,10 +17,8 @@ export class OccurrencesListComponent {
     () => this.occurrences().length > 0 || this.verdexService?.isLoading()
   );
 
-  constructor(
-    public verdexService: VerdexService,
-    private activeOccurrenceService: ActiveOccurrenceService
-  ) {}
+  public readonly verdexService = inject(VerdexService);
+  private readonly activeOccurrenceService = inject(ActiveOccurrenceService);
 
   handleClick(occurrence: Occurrence) {
     this.activeOccurrenceService.setActiveOccurrence(occurrence);
