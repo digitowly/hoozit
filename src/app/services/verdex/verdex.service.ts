@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { OccurrenceResponse } from '../../model/occurrence';
+import { AnimalSearchResponse } from '../../model/animal-search-result';
 import { catchError, finalize, Observable, of } from 'rxjs';
 import { HttpErrorService } from '../http-error-service/http-error.service';
 
@@ -25,10 +25,10 @@ export class VerdexService {
     private httpErrorService: HttpErrorService
   ) {}
 
-  getOccurrences(name: string): Observable<OccurrenceResponse> {
+  getOccurrences(name: string): Observable<AnimalSearchResponse> {
     this.isLoading.set(true);
     const url = `${this.apiUrl}/animals/search?q=${name}&lang=de`;
-    return this.http.get<OccurrenceResponse>(url, this.httpOptions).pipe(
+    return this.http.get<AnimalSearchResponse>(url, this.httpOptions).pipe(
       catchError((err) => {
         this.httpErrorService.handleError(err, (message) =>
           this.error.set(message)

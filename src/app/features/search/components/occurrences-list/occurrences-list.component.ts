@@ -1,5 +1,5 @@
 import { Component, input, computed, inject } from '@angular/core';
-import { Occurrence } from '../../../../model/occurrence';
+import { AnimalSearchResult } from '../../../../model/animal-search-result';
 import { OccurrenceItemComponent } from '../occurrence-item/occurrence-item.component';
 import { VerdexService } from '../../../../services/verdex/verdex.service';
 import { ActiveOccurrenceService } from '../../../../services/active-occurrence/active-occurrence.service';
@@ -11,7 +11,7 @@ import { ActiveOccurrenceService } from '../../../../services/active-occurrence/
   styleUrl: './occurrences-list.component.scss',
 })
 export class OccurrencesListComponent {
-  occurrences = input<Occurrence[]>([]);
+  occurrences = input<AnimalSearchResult[]>([]);
 
   isVisible = computed(
     () => this.occurrences().length > 0 || this.verdexService?.isLoading()
@@ -20,7 +20,7 @@ export class OccurrencesListComponent {
   public readonly verdexService = inject(VerdexService);
   private readonly activeOccurrenceService = inject(ActiveOccurrenceService);
 
-  handleClick(occurrence: Occurrence) {
-    this.activeOccurrenceService.setActiveOccurrence(occurrence);
+  handleClick(result: AnimalSearchResult) {
+    this.activeOccurrenceService.setActiveOccurrence(result);
   }
 }

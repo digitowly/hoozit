@@ -1,22 +1,22 @@
 import { TestBed } from '@angular/core/testing';
+import { GbifSpeciesService } from './gbif-species.service';
 import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
-import { VerdexService } from './verdex.service';
-import { AnimalSearchResponse } from '../../model/animal-search-result';
 import { provideHttpClient } from '@angular/common/http';
+import { GbifSpecies } from './gbif-species.model';
 import { finalize } from 'rxjs';
 
-describe('VerdexService', () => {
-  let service: VerdexService;
+describe('GbifSpeciesService', () => {
+  let service: GbifSpeciesService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting()],
     });
-    service = TestBed.inject(VerdexService);
+    service = TestBed.inject(GbifSpeciesService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -28,12 +28,22 @@ describe('VerdexService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set isLoading to true when findOccurrences is called and false when complete', (done) => {
-    const mockResponse: AnimalSearchResponse = { data: [] };
+  it('should set isLoading to true when getSpecies is called and false when complete', (done) => {
+    const mockResponse: GbifSpecies = {
+      usage: {
+        key: '1',
+        canonicalName: 'Test Species',
+        name: 'Test Species Name',
+      },
+      diagnostics: {
+        matchType: 'EXACT',
+        confidence: 100,
+      },
+    };
     expect(service.isLoading()).toBe(false);
 
     service
-      .getOccurrences('test')
+      .getSpecies(1)
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
@@ -46,25 +56,21 @@ describe('VerdexService', () => {
 
     expect(service.isLoading()).toBe(true);
 
-    const req = httpMock.expectOne(
-      'http://localhost:8082/api/animals/search?q=test&lang=de'
-    );
+    const req = httpMock.expectOne('https://api.gbif.org/v1/species/match/1');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
 
   it('should handle error', (done) => {
-    service.getOccurrences('test').subscribe((res) => {
-      expect(res).toEqual({ data: [] });
+    service.getSpecies(1).subscribe((res) => {
+      expect(res).toBeNull();
       expect(service.error()).toBe(
         'Network error: Please check your connection'
       );
       done();
     });
 
-    const req = httpMock.expectOne(
-      'http://localhost:8082/api/animals/search?q=test&lang=de'
-    );
+    const req = httpMock.expectOne('https://api.gbif.org/v1/species/match/1');
     req.error(new ProgressEvent('Network error'), { status: 0 });
   });
 });

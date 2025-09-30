@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { Occurrence } from '../../../../model/occurrence';
+import { AnimalSearchResult } from '../../../../model/animal-search-result';
 
 @Component({
   selector: 'occurrence-item',
@@ -8,5 +8,5 @@ import { Occurrence } from '../../../../model/occurrence';
   styleUrl: './occurrence-item.component.scss',
 })
 export class OccurrenceItemComponent {
-  occurrence = input<Occurrence>();
+  occurrence = input<AnimalSearchResult>();
 }

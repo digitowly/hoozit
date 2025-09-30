@@ -1,14 +1,14 @@
 import { Injectable, signal } from '@angular/core';
-import { Occurrence } from '../../model/occurrence';
+import { AnimalSearchResult } from '../../model/animal-search-result';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ActiveOccurrenceService {
   private static readonly STORAGE_KEY = 'activeOccurrence';
-  private activeOccurrence = signal<Occurrence | null>(null);
+  private activeOccurrence = signal<AnimalSearchResult | null>(null);
 
-  setActiveOccurrence(occurrence: Occurrence | null) {
+  setActiveOccurrence(occurrence: AnimalSearchResult | null) {
     localStorage.setItem(
       ActiveOccurrenceService.STORAGE_KEY,
       JSON.stringify(occurrence)
@@ -16,12 +16,13 @@ export class ActiveOccurrenceService {
     this.activeOccurrence.set(occurrence);
   }
 
-  getActiveOccurrence() {
+  getActiveOccurrence(): AnimalSearchResult | null {
     const occurrence = localStorage.getItem(
       ActiveOccurrenceService.STORAGE_KEY
     );
     if (occurrence) {
       this.activeOccurrence.set(JSON.parse(occurrence));
     }
+    return this.activeOccurrence();
   }
 }

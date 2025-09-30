@@ -1,5 +1,8 @@
 import { Component, signal } from '@angular/core';
-import { Occurrence, OccurrenceResponse } from '../../../../model/occurrence';
+import {
+  AnimalSearchResult,
+  AnimalSearchResponse,
+} from '../../../../model/animal-search-result';
 import { OccurrencesListComponent } from '../occurrences-list/occurrences-list.component';
 import { OccurrenceSearchFormComponent } from '../occurrence-search-form/occurrence-search-form.component';
 
@@ -11,9 +14,9 @@ import { OccurrenceSearchFormComponent } from '../occurrence-search-form/occurre
 })
 export class OccurrenceSearchComponent {
   title = 'habinaut-angular';
-  occurrences = signal<Occurrence[]>([]);
+  occurrences = signal<AnimalSearchResult[]>([]);
 
-  setOccurrences(occurrenceResponse: OccurrenceResponse) {
+  setOccurrences(occurrenceResponse: AnimalSearchResponse) {
     this.occurrences.set(occurrenceResponse.data);
   }
 }

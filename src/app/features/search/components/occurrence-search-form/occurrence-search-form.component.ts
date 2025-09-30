@@ -13,7 +13,7 @@ import {
   of,
   switchMap,
 } from 'rxjs';
-import { OccurrenceResponse } from '../../../../model/occurrence';
+import { AnimalSearchResponse } from '../../../../model/animal-search-result';
 import { VerdexService } from '../../../../services/verdex/verdex.service';
 
 @Component({
@@ -30,7 +30,7 @@ export class OccurrenceSearchFormComponent {
     ]),
   });
 
-  @Output() onSearch = new EventEmitter<OccurrenceResponse>();
+  @Output() onSearch = new EventEmitter<AnimalSearchResponse>();
 
   constructor(private verdexService: VerdexService) {
     effect(() => {
