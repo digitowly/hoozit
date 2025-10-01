@@ -9,5 +9,5 @@ import { RouterLink, Router } from '@angular/router';
   styleUrl: './navigation.component.scss',
 })
 export class NavigationComponent {
-  public readonly router = inject(Router);
+  constructor(private router: Router) {}
 }
