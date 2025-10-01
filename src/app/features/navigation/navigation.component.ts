@@ -9,5 +9,5 @@ import { RouterLink, Router } from '@angular/router';
   styleUrl: './navigation.component.scss',
 })
 export class NavigationComponent {
-  constructor(private router: Router) {}
+  constructor(public router: Router) {}
 }
