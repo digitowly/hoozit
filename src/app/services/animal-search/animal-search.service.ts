@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { AnimalSearchResponse } from './animal-search.model';
 import { catchError, finalize, Observable, of } from 'rxjs';
-import { HttpErrorService } from '../http-error-service/http-error.service';
+import { HttpErrorService } from '../http-error/http-error.service';
 
 @Injectable({
   providedIn: 'root',

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { GbifSpecies } from './gbif-species.model';
 import { catchError, finalize, Observable, of } from 'rxjs';
-import { HttpErrorService } from '../../http-error-service/http-error.service';
+import { HttpErrorService } from '../../http-error/http-error.service';
 
 @Injectable({
   providedIn: 'root',

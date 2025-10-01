@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { catchError, finalize, Observable, of } from 'rxjs';
-import { HttpErrorService } from '../../http-error-service/http-error.service';
+import { HttpErrorService } from '../../http-error/http-error.service';
 import { Coordinate } from '../../../model/coordinate';
 import { GbifOccurrenceResponse } from './gbif-occurrence.model';
 
