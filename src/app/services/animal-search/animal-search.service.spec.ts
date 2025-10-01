@@ -3,20 +3,20 @@ import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
-import { VerdexService } from './verdex.service';
-import { AnimalSearchResponse } from '../../model/animal-search-result';
+import { AnimalSearchService } from './animal-search.service';
+import { AnimalSearchResponse } from './animal-search.model';
 import { provideHttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs';
 
-describe('VerdexService', () => {
-  let service: VerdexService;
+describe('AnimalSearchService', () => {
+  let service: AnimalSearchService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting()],
     });
-    service = TestBed.inject(VerdexService);
+    service = TestBed.inject(AnimalSearchService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 

@@ -1,13 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { AnimalSearchResponse } from '../../model/animal-search-result';
+import { AnimalSearchResponse } from './animal-search.model';
 import { catchError, finalize, Observable, of } from 'rxjs';
 import { HttpErrorService } from '../http-error-service/http-error.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class VerdexService {
+export class AnimalSearchService {
   private readonly apiUrl = 'http://localhost:8082/api';
 
   private readonly httpOptions = {

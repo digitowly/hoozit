@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { AnimalSearchResult } from '../../model/animal-search-result';
+import { AnimalSearchResult } from '../animal-search/animal-search.model';
 
 @Injectable({
   providedIn: 'root',

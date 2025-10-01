@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { AnimalSearchResult } from '../../../../model/animal-search-result';
+import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
 
 @Component({
   selector: 'occurrence-item',

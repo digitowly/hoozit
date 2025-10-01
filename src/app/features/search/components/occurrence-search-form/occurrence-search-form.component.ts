@@ -13,8 +13,8 @@ import {
   of,
   switchMap,
 } from 'rxjs';
-import { AnimalSearchResponse } from '../../../../model/animal-search-result';
-import { VerdexService } from '../../../../services/verdex/verdex.service';
+import { AnimalSearchResponse } from '../../../../services/animal-search/animal-search.model';
+import { AnimalSearchService } from '../../../../services/animal-search/animal-search.service';
 
 @Component({
   selector: 'occurrence-search-form',
@@ -32,7 +32,7 @@ export class OccurrenceSearchFormComponent {
 
   @Output() onSearch = new EventEmitter<AnimalSearchResponse>();
 
-  constructor(private verdexService: VerdexService) {
+  constructor(private animalSearch: AnimalSearchService) {
     effect(() => {
       this.query?.valueChanges
         .pipe(
@@ -48,7 +48,7 @@ export class OccurrenceSearchFormComponent {
     });
 
     effect(() => {
-      this.searchForm.setErrors({ requestError: this.verdexService.error() });
+      this.searchForm.setErrors({ requestError: this.animalSearch.error() });
     });
   }
 
@@ -70,6 +70,6 @@ export class OccurrenceSearchFormComponent {
     if (!this.query?.valid || !term) {
       return of({ data: [] });
     }
-    return this.verdexService.getOccurrences(term);
+    return this.animalSearch.getOccurrences(term);
   }
 }

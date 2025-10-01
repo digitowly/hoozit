@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import {
   AnimalSearchResult,
   AnimalSearchResponse,
-} from '../../../../model/animal-search-result';
+} from '../../../../services/animal-search/animal-search.model';
 import { OccurrencesListComponent } from '../occurrences-list/occurrences-list.component';
 import { OccurrenceSearchFormComponent } from '../occurrence-search-form/occurrence-search-form.component';
 
