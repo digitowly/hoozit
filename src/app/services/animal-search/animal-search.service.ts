@@ -13,7 +13,6 @@ export class AnimalSearchService {
   private readonly httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-Api-Key': 'secret',
     }),
   };
 
