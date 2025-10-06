@@ -4,12 +4,13 @@ import { catchError, finalize, Observable, of } from 'rxjs';
 import { HttpErrorService } from '../../http-error/http-error.service';
 import { Coordinate } from '../../../model/coordinate';
 import { GbifOccurrenceResponse } from './gbif-occurrence.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GbifOccurrenceService {
-  private baseUrl = 'https://api.gbif.org/v1';
+  private baseUrl = `${environment.gbifUrl}/occurrence`;
 
   isLoading = signal<boolean>(false);
   error = signal<string | null>(null);
@@ -24,7 +25,7 @@ export class GbifOccurrenceService {
     limit: '300',
   });
 
-  getOccurrences(
+  search(
     taxonKey: string,
     coordinate: Coordinate
   ): Observable<GbifOccurrenceResponse | null> {
@@ -38,9 +39,7 @@ export class GbifOccurrenceService {
     );
 
     return this.http
-      .get<GbifOccurrenceResponse>(
-        `${this.baseUrl}/occurrence/search?${this.urlParams}`
-      )
+      .get<GbifOccurrenceResponse>(`${this.baseUrl}/search?${this.urlParams}`)
       .pipe(
         catchError((error) => {
           this.httpErrorService.handleError(error, (message) =>

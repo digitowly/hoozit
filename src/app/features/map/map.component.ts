@@ -41,7 +41,7 @@ export class MapComponent {
 
       const activeOccurrence =
         this.activeOccurrenceService.getActiveOccurrence();
-      const test = this.gbifOccurrenceService.getOccurrences(
+      const test = this.gbifOccurrenceService.search(
         activeOccurrence?.gbif_key ?? '',
         {
           latitude: this.userLocation.coordinate().latitude,
@@ -72,6 +72,43 @@ export class MapComponent {
           }
         });
       });
+
+      // draw a circle around user location
+      if (this.map) {
+        L.circle(
+          [
+            this.userLocation.coordinate().latitude,
+            this.userLocation.coordinate().longitude,
+          ],
+          {
+            color: 'blue',
+            fillColor: '#blue',
+            fillOpacity: 0.1,
+            radius: 20,
+          }
+        ).addTo(this.map);
+      }
+
+      // draw a radius around user location
+      if (this.map) {
+        L.rectangle(
+          [
+            [
+              this.userLocation.coordinate().latitude - 0.03,
+              this.userLocation.coordinate().longitude - 0.03,
+            ],
+            [
+              this.userLocation.coordinate().latitude + 0.03,
+              this.userLocation.coordinate().longitude + 0.03,
+            ],
+          ],
+          {
+            color: '#00bb89ff',
+            fillColor: '#00ffbbff',
+            fillOpacity: 0.1,
+          }
+        ).addTo(this.map);
+      }
     });
   }
 
@@ -84,7 +121,7 @@ export class MapComponent {
         this.userLocation.coordinate().latitude,
         this.userLocation.coordinate().longitude,
       ],
-      17
+      15
     );
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(

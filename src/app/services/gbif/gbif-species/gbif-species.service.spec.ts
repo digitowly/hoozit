@@ -43,7 +43,7 @@ describe('GbifSpeciesService', () => {
     expect(service.isLoading()).toBe(false);
 
     service
-      .getSpecies(1)
+      .get(1)
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
@@ -62,7 +62,7 @@ describe('GbifSpeciesService', () => {
   });
 
   it('should handle error', (done) => {
-    service.getSpecies(1).subscribe((res) => {
+    service.get(1).subscribe((res) => {
       expect(res).toBeNull();
       expect(service.error()).toBe(
         'Network error: Please check your connection'

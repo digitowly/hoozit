@@ -38,7 +38,7 @@ describe('GbifOccurrenceService', () => {
     expect(service.isLoading()).toBe(false);
 
     service
-      .getOccurrences('1', { latitude: 0, longitude: 0 })
+      .search('1', { latitude: 0, longitude: 0 })
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
@@ -62,7 +62,7 @@ describe('GbifOccurrenceService', () => {
     expect(service.error()).toBeNull();
 
     service
-      .getOccurrences('1', { latitude: 0, longitude: 0 })
+      .search('1', { latitude: 0, longitude: 0 })
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
