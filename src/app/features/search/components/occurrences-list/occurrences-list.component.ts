@@ -2,7 +2,7 @@ import { Component, input, computed } from '@angular/core';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
 import { OccurrenceItemComponent } from '../occurrence-item/occurrence-item.component';
 import { AnimalSearchService } from '../../../../services/animal-search/animal-search.service';
-import { ActiveOccurrenceService } from '../../../../services/active-occurrence/active-occurrence.service';
+import { SearchResultSelectionService } from '../../services/search-result-selection/search-result-selection.service';
 
 @Component({
   selector: 'occurrences-list',
@@ -19,10 +19,10 @@ export class OccurrencesListComponent {
 
   constructor(
     public animalSearch: AnimalSearchService,
-    private activeOccurrence: ActiveOccurrenceService
+    private searchResultSelection: SearchResultSelectionService
   ) {}
 
   handleClick(result: AnimalSearchResult) {
-    this.activeOccurrence.setActiveOccurrence(result);
+    this.searchResultSelection.addSelection(result);
   }
 }
