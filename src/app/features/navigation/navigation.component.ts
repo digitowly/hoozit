@@ -1,13 +1,12 @@
-import { Component, inject } from '@angular/core';
-import { OccurrenceSearchComponent } from '../search/components/occurrence-search/occurrence-search.component';
-import { RouterLink, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'navigation',
-  imports: [OccurrenceSearchComponent, RouterLink],
+  imports: [RouterLink],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
 })
 export class NavigationComponent {
-  constructor(public router: Router) {}
+  constructor() {}
 }
