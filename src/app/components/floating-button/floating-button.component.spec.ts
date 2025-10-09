@@ -26,7 +26,7 @@ describe('FloatingButtonComponent', () => {
       done();
     });
 
-    const buttonElement = fixture.debugElement.query(By.css('.floating-action'))
+    const buttonElement = fixture.debugElement.query(By.css('.floating-button'))
       .nativeElement as HTMLButtonElement;
     buttonElement.click();
   });
