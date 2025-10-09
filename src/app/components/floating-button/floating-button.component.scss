@@ -1,0 +1,23 @@
+$size: 60px;
+
+.floating-button {
+  button {
+    cursor: pointer;
+    width: $size;
+    height: $size;
+    border-radius: 100%;
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: all 0.3s ease-in-out;
+
+    &:active {
+      transform: scale(1.2);
+    }
+  }
+}
+
