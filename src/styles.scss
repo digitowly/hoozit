@@ -1,8 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 @import url("leaflet/dist/leaflet.css");
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
 .marker-icon {
-  border-radius: 50%;
   border-radius: 50%;
   border: 2px solid white;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
