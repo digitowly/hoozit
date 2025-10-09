@@ -1,12 +1,12 @@
-import { NgClass } from '@angular/common';
-import { Component, effect, input, output } from '@angular/core';
-import { CrossIconComponent } from '../icons/cross-icon/cross-icon.component';
+import {NgClass} from '@angular/common';
+import {Component, effect, input, output} from '@angular/core';
+import {IconComponent} from '../icon/icon.component';
 
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.scss',
-  imports: [NgClass, CrossIconComponent],
+  imports: [NgClass, IconComponent],
 })
 export class ModalComponent {
   title = input('');

@@ -3,11 +3,7 @@ import {IconRegistryService} from '../../services/icon-registry/icon-registry.se
 import {IconName} from '../../services/icon-registry/icon-registry.model';
 
 type Color = 'black' | 'white';
-
-const SIZE = {
-  s: '15px',
-  m: '25px',
-};
+type Size = "size-small" | "size-medium" | "size-large";
 
 @Component({
   selector: 'app-icon',
@@ -18,7 +14,7 @@ const SIZE = {
 export class IconComponent {
   name = input<IconName | null>(null);
   color = input<Color>('black');
-  size = input(SIZE.s);
+  size = input<Size>("size-medium");
 
 
   svg = computed(() => this.iconRegistry.getIcon(this.name()));

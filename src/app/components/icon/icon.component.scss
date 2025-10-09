@@ -1,0 +1,19 @@
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.size {
+  &-small {
+    width: 18px;
+  }
+
+  &-medium {
+    width: 24px;
+  }
+
+  &-large {
+    width: 36px;
+  }
+}
