@@ -52,7 +52,12 @@ export class SearchResultListComponent {
   }
 
   private calculateDistanceToBottom(): number {
-    const rect = this.listRef.nativeElement.getBoundingClientRect();
-    return window.innerHeight - rect.top;
+    // Guard against ViewChild not yet available or element not rendered
+    const rectTop = this.listRef?.nativeElement?.getBoundingClientRect?.().top;
+    if (typeof rectTop !== 'number') {
+      // Fallback: assume full viewport available to avoid runtime errors
+      return window.innerHeight;
+    }
+    return window.innerHeight - rectTop;
   }
 }

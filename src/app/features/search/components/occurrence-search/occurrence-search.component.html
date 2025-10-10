@@ -1,4 +1,11 @@
 <div class="occurrence-search">
-  <occurrence-search-form (onSearch)="setOccurrences($event)" />
-  <occurrences-list [occurrences]="occurrences()" />
+  <search-form
+    [isActive]="isActive()"
+    (onSearch)="handleSearch($event)"
+  />
+  <search-result-list
+    [list]="occurrences()"
+    [isLoading]="isLoading()"
+    (onItemSelect)="onSelect()"
+  />
 </div>

@@ -1,22 +1,27 @@
-import { Component, signal } from '@angular/core';
-import {
-  AnimalSearchResult,
-  AnimalSearchResponse,
-} from '../../../../services/animal-search/animal-search.model';
-import { OccurrencesListComponent } from '../occurrences-list/occurrences-list.component';
-import { OccurrenceSearchFormComponent } from '../occurrence-search-form/occurrence-search-form.component';
+import {Component, input, output} from '@angular/core';
+import {AnimalSearchResult} from '../../../../services/animal-search/animal-search.model';
+import {SearchResultListComponent} from '../search-result-list/search-result-list.component';
+import {SearchFormComponent} from '../search-form/search-form.component';
 
 @Component({
   selector: 'occurrence-search',
-  imports: [OccurrencesListComponent, OccurrenceSearchFormComponent],
+  imports: [SearchResultListComponent, SearchFormComponent],
   templateUrl: './occurrence-search.component.html',
   styleUrl: './occurrence-search.component.scss',
 })
 export class OccurrenceSearchComponent {
-  title = 'habinaut-angular';
-  occurrences = signal<AnimalSearchResult[]>([]);
+  occurrences = input<AnimalSearchResult[]>([]);
+  isLoading = input(false);
+  isActive = input(false);
+  onResultSelection = output();
+  onSearch = output<string>();
 
-  setOccurrences(occurrenceResponse: AnimalSearchResponse) {
-    this.occurrences.set(occurrenceResponse.data);
+  onSelect() {
+    this.onResultSelection.emit();
+  }
+
+  handleSearch(searchTerm: string) {
+    console.log({searchTerm});
+    this.onSearch.emit(searchTerm);
   }
 }
