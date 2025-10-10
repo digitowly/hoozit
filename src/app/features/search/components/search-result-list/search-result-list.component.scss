@@ -1,4 +1,8 @@
-.occurrences-list {
+.search-result-list {
+  padding: 0.5rem;
+  overflow-y: scroll;
+  transition: all 0.3s;
+
   ul {
     list-style-type: none;
     padding: 0;

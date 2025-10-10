@@ -1,0 +1,15 @@
+@if (isVisible()) {
+  <div #listElement class="search-result-list" [style]="{ height: height() }">
+    @if (isLoading()) {
+      <p>Loading...</p>
+    } @else {
+      <ul>
+        @for (item of list(); track $index) {
+          <li (click)="handleItemSelection(item)">
+            <occurrence-item [occurrence]="item"></occurrence-item>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+}

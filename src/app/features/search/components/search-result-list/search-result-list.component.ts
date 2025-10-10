@@ -1,0 +1,58 @@
+import {
+  Component,
+  input,
+  computed,
+  output,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
+import {AnimalSearchResult} from '../../../../services/animal-search/animal-search.model';
+import {OccurrenceItemComponent} from '../occurrence-item/occurrence-item.component';
+import {SearchResultSelectionService} from '../../services/search-result-selection/search-result-selection.service';
+
+@Component({
+  selector: 'search-result-list',
+  imports: [OccurrenceItemComponent],
+  templateUrl: './search-result-list.component.html',
+  styleUrl: './search-result-list.component.scss',
+})
+export class SearchResultListComponent {
+  list = input<AnimalSearchResult[]>([]);
+
+  isLoading = input(false);
+
+  readonly onItemSelect = output();
+
+  @ViewChild('listElement') listRef!: ElementRef<HTMLDivElement>;
+
+  height = computed(() => this.calculateHeight());
+
+  isVisible = computed(
+    () => this.list().length > 0 || this.isLoading()
+  );
+
+  constructor(
+    private searchResultSelection: SearchResultSelectionService
+  ) {
+  }
+
+  handleItemSelection(result: AnimalSearchResult) {
+    this.searchResultSelection.addSelection(result);
+    this.onItemSelect.emit();
+  }
+
+  private calculateHeight(): string {
+    if (!this.list().length) return 'auto';
+    const distanceToBottom = this.calculateDistanceToBottom();
+    const listHeight = this.list().length * 78;
+
+    return listHeight > distanceToBottom
+      ? distanceToBottom - 16 + 'px'
+      : 'auto';
+  }
+
+  private calculateDistanceToBottom(): number {
+    const rect = this.listRef.nativeElement.getBoundingClientRect();
+    return window.innerHeight - rect.top;
+  }
+}
