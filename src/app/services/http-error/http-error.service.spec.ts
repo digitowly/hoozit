@@ -12,7 +12,7 @@ describe('HttpErrorService', () => {
   it('should handle network error (status 0)', () => {
     service.handleError({ status: 0 }, onErrorSpy);
     expect(onErrorSpy).toHaveBeenCalledWith(
-      'Network error: Please check your connection'
+      'Network error: Please check your connection',
     );
   });
 
@@ -29,14 +29,14 @@ describe('HttpErrorService', () => {
   it('should handle server error (status 500)', () => {
     service.handleError({ status: 500 }, onErrorSpy);
     expect(onErrorSpy).toHaveBeenCalledWith(
-      'Server error: Please try again later'
+      'Server error: Please try again later',
     );
   });
 
   it('should handle unknown error', () => {
     service.handleError({ status: 123 }, onErrorSpy);
     expect(onErrorSpy).toHaveBeenCalledWith(
-      'Services is currently unavailable'
+      'Services is currently unavailable',
     );
   });
 });

@@ -1,6 +1,6 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {FloatingButtonComponent} from './floating-button.component';
-import {By} from '@angular/platform-browser';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FloatingButtonComponent } from './floating-button.component';
+import { By } from '@angular/platform-browser';
 
 describe('FloatingButtonComponent', () => {
   let fixture: ComponentFixture<FloatingButtonComponent>;

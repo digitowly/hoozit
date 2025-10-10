@@ -1,7 +1,7 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {SearchResultListComponent} from './search-result-list.component';
-import {SearchResultSelectionService} from '../../services/search-result-selection/search-result-selection.service';
-import {AnimalSearchResult} from '../../../../services/animal-search/animal-search.model';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SearchResultListComponent } from './search-result-list.component';
+import { SearchResultSelectionService } from '../../services/search-result-selection/search-result-selection.service';
+import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
 
 describe('SearchResultListComponent', () => {
   let component: SearchResultListComponent;
@@ -10,15 +10,26 @@ describe('SearchResultListComponent', () => {
   let originalInnerHeight: number;
 
   function setInnerHeight(height: number) {
-    Object.defineProperty(window, 'innerHeight', {configurable: true, value: height});
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: height,
+    });
   }
 
   beforeEach(async () => {
-    selectionServiceSpy = jasmine.createSpyObj<SearchResultSelectionService>('SearchResultSelectionService', ['addSelection']);
+    selectionServiceSpy = jasmine.createSpyObj<SearchResultSelectionService>(
+      'SearchResultSelectionService',
+      ['addSelection'],
+    );
 
     await TestBed.configureTestingModule({
       imports: [SearchResultListComponent],
-      providers: [{provide: SearchResultSelectionService, useValue: selectionServiceSpy}],
+      providers: [
+        {
+          provide: SearchResultSelectionService,
+          useValue: selectionServiceSpy,
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SearchResultListComponent);
@@ -31,7 +42,10 @@ describe('SearchResultListComponent', () => {
 
   afterEach(() => {
     // Restore original innerHeight after each test
-    Object.defineProperty(window, 'innerHeight', {configurable: true, value: originalInnerHeight});
+    Object.defineProperty(window, 'innerHeight', {
+      configurable: true,
+      value: originalInnerHeight,
+    });
   });
 
   it('should create', () => {
@@ -74,7 +88,7 @@ describe('SearchResultListComponent', () => {
       // Provide a fake ElementRef with a controllable top value
       (component as any).listRef = {
         nativeElement: {
-          getBoundingClientRect: () => ({top: 100}),
+          getBoundingClientRect: () => ({ top: 100 }),
         },
       };
     });
@@ -90,13 +104,15 @@ describe('SearchResultListComponent', () => {
       // window.innerHeight - rect.top = 1000 - 100 = 900
       setInnerHeight(1000);
       // 10 items * 78 = 780 which is <= 900, so 'auto'
-      const items: AnimalSearchResult[] = Array.from({length: 10}).map((_, i) => ({
-        id: i + 1,
-        name: `Animal ${i + 1}`,
-        binomial_name: 'X y',
-        thumbnail: 't.jpg',
-        gbif_key: String(i + 1),
-      }));
+      const items: AnimalSearchResult[] = Array.from({ length: 10 }).map(
+        (_, i) => ({
+          id: i + 1,
+          name: `Animal ${i + 1}`,
+          binomial_name: 'X y',
+          thumbnail: 't.jpg',
+          gbif_key: String(i + 1),
+        }),
+      );
       fixture.componentRef.setInput('list', items);
 
       const result = (component as any).calculateHeight();
@@ -107,13 +123,15 @@ describe('SearchResultListComponent', () => {
       // distanceToBottom = 1000 - 100 = 900; expected height = 900 - 16 = 884px
       setInnerHeight(1000);
       // 20 items * 78 = 1560 which is > 900
-      const items: AnimalSearchResult[] = Array.from({length: 20}).map((_, i) => ({
-        id: i + 1,
-        name: `Animal ${i + 1}`,
-        binomial_name: 'X y',
-        thumbnail: 't.jpg',
-        gbif_key: String(i + 1),
-      }));
+      const items: AnimalSearchResult[] = Array.from({ length: 20 }).map(
+        (_, i) => ({
+          id: i + 1,
+          name: `Animal ${i + 1}`,
+          binomial_name: 'X y',
+          thumbnail: 't.jpg',
+          gbif_key: String(i + 1),
+        }),
+      );
       fixture.componentRef.setInput('list', items);
 
       const result = (component as any).calculateHeight();

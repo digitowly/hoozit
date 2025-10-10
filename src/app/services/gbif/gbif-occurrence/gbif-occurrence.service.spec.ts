@@ -43,7 +43,7 @@ describe('GbifOccurrenceService', () => {
         finalize(() => {
           expect(service.isLoading()).toBe(false);
           done();
-        })
+        }),
       )
       .subscribe((res) => {
         expect(res).toEqual(mockResponse);
@@ -52,7 +52,7 @@ describe('GbifOccurrenceService', () => {
     expect(service.isLoading()).toBe(true);
 
     const req = httpMock.expectOne((request) =>
-      request.url.startsWith('https://api.gbif.org/v1/occurrence/search')
+      request.url.startsWith('https://api.gbif.org/v1/occurrence/search'),
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
@@ -68,7 +68,7 @@ describe('GbifOccurrenceService', () => {
           expect(service.isLoading()).toBe(false);
           expect(service.error()).toBe('Server error: Please try again later');
           done();
-        })
+        }),
       )
       .subscribe((res) => {
         expect(res).toBeNull();
@@ -77,7 +77,7 @@ describe('GbifOccurrenceService', () => {
     expect(service.isLoading()).toBe(true);
 
     const req = httpMock.expectOne((request) =>
-      request.url.startsWith('https://api.gbif.org/v1/occurrence/search')
+      request.url.startsWith('https://api.gbif.org/v1/occurrence/search'),
     );
     expect(req.request.method).toBe('GET');
     req.flush('Error', { status: 500, statusText: 'Server Error' });

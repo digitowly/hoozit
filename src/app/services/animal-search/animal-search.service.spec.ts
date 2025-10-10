@@ -38,7 +38,7 @@ describe('AnimalSearchService', () => {
         finalize(() => {
           expect(service.isLoading()).toBe(false);
           done();
-        })
+        }),
       )
       .subscribe((res) => {
         expect(res).toEqual(mockResponse);
@@ -47,7 +47,7 @@ describe('AnimalSearchService', () => {
     expect(service.isLoading()).toBe(true);
 
     const req = httpMock.expectOne(
-      'http://localhost:8082/api/animals/search?q=test&lang=de'
+      'http://localhost:8082/api/animals/search?q=test&lang=de',
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
@@ -57,13 +57,13 @@ describe('AnimalSearchService', () => {
     service.getOccurrences('test').subscribe((res) => {
       expect(res).toEqual({ data: [] });
       expect(service.error()).toBe(
-        'Network error: Please check your connection'
+        'Network error: Please check your connection',
       );
       done();
     });
 
     const req = httpMock.expectOne(
-      'http://localhost:8082/api/animals/search?q=test&lang=de'
+      'http://localhost:8082/api/animals/search?q=test&lang=de',
     );
     req.error(new ProgressEvent('Network error'), { status: 0 });
   });

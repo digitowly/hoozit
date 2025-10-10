@@ -1,9 +1,9 @@
-import {Component, input, computed} from '@angular/core';
-import {IconRegistryService} from '../../services/icon-registry/icon-registry.service';
-import {IconName} from '../../services/icon-registry/icon-registry.model';
+import { Component, input, computed } from '@angular/core';
+import { IconRegistryService } from '../../services/icon-registry/icon-registry.service';
+import { IconName } from '../../services/icon-registry/icon-registry.model';
 
 type Color = 'black' | 'white';
-type Size = "size-small" | "size-medium" | "size-large";
+type Size = 'size-small' | 'size-medium' | 'size-large';
 
 @Component({
   selector: 'app-icon',
@@ -14,12 +14,9 @@ type Size = "size-small" | "size-medium" | "size-large";
 export class IconComponent {
   name = input<IconName | null>(null);
   color = input<Color>('black');
-  size = input<Size>("size-medium");
-
+  size = input<Size>('size-medium');
 
   svg = computed(() => this.iconRegistry.getIcon(this.name()));
 
-  constructor(private iconRegistry: IconRegistryService) {
-  }
-
+  constructor(private iconRegistry: IconRegistryService) {}
 }

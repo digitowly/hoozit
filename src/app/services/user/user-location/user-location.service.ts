@@ -27,7 +27,7 @@ export class UserLocationService {
       (error) => {
         console.error('Error getting location:', error);
         this.hasError.set(true);
-      }
+      },
     );
 
     this.isInitialized.set(true);

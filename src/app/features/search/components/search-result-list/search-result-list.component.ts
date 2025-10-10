@@ -6,9 +6,9 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
-import {AnimalSearchResult} from '../../../../services/animal-search/animal-search.model';
-import {OccurrenceItemComponent} from '../occurrence-item/occurrence-item.component';
-import {SearchResultSelectionService} from '../../services/search-result-selection/search-result-selection.service';
+import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
+import { OccurrenceItemComponent } from '../occurrence-item/occurrence-item.component';
+import { SearchResultSelectionService } from '../../services/search-result-selection/search-result-selection.service';
 
 @Component({
   selector: 'search-result-list',
@@ -27,14 +27,9 @@ export class SearchResultListComponent {
 
   height = computed(() => this.calculateHeight());
 
-  isVisible = computed(
-    () => this.list().length > 0 || this.isLoading()
-  );
+  isVisible = computed(() => this.list().length > 0 || this.isLoading());
 
-  constructor(
-    private searchResultSelection: SearchResultSelectionService
-  ) {
-  }
+  constructor(private searchResultSelection: SearchResultSelectionService) {}
 
   handleItemSelection(result: AnimalSearchResult) {
     this.searchResultSelection.addSelection(result);

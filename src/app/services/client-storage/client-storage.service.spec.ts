@@ -24,7 +24,7 @@ describe('ClientStorageService', () => {
       service.set(ClientStorageKey.SEARCH_SELECTIONS, mockData);
       expect(localStorage.setItem).toHaveBeenCalledOnceWith(
         ClientStorageKey.SEARCH_SELECTIONS,
-        JSON.stringify(mockData)
+        JSON.stringify(mockData),
       );
     });
 
@@ -40,7 +40,7 @@ describe('ClientStorageService', () => {
 
       const result = service.get(ClientStorageKey.SEARCH_SELECTIONS);
       expect(localStorage.getItem).toHaveBeenCalledOnceWith(
-        ClientStorageKey.SEARCH_SELECTIONS
+        ClientStorageKey.SEARCH_SELECTIONS,
       );
 
       expect(result).toEqual('test');
@@ -51,7 +51,7 @@ describe('ClientStorageService', () => {
 
       const result = service.get(ClientStorageKey.SEARCH_SELECTIONS);
       expect(localStorage.getItem).toHaveBeenCalledOnceWith(
-        ClientStorageKey.SEARCH_SELECTIONS
+        ClientStorageKey.SEARCH_SELECTIONS,
       );
 
       expect(result).toEqual(null);
@@ -62,7 +62,7 @@ describe('ClientStorageService', () => {
 
       const result = service.get(ClientStorageKey.SEARCH_SELECTIONS);
       expect(localStorage.getItem).toHaveBeenCalledOnceWith(
-        ClientStorageKey.SEARCH_SELECTIONS
+        ClientStorageKey.SEARCH_SELECTIONS,
       );
       expect(result).toEqual(null);
     });
@@ -72,7 +72,7 @@ describe('ClientStorageService', () => {
     it('should remove by key', () => {
       service.remove(ClientStorageKey.SEARCH_SELECTIONS);
       expect(localStorage.removeItem).toHaveBeenCalledOnceWith(
-        ClientStorageKey.SEARCH_SELECTIONS
+        ClientStorageKey.SEARCH_SELECTIONS,
       );
     });
   });

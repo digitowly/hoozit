@@ -1,7 +1,7 @@
-import {Component, input, output} from '@angular/core';
-import {AnimalSearchResult} from '../../../../services/animal-search/animal-search.model';
-import {SearchResultListComponent} from '../search-result-list/search-result-list.component';
-import {SearchFormComponent} from '../search-form/search-form.component';
+import { Component, input, output } from '@angular/core';
+import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
+import { SearchResultListComponent } from '../search-result-list/search-result-list.component';
+import { SearchFormComponent } from '../search-form/search-form.component';
 
 @Component({
   selector: 'occurrence-search',
@@ -21,7 +21,7 @@ export class OccurrenceSearchComponent {
   }
 
   handleSearch(searchTerm: string) {
-    console.log({searchTerm});
+    console.log({ searchTerm });
     this.onSearch.emit(searchTerm);
   }
 }

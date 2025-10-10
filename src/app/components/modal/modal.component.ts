@@ -1,6 +1,6 @@
-import {NgClass} from '@angular/common';
-import {Component, effect, input, output} from '@angular/core';
-import {IconComponent} from '../icon/icon.component';
+import { NgClass } from '@angular/common';
+import { Component, effect, input, output } from '@angular/core';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-modal',

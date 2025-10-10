@@ -22,7 +22,7 @@ export class AnimalSearchService {
 
   constructor(
     private http: HttpClient,
-    private httpErrorService: HttpErrorService
+    private httpErrorService: HttpErrorService,
   ) {}
 
   getOccurrences(name: string): Observable<AnimalSearchResponse> {
@@ -31,11 +31,11 @@ export class AnimalSearchService {
     return this.http.get<AnimalSearchResponse>(url, this.httpOptions).pipe(
       catchError((err) => {
         this.httpErrorService.handleError(err, (message) =>
-          this.error.set(message)
+          this.error.set(message),
         );
         return of({ data: [] });
       }),
-      finalize(() => this.isLoading.set(false))
+      finalize(() => this.isLoading.set(false)),
     );
   }
 }

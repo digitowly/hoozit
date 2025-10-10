@@ -16,7 +16,7 @@ export class GbifSpeciesService {
 
   constructor(
     private http: HttpClient,
-    private httpErrorService: HttpErrorService
+    private httpErrorService: HttpErrorService,
   ) {}
 
   get(taxonKey: number): Observable<GbifSpecies | null> {
@@ -24,11 +24,11 @@ export class GbifSpeciesService {
     return this.http.get<GbifSpecies>(`${this.baseUrl}/match/${taxonKey}`).pipe(
       catchError((error) => {
         this.httpErrorService.handleError(error, (message) =>
-          this.error.set(message)
+          this.error.set(message),
         );
         return of(null);
       }),
-      finalize(() => this.isLoading.set(false))
+      finalize(() => this.isLoading.set(false)),
     );
   }
 }

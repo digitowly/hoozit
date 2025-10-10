@@ -17,7 +17,7 @@ export class GbifOccurrenceService {
 
   constructor(
     private http: HttpClient,
-    private httpErrorService: HttpErrorService
+    private httpErrorService: HttpErrorService,
   ) {}
 
   private readonly urlParams = new URLSearchParams({
@@ -27,7 +27,7 @@ export class GbifOccurrenceService {
 
   search(
     taxonKey: string,
-    coordinate: Coordinate
+    coordinate: Coordinate,
   ): Observable<GbifOccurrenceResponse | null> {
     this.isLoading.set(true);
 
@@ -35,7 +35,7 @@ export class GbifOccurrenceService {
 
     this.urlParams.set(
       'geometry',
-      this.createCoordinatePolygon(coordinate, 0.1)
+      this.createCoordinatePolygon(coordinate, 0.1),
     );
 
     return this.http
@@ -43,17 +43,17 @@ export class GbifOccurrenceService {
       .pipe(
         catchError((error) => {
           this.httpErrorService.handleError(error, (message) =>
-            this.error.set(message)
+            this.error.set(message),
           );
           return of(null);
         }),
-        finalize(() => this.isLoading.set(false))
+        finalize(() => this.isLoading.set(false)),
       );
   }
 
   private createCoordinatePolygon(
     coordinate: Coordinate,
-    radius: number
+    radius: number,
   ): string {
     return `POLYGON((${coordinate.longitude - radius} ${
       coordinate.latitude - radius

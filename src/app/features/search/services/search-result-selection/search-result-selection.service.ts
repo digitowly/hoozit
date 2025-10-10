@@ -22,7 +22,7 @@ export class SearchResultSelectionService {
 
     this.clientStorage.set(
       ClientStorageKey.SEARCH_SELECTIONS,
-      updatedSelections
+      updatedSelections,
     );
 
     this.selections.set(updatedSelections);
@@ -30,12 +30,12 @@ export class SearchResultSelectionService {
 
   removeSelection(id: number) {
     const updatedSelections = this.selections().filter(
-      (selection) => selection.id !== id
+      (selection) => selection.id !== id,
     );
 
     this.clientStorage.set(
       ClientStorageKey.SEARCH_SELECTIONS,
-      updatedSelections
+      updatedSelections,
     );
 
     this.selections.set(updatedSelections);

@@ -1,8 +1,8 @@
 <div>
-  <app-map/>
+  <app-map />
   <div class="map-trigger-row">
     <floating-button (click)="isSearchModalOpen.set(true)">
-      <app-icon name="search" size="size-large"/>
+      <app-icon name="search" size="size-large" />
     </floating-button>
   </div>
   <app-modal
@@ -14,7 +14,7 @@
       [occurrences]="result()"
       [isActive]="isSearchModalOpen()"
       (onResultSelection)="isSearchModalOpen.set(false)"
-      (onSearch)="handleSearch( $event)"
+      (onSearch)="handleSearch($event)"
       [isLoading]="animalSearch.isLoading()"
     />
   </app-modal>

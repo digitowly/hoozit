@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
 import { SearchFormComponent } from './search-form.component';
 
 describe('SearchFormComponent', () => {
@@ -41,7 +46,8 @@ describe('SearchFormComponent', () => {
   });
 
   it('should focus the input when isActive becomes true', () => {
-    const inputEl: HTMLInputElement = fixture.nativeElement.querySelector('input');
+    const inputEl: HTMLInputElement =
+      fixture.nativeElement.querySelector('input');
     spyOn(inputEl, 'focus');
 
     fixture.componentRef.setInput('isActive', true);

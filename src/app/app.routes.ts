@@ -1,16 +1,18 @@
-import {Routes} from '@angular/router';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('../app/features/map-view/map-view.component').then((m) => m.MapViewComponent),
+      import('../app/features/map-view/map-view.component').then(
+        (m) => m.MapViewComponent,
+      ),
   },
   {
     path: 'user',
     loadComponent: () =>
       import('../app/features/user/user.component').then(
-        (m) => m.UserComponent
+        (m) => m.UserComponent,
       ),
   },
 ];

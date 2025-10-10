@@ -2,7 +2,8 @@ import {
   Component,
   effect,
   ElementRef,
-  input, output,
+  input,
+  output,
   ViewChild,
 } from '@angular/core';
 import {
@@ -11,13 +12,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  of,
-  switchMap,
-} from 'rxjs';
-import {IconComponent} from '../../../../components/icon/icon.component';
+import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import { IconComponent } from '../../../../components/icon/icon.component';
 
 @Component({
   selector: 'search-form',
@@ -35,7 +31,7 @@ export class SearchFormComponent {
     ]),
   });
 
-  onSearch = output<string>()
+  onSearch = output<string>();
 
   @ViewChild('searchInput') searchInputRef!: ElementRef<HTMLInputElement>;
 
@@ -52,8 +48,8 @@ export class SearchFormComponent {
           debounceTime(300),
           distinctUntilChanged(),
           switchMap((term) => {
-            return this.validateTerm(term)
-          })
+            return this.validateTerm(term);
+          }),
         )
         .subscribe(() => this.onSubmit());
     });
@@ -73,7 +69,7 @@ export class SearchFormComponent {
 
   private validateTerm(term: string | null) {
     if (!this.query?.valid || !term) {
-      return of("");
+      return of('');
     }
     return of(term);
   }

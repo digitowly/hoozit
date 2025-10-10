@@ -1,10 +1,10 @@
-import {Component, effect, signal} from '@angular/core';
-import {UserLocationService} from '../../services/user/user-location/user-location.service';
-import {GbifOccurrenceService} from '../../services/gbif/gbif-occurrence/gbif-occurrence.service';
-import {MapService} from '../../services/map/map-service';
-import {LeafletService} from '../../services/map/leaflet/leaflet.service';
-import {SearchResultSelectionService} from '../search/services/search-result-selection/search-result-selection.service';
-import {AnimalSearchService} from '../../services/animal-search/animal-search.service';
+import { Component, effect, signal } from '@angular/core';
+import { UserLocationService } from '../../services/user/user-location/user-location.service';
+import { GbifOccurrenceService } from '../../services/gbif/gbif-occurrence/gbif-occurrence.service';
+import { MapService } from '../../services/map/map-service';
+import { LeafletService } from '../../services/map/leaflet/leaflet.service';
+import { SearchResultSelectionService } from '../search/services/search-result-selection/search-result-selection.service';
+import { AnimalSearchService } from '../../services/animal-search/animal-search.service';
 
 @Component({
   selector: 'app-map',
@@ -24,7 +24,7 @@ export class AppMapComponent {
     private userLocation: UserLocationService,
     private gbifOccurrenceService: GbifOccurrenceService,
     public animalSearch: AnimalSearchService,
-    private searchResultSelection: SearchResultSelectionService
+    private searchResultSelection: SearchResultSelectionService,
   ) {
     this.userLocation.getLocation();
 
@@ -38,7 +38,7 @@ export class AppMapComponent {
         console.log(selection);
         const occurrences = this.gbifOccurrenceService.search(
           selection.gbif_key ?? '',
-          this.userLocation.coordinate()
+          this.userLocation.coordinate(),
         );
         occurrences.subscribe((species) => {
           species?.results.forEach((occurrence) => {

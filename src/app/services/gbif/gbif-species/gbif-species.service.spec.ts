@@ -48,7 +48,7 @@ describe('GbifSpeciesService', () => {
         finalize(() => {
           expect(service.isLoading()).toBe(false);
           done();
-        })
+        }),
       )
       .subscribe((res) => {
         expect(res).toEqual(mockResponse);
@@ -65,7 +65,7 @@ describe('GbifSpeciesService', () => {
     service.get(1).subscribe((res) => {
       expect(res).toBeNull();
       expect(service.error()).toBe(
-        'Network error: Please check your connection'
+        'Network error: Please check your connection',
       );
       done();
     });

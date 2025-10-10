@@ -1,8 +1,5 @@
 <div class="occurrence-search">
-  <search-form
-    [isActive]="isActive()"
-    (onSearch)="handleSearch($event)"
-  />
+  <search-form [isActive]="isActive()" (onSearch)="handleSearch($event)" />
   <search-result-list
     [list]="occurrences()"
     [isLoading]="isLoading()"
