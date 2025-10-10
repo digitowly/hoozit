@@ -1,12 +1,13 @@
-import { Component, effect, signal } from '@angular/core';
-import { UserLocationService } from '../../services/user/user-location/user-location.service';
-import { GbifOccurrenceService } from '../../services/gbif/gbif-occurrence/gbif-occurrence.service';
-import { MapService, Marker } from '../../services/map/map-service';
-import { LeafletService } from '../../services/map/leaflet/leaflet.service';
-import { SearchResultSelectionService } from '../search/services/search-result-selection/search-result-selection.service';
+import {Component, effect, signal} from '@angular/core';
+import {UserLocationService} from '../../services/user/user-location/user-location.service';
+import {GbifOccurrenceService} from '../../services/gbif/gbif-occurrence/gbif-occurrence.service';
+import {MapService} from '../../services/map/map-service';
+import {LeafletService} from '../../services/map/leaflet/leaflet.service';
+import {SearchResultSelectionService} from '../search/services/search-result-selection/search-result-selection.service';
+import {AnimalSearchService} from '../../services/animal-search/animal-search.service';
 
 @Component({
-  selector: 'map',
+  selector: 'app-map',
   imports: [],
   providers: [
     {
@@ -14,14 +15,15 @@ import { SearchResultSelectionService } from '../search/services/search-result-s
       useClass: LeafletService,
     },
   ],
-  templateUrl: './map.component.html',
-  styleUrl: './map.component.scss',
+  templateUrl: './app-map.component.html',
+  styleUrl: './app-map.component.scss',
 })
-export class MapComponent {
+export class AppMapComponent {
   constructor(
     private map: MapService,
     private userLocation: UserLocationService,
     private gbifOccurrenceService: GbifOccurrenceService,
+    public animalSearch: AnimalSearchService,
     private searchResultSelection: SearchResultSelectionService
   ) {
     this.userLocation.getLocation();
