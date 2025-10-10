@@ -1,8 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 @import url("leaflet/dist/leaflet.css");
 
+@font-face {
+  font-family: "Montserrat";
+  src: url("/assets/fonts/Montserrat/Montserrat-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 400;
 }
 
 body {
@@ -17,4 +29,8 @@ body {
   width: 30px !important;
   height: 30px !important;
   object-fit: cover;
+}
+
+.leaflet-control-attribution {
+  display: none;
 }

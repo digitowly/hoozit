@@ -1,23 +1,39 @@
 .navigation {
   position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  top: 1rem;
+  right: 1rem;
+
   background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 10000;
-  width: 100%;
 
   nav {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
+
+    @media (min-width: 768px) {
+      padding: 1rem 2rem;
+    }
   }
 
-  ul {
-    list-style: none;
+  &-item {
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+
+    p {
+      font-size: 0.65rem;
+      padding-top: 0.1rem;
+      line-height: 0;
+    }
+  }
+
+
+  ul {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    gap: 2rem;
     margin: 0;
     padding: 0;
 
@@ -34,3 +50,4 @@
     }
   }
 }
+
