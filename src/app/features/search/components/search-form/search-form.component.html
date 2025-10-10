@@ -4,17 +4,14 @@
       #searchInput
       class="search-input"
       type="text"
-      placeholder="Search..."
+      placeholder="E.g tawny owl, duck..."
       formControlName="query"
     />
-    <!-- @if (query?.invalid && (query?.dirty || query?.touched)) {
-    <p>error</p>
-    } -->
     <button type="submit" [disabled]="!searchForm.valid || searchForm.pending">
-      search
+      <app-icon name="search" size="size-medium"/>
     </button>
   </form>
-  @if (searchForm.hasError("requestError") ) {
-  {{ searchForm.getError("requestError") }}
+  @if (searchForm.hasError("requestError")) {
+    {{ searchForm.getError("requestError") }}
   }
 </div>

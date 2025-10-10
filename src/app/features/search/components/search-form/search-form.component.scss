@@ -21,13 +21,23 @@
     cursor: pointer;
     border: none;
     padding: 0.5rem 1rem;
-    border-radius: border.$radius;
-    background-color: rgba(0, 0, 0, 0.08);
+    background-color: rgba(207, 207, 207, 0.178);
+    border-radius: 100%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
 
     &:disabled {
       cursor: not-allowed;
-      background-color: rgba(0, 0, 0, 0.01);
-      opacity: 0.5;
+      background-color: rgba(190, 255, 174, 0);
+      opacity: 0.35;
+    }
+
+    &:active {
+      transform: scale(1.1);
     }
   }
 }
