@@ -2,18 +2,20 @@
   <nav>
     <ul>
       <li>
-        <a routerLink="/">
+        <a routerLink="/map" [routerLinkActive]="['active']">
           <div class="navigation-item">
-            <app-icon name="map" size="size-medium"/>
+            <app-icon name="map" size="size-medium" />
             <p>Map</p>
+            <div class="highlighter"></div>
           </div>
         </a>
       </li>
       <li>
-        <a routerLink="/user">
+        <a routerLink="/user" [routerLinkActive]="['active']">
           <div class="navigation-item">
-            <app-icon name="user" size="size-medium"/>
+            <app-icon name="user" size="size-medium" />
             <p>User</p>
+            <div class="highlighter"></div>
           </div>
         </a>
       </li>

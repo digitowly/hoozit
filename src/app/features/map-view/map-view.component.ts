@@ -1,20 +1,19 @@
 import { Component, signal } from '@angular/core';
 import { AppMapComponent } from '../app-map/app-map.component';
-import { FloatingButtonComponent } from '../../components/floating-button/floating-button.component';
-import { IconComponent } from '../../components/icon/icon.component';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { OccurrenceSearchComponent } from '../search/components/occurrence-search/occurrence-search.component';
 import { AnimalSearchService } from '../../services/animal-search/animal-search.service';
 import { AnimalSearchResult } from '../../services/animal-search/animal-search.model';
-
+import { FloatingButtonComponent } from '../../components/floating-button/floating-button.component';
+import { IconComponent } from '../../components/icon/icon.component';
 @Component({
   selector: 'map-view',
   imports: [
     AppMapComponent,
-    FloatingButtonComponent,
-    IconComponent,
     ModalComponent,
     OccurrenceSearchComponent,
+    FloatingButtonComponent,
+    IconComponent,
   ],
   templateUrl: './map-view.component.html',
   styleUrl: './map-view.component.scss',

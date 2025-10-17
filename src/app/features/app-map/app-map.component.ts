@@ -1,4 +1,4 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { UserLocationService } from '../../services/user/user-location/user-location.service';
 import { GbifOccurrenceService } from '../../services/gbif/gbif-occurrence/gbif-occurrence.service';
 import { MapService } from '../../services/map/map-service';
