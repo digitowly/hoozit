@@ -1,0 +1,33 @@
+// ---------- Brand ----------
+$primary-light: #58d1cc;   // teal highlight
+$primary-base:  #127c7e;   // main teal
+$primary-dark:  #0c3440;   // deep contrast
+
+// ---------- Accent ----------
+$accent-light:  #ffd8a8;   // warm accent highlight
+$accent-base:   #ff8c32;   // orange accent (owl beak/energy)
+$accent-dark:   #b55a1c;   // muted earth tone
+
+// ---------- Nature ----------
+$nature-light:  #a6e6a1;   // vibrant green (leaves)
+$nature-base:   #3cbf6d;   // balanced green (growth)
+$nature-dark:   #2a8f4e;   // forest tone
+
+// ---------- Neutral ----------
+$neutral-light: #f5f7f8;   // soft background
+$neutral-base:  #dce1e3;   // card / surface
+$neutral-dark:  #3a4750;   // text / outlines
+
+// ---------- Semantic ----------
+$success: #3ecf8e;  // positive / confirmation
+$info:    #3da9fc;  // informational blue
+$warning: #f7b731;  // caution or notice
+$error:   #eb5757;  // error or critical state
+
+// ---------- Utility ----------
+$shadow: rgba(0, 0, 0, 0.15);
+$overlay: rgba(0, 0, 0, 0.3);
+
+// ---------- Example Gradients ----------
+$gradient-primary: linear-gradient(135deg, $primary-base, $accent-base);
+$gradient-forest: linear-gradient(135deg, $nature-base, $primary-base);

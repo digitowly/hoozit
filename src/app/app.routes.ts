@@ -7,6 +7,7 @@ export const routes: Routes = [
       import('../app/features/map-view/map-view.component').then(
         (m) => m.MapViewComponent,
       ),
+    data: { reuse: true },
   },
   {
     path: 'user',
@@ -14,5 +15,6 @@ export const routes: Routes = [
       import('../app/features/user/user.component').then(
         (m) => m.UserComponent,
       ),
+    data: { reuse: true },
   },
 ];

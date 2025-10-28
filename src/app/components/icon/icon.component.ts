@@ -2,7 +2,7 @@ import { Component, input, computed } from '@angular/core';
 import { IconRegistryService } from '../../services/icon-registry/icon-registry.service';
 import { IconName } from '../../services/icon-registry/icon-registry.model';
 
-type Color = 'black' | 'white';
+type Color = 'color-primary-dark' | 'color-neutral-light';
 type Size = 'size-small' | 'size-medium' | 'size-large';
 
 @Component({
@@ -13,7 +13,7 @@ type Size = 'size-small' | 'size-medium' | 'size-large';
 })
 export class IconComponent {
   name = input<IconName | null>(null);
-  color = input<Color>('black');
+  color = input<Color>('color-primary-dark');
   size = input<Size>('size-medium');
 
   svg = computed(() => this.iconRegistry.getIcon(this.name()));

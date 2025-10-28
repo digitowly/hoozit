@@ -1,7 +1,6 @@
 @if (svg()) {
   <div
-    [class]="'icon-wrapper ' + size()"
-    [style.color]="color()"
+    [class]="'icon-wrapper ' + size() + ' ' + color()"
     [innerHTML]="svg()"
   ></div>
 }

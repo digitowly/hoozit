@@ -8,7 +8,7 @@
       formControlName="query"
     />
     <button type="submit" [disabled]="!searchForm.valid || searchForm.pending">
-      <app-icon name="search" size="size-medium" />
+      <app-icon name="search" size="size-medium" color="color-neutral-light" />
     </button>
   </form>
   @if (searchForm.hasError("requestError")) {

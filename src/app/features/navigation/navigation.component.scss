@@ -1,3 +1,7 @@
+@use "../../style/color";
+
+$link-size: 52px;
+
 .navigation {
   position: fixed;
   top: 1rem;
@@ -5,7 +9,7 @@
 
   background: white;
   border-radius: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px color.$shadow;
   z-index: 10000;
 
   nav {
@@ -43,8 +47,8 @@
         color: black;
         font-weight: bold;
         position: relative;
-        width: 50px;
-        height: 50px;
+        width: $link-size;
+        height: $link-size;
 
         &:hover {
           text-decoration: underline;
@@ -60,18 +64,19 @@
 }
 
 .highlighter {
-  transition: all 0.3s ease-in;
-  width: 50px;
-  height:50px;
+  transition: all 0.2s ease-in;
+  width: $link-size;
+  height:$link-size;
   border-radius: 50%;
   position: absolute;
-  left: 25%;
-  transform: translate(-25%, -25%) scale(0);
+  left: calc($link-size / 4 );
+  top: calc($link-size / 4  * -1);;
+  transform: translateX(-50%) scale(0);
 }
 
 .active {
   & .highlighter {
-    transform: translate(-25%, -25%) scale(.7);
-    background-color: rgba(137, 255, 161, 0.61);
+    transform: translateX(-50%) scale(.7);
+    background-color: color.$nature-light;
   }
 }

@@ -3,7 +3,7 @@
     <img [src]="occurrence()?.thumbnail" alt="{{ occurrence()?.name }}" />
   </div>
   <div class="details">
-    <p>{{ occurrence()?.name }}</p>
-    <p>{{ occurrence()?.binomial_name }}</p>
+    <span class="details-title">{{ occurrence()?.name }}</span>
+    <span class="details-subtitle">{{ occurrence()?.binomial_name }}</span>
   </div>
 </button>

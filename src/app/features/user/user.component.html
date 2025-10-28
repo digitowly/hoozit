@@ -1,1 +1,9 @@
-<p>user works!</p>
+@if (user.isLoading()) {
+  <p>loading</p>
+} @else if (!user.data()) {
+  <p>No user logged in</p>
+  <a href="http://localhost:8000/user/login/google">Login with Google</a>
+} @else {
+  <p>{{ user.data()?.email }}</p>
+  <button (click)="user.logout()">logout</button>
+}

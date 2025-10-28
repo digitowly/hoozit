@@ -1,7 +1,19 @@
+@use "../../style/color";
+
 .icon-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.color {
+  &-primary-dark {
+    color: color.$primary-dark;
+  }
+
+  &-neutral-light {
+    color: color.$neutral-light;
+  }
 }
 
 .size {

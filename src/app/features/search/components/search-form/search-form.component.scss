@@ -1,4 +1,5 @@
 @use "../../../../style/border";
+@use "../../../../style/color";
 
 .search-form {
   display: flex;
@@ -21,7 +22,7 @@
     cursor: pointer;
     border: none;
     padding: 0.5rem 1rem;
-    background-color: rgba(207, 207, 207, 0.178);
+    background-color: color.$primary-base;
     border-radius: 100%;
     width: 45px;
     height: 45px;
