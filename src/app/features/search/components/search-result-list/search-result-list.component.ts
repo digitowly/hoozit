@@ -5,6 +5,7 @@ import {
   output,
   ViewChild,
   ElementRef,
+  effect,
 } from '@angular/core';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
 import { OccurrenceItemComponent } from '../occurrence-item/occurrence-item.component';
@@ -21,19 +22,24 @@ export class SearchResultListComponent {
 
   isLoading = input(false);
 
-  readonly onItemSelect = output();
+  readonly onItemSelect = output<AnimalSearchResult>();
 
   @ViewChild('listElement') listRef!: ElementRef<HTMLDivElement>;
 
   height = computed(() => this.calculateHeight());
 
-  isVisible = computed(() => this.list().length > 0 || this.isLoading());
+  isManuallyHidden = input(false);
+
+  isVisible = computed(
+    () =>
+      !this.isManuallyHidden() && (this.list().length > 0 || this.isLoading()),
+  );
 
   constructor(private searchResultSelection: SearchResultSelectionService) {}
 
   handleItemSelection(result: AnimalSearchResult) {
     this.searchResultSelection.addSelection(result);
-    this.onItemSelect.emit();
+    this.onItemSelect.emit(result);
   }
 
   private calculateHeight(): string {

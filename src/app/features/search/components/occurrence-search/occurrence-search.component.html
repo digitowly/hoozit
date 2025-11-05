@@ -1,8 +1,16 @@
 <div class="occurrence-search">
-  <search-form [isActive]="isActive()" (onSearch)="handleSearch($event)" />
+  <search-form
+    [defaultTerm]="defaultTerm()"
+    [isActive]="isActive()"
+    (onSearch)="handleSearch($event)"
+    (onSearchTermChange)="showResultList()"
+    (onSearchTermFocus)="showResultList()"
+    (click)="showResultList()"
+  />
   <search-result-list
     [list]="occurrences()"
     [isLoading]="isLoading()"
-    (onItemSelect)="onSelect()"
+    [isManuallyHidden]="isResultListManuallyHidden()"
+    (onItemSelect)="onSelect($event)"
   />
 </div>

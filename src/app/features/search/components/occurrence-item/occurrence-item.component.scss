@@ -18,7 +18,7 @@ $thumbnail-size: 70px;
   transition: all 0.25s ease;
 
   &:hover {
-    background-color: scolor.scale($color: red, $alpha: 10%);
+    background-color: scolor.change(color.$neutral-base, $alpha: 40%);
   }
 
   &:active {

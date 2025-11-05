@@ -9,3 +9,16 @@
   padding: 1rem;
   z-index: 10000;
 }
+
+.map-search-top {
+  z-index: 10000;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width:90%;
+
+  @media (min-width: 768px) {
+    width:70%;
+    max-width: 500px;
+  }
+}

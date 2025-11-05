@@ -23,9 +23,10 @@ import { IconComponent } from '../../../../components/icon/icon.component';
 })
 export class SearchFormComponent {
   isActive = input(false);
+  defaultTerm = input('');
 
   searchForm = new FormGroup({
-    query: new FormControl<string>('', [
+    query: new FormControl<string>(this.defaultTerm(), [
       Validators.required,
       Validators.minLength(3),
     ]),
@@ -33,9 +34,21 @@ export class SearchFormComponent {
 
   onSearch = output<string>();
 
+  onSearchTermChange = output();
+
+  onSearchTermFocus = output();
+
   @ViewChild('searchInput') searchInputRef!: ElementRef<HTMLInputElement>;
 
   constructor() {
+    effect(() => {
+      if (this.defaultTerm()) {
+        this.searchForm.patchValue({
+          query: this.defaultTerm(),
+        });
+      }
+    });
+
     effect(() => {
       if (this.isActive() && this.searchInputRef) {
         this.searchInputRef.nativeElement.focus();
@@ -59,11 +72,19 @@ export class SearchFormComponent {
     return this.searchForm.get('query');
   }
 
+  onQueryChange() {
+    this.onSearchTermChange.emit();
+  }
+
+  onQueryFocus() {
+    this.onSearchTermFocus.emit();
+  }
+
   onSubmit() {
     if (!this.query?.value) return;
 
     this.validateTerm(this.query.value).subscribe((term) => {
-      this.onSearch.emit(term);
+      if (term) this.onSearch.emit(term);
     });
   }
 

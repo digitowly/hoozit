@@ -20,7 +20,7 @@ export class HttpErrorService {
       return onError('Server error: Please try again later');
     }
 
-    console.error('Error fetching occurrences:', err);
+    console.error('Error: ', err);
     return onError('Services is currently unavailable');
   }
 }

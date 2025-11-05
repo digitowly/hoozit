@@ -6,6 +6,8 @@
       type="text"
       placeholder="E.g tawny owl, duck..."
       formControlName="query"
+      (keydown)="onQueryChange()"
+      (focus)="onQueryFocus()"
     />
     <button type="submit" [disabled]="!searchForm.valid || searchForm.pending">
       <app-icon name="search" size="size-medium" color="color-neutral-light" />

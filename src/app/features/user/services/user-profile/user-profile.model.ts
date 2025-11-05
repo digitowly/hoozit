@@ -1,5 +1,7 @@
 export interface UserProfileResponse {
-  id: number;
   email: string;
+  nickname: string;
   image: string;
+  expertise_tier: string;
+  account_tier: string;
 }

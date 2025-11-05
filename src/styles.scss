@@ -30,6 +30,6 @@ body {
   object-fit: cover;
 }
 
-.leaflet-control-attribution {
+.leaflet-control-attribution, .leaflet-control-zoom {
   display: none;
 }

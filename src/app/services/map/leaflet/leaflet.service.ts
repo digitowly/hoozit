@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Coordinate } from '../../../model/coordinate';
 import { MapService, Marker } from '../map-service';
 import * as L from 'leaflet';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class LeafletService extends MapService {
   private map: L.Map | null = null;
+  override selectedMarker = signal<Marker | null>(null);
 
   override init(coordinate: Coordinate, zoom: number = 13) {
     if (this.map) {
@@ -43,7 +42,12 @@ export class LeafletService extends MapService {
           shadowSize: [41, 41],
         }),
       )
+      .on('click', () => this.onMarkerClick(marker))
       .bindPopup(marker.content);
+  }
+
+  override onMarkerClick(marker: Marker) {
+    this.selectedMarker.set(marker);
   }
 
   override removeMarkers() {

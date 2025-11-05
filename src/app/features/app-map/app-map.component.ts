@@ -53,26 +53,6 @@ export class AppMapComponent {
           });
         });
       }
-
-      // if (this.map) {
-      //   L.rectangle(
-      //     [
-      //       [
-      //         this.userLocation.coordinate().latitude - 0.03,
-      //         this.userLocation.coordinate().longitude - 0.03,
-      //       ],
-      //       [
-      //         this.userLocation.coordinate().latitude + 0.03,
-      //         this.userLocation.coordinate().longitude + 0.03,
-      //       ],
-      //     ],
-      //     {
-      //       color: '#00bb89ff',
-      //       fillColor: '#00ffbbff',
-      //       fillOpacity: 0.1,
-      //     }
-      //   ).addTo(this.map);
-      // }
     });
   }
 }

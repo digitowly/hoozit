@@ -49,7 +49,13 @@ describe('OccurrenceSearchComponent', () => {
     );
     const listCmp = listDE.componentInstance as SearchResultListComponent;
 
-    listCmp.onItemSelect.emit();
+    listCmp.onItemSelect.emit({
+      id: 1,
+      name: 'Fox',
+      binomial_name: 'Vulpes vulpes',
+      thumbnail: 't.jpg',
+      gbif_key: '1',
+    });
 
     expect(called).toBe(1);
   });
