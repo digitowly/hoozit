@@ -6,9 +6,9 @@ $link-size: 52px;
   position: fixed;
   bottom: 1rem;
   right: 1rem;
-  max-height: 65px;
+  max-height: 70px;
 
-  background: white;
+  background-color: var(--color-background-overlay);
   border-radius: 1.5rem;
   box-shadow: 0 2px 4px color.$shadow;
   z-index: 10000;
@@ -28,8 +28,8 @@ $link-size: 52px;
     align-items: center;
 
     p {
-      font-size: 0.65rem;
-      padding-top: 0.1rem;
+      font-size: 0.75rem;
+      padding-top: 0.4rem;
       line-height: 0;
     }
   }
@@ -46,7 +46,7 @@ $link-size: 52px;
     li {
       a {
         text-decoration: none;
-        color: black;
+        color: var(--text-color);
         font-weight: bold;
         position: relative;
         width: $link-size;
@@ -71,7 +71,7 @@ $link-size: 52px;
   height:$link-size;
   border-radius: 50%;
   position: absolute;
-  left: calc($link-size / 4 );
+  left: calc($link-size / 3.75 );
   top: calc($link-size / 4  * -1);;
   transform: translateX(-50%) scale(0);
 }

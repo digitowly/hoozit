@@ -8,7 +8,8 @@ $thumbnail-size: 70px;
   display: flex;
   align-items: center;
   border-radius: border.$radius;
-  background-color: color.$neutral-light;
+  background-color: var(--color-background);
+  color: var(--color-text);
   margin-bottom: 0.5rem;
   height: $thumbnail-size;
   cursor: pointer;
@@ -18,11 +19,12 @@ $thumbnail-size: 70px;
   transition: all 0.25s ease;
 
   &:hover {
-    background-color: scolor.change(color.$neutral-base, $alpha: 40%);
+    background-color: var(--color-background-overlay);
   }
 
   &:active {
-    background-color: color.$neutral-base;
+    background-color: var(--color-background-overlay);
+    opacity: 0.75;
   }
 
   .details {

@@ -16,7 +16,8 @@ $nature-dark:   #2a8f4e;   // forest tone
 // ---------- Neutral ----------
 $neutral-light: #f5f7f8;   // soft background
 $neutral-base:  #dce1e3;   // card / surface
-$neutral-dark:  #3a4750;   // text / outlines
+$neutral-dark: #2e3a3e;   // text / outlines
+$neutral-night: #1b2124;   // text / outlines
 
 // ---------- Semantic ----------
 $success: #3ecf8e;  // positive / confirmation
@@ -31,3 +32,17 @@ $overlay: rgba(0, 0, 0, 0.3);
 // ---------- Example Gradients ----------
 $gradient-primary: linear-gradient(135deg, $primary-base, $accent-base);
 $gradient-forest: linear-gradient(135deg, $nature-base, $primary-base);
+
+// ---------- Theme ----------
+
+html[data-theme="light"] {
+  --color-text: #{$neutral-night};
+  --color-background: #{$neutral-light};
+  --color-background-overlay: #{$neutral-dark};
+}
+
+html[data-theme="dark"] {
+  --color-text: #{$neutral-light};
+  --color-background: #{$neutral-night};
+  --color-background-overlay: #{$neutral-dark};
+}

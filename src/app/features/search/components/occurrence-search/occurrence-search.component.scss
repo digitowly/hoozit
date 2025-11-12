@@ -6,7 +6,7 @@
   flex-direction: column;
   box-shadow: 0 2px 4px color.$shadow;
   border-radius: border.$radius;
-  background-color: color.$neutral-light;
+  background-color: var(--color-background);
 
   .results-container {
     padding: 0.5rem;

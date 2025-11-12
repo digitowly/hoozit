@@ -15,7 +15,7 @@
   position: absolute;
   top: 1rem;
   left: 1rem;
-  width:90%;
+  width: calc(100% - 32px);
 
   @media (min-width: 768px) {
     width:70%;

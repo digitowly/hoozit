@@ -1,4 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
+@use "./app/style/color";
+
 @import url("leaflet/dist/leaflet.css");
 
 @font-face {
@@ -19,6 +20,8 @@
 body {
   padding: 0;
   margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 .marker-icon {

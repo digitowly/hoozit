@@ -8,11 +8,11 @@
 
 .color {
   &-primary-dark {
-    color: color.$primary-dark;
+    color: var(--color-text);
   }
 
   &-neutral-light {
-    color: color.$neutral-light;
+    color: var(--color-text);
   }
 }
 
