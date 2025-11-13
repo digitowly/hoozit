@@ -45,11 +45,8 @@ export class SearchResultListComponent {
   private calculateHeight(): string {
     if (!this.list().length) return 'auto';
     const distanceToBottom = this.calculateDistanceToBottom();
-    const listHeight = this.list().length * 78;
-
-    return listHeight > distanceToBottom
-      ? distanceToBottom - 16 + 'px'
-      : 'auto';
+    const listHeight = this.list().length * 80;
+    return listHeight > distanceToBottom ? distanceToBottom - 8 + 'px' : 'auto';
   }
 
   private calculateDistanceToBottom(): number {

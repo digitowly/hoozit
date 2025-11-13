@@ -1,0 +1,65 @@
+@use '../../style/color' ;
+
+.toggle-button-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  cursor: pointer;
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .slider {
+      background-color: color.$info;
+
+      &:before {
+        transform: translateX(20px);
+      }
+    }
+
+    &:focus + .slider {
+      box-shadow: 0 0 1px color.$info;
+    }
+  }
+
+  .slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 10px;
+    transition: .3s;
+
+    &:before {
+      content: "";
+      position: absolute;
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      border-radius: 50%;
+      transition: .3s;
+    }
+  }
+}
+
+.toggle-label {
+  font-size: 14px;
+}

@@ -1,3 +1,5 @@
+@use "../../style/layout";
+
 .map-trigger-row {
   display: flex;
   justify-content: center;
@@ -13,8 +15,8 @@
 .map-search-top {
   z-index: 10000;
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: layout.$safe-area-inset;
+  left: layout.$safe-area-inset;
   width: calc(100% - 32px);
 
   @media (min-width: 768px) {

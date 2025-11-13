@@ -1,11 +1,12 @@
 @use "../../style/color";
+@use "../../style/layout";
 
 $link-size: 52px;
 
 .navigation {
   position: fixed;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: layout.$safe-area-inset;
+  right: layout.$safe-area-inset;
   max-height: 70px;
 
   background-color: var(--color-background-overlay);
@@ -14,32 +15,37 @@ $link-size: 52px;
   z-index: 10000;
 
   @media (min-width: 768px) {
-    top: 1rem;
-    right: 1rem;
+    top: layout.$safe-area-inset;
+    right: layout.$safe-area-inset;
   }
 
   nav {
     padding: 0.75rem 1rem;
   }
 
+
+
   &-item {
     display: flex;
+    position: relative;
     flex-direction: column;
     align-items: center;
 
     p {
-      font-size: 0.75rem;
-      padding-top: 0.4rem;
+      font-size: 0.7rem;
+      padding-top: 0.3rem;
       line-height: 0;
     }
   }
+
+
 
 
   ul {
     display: flex;
     justify-content: space-between;
     list-style: none;
-    gap: 2rem;
+    gap: 1.5rem;
     margin: 0;
     padding: 0;
 
@@ -51,9 +57,18 @@ $link-size: 52px;
         position: relative;
         width: $link-size;
         height: $link-size;
+        opacity: 0.6;
+
+        &:link, &:visited, &:active, &:hover {
+          text-decoration: none;
+        }
 
         &:hover {
-          text-decoration: underline;
+          opacity: 1;
+        }
+
+        &.active {
+          opacity: 1;
         }
       }
     }
@@ -63,22 +78,26 @@ $link-size: 52px;
 .navigation-icon {
   position: relative;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc($link-size / 2 );
 }
 
 .highlighter {
-  transition: all 0.2s ease-in;
+  transition: all 0.25s ease-in;
   width: $link-size;
   height:$link-size;
-  border-radius: 50%;
+  border-radius: 35%;
   position: absolute;
-  left: calc($link-size / 3.75 );
-  top: calc($link-size / 4  * -1);;
-  transform: translateX(-50%) scale(0);
+  top: calc($link-size / 4  * -1);
+  transform: scale(0);
+  opacity: 0.5;
 }
 
 .active {
   & .highlighter {
-    transform: translateX(-50%) scale(.7);
-    background-color: color.$nature-light;
+    transform: scale(.7);
+    background-color: color.$primary-base;
   }
 }

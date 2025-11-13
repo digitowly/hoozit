@@ -135,7 +135,7 @@ describe('SearchResultListComponent', () => {
       fixture.componentRef.setInput('list', items);
 
       const result = (component as any).calculateHeight();
-      expect(result).toBe('884px');
+      expect(result).toBe('892px');
     });
   });
 });

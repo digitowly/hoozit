@@ -1,0 +1,13 @@
+<div class="toggle-button-container">
+  <label class="toggle-switch" [class.disabled]="disabled()">
+    <input
+      type="checkbox"
+      [formControl]="toggleControl"
+      (change)="onToggleChange()"
+    />
+    <span class="slider"></span>
+  </label>
+  @if (label()) {
+    <span class="toggle-label">{{ label() }}</span>
+  }
+</div>

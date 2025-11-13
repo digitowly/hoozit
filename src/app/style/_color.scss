@@ -1,5 +1,5 @@
 // ---------- Brand ----------
-$primary-light: #58d1cc;   // teal highlight
+$primary-light: #4baba7;   // teal highlight
 $primary-base:  #127c7e;   // main teal
 $primary-dark:  #0c3440;   // deep contrast
 
@@ -38,7 +38,7 @@ $gradient-forest: linear-gradient(135deg, $nature-base, $primary-base);
 html[data-theme="light"] {
   --color-text: #{$neutral-night};
   --color-background: #{$neutral-light};
-  --color-background-overlay: #{$neutral-dark};
+  --color-background-overlay: #{$neutral-light};
 }
 
 html[data-theme="dark"] {
