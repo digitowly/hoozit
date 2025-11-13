@@ -14,3 +14,8 @@ ng build
 # run tests
 ng test
 ```
+## Credit
+
+### Icons
+
+[Angular Icons](https://www.angularicons.com/)
