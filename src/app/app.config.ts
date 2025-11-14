@@ -1,4 +1,7 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 import {
   provideRouter,
   RouteReuseStrategy,
@@ -11,7 +14,7 @@ import { CustomRouteReuseStrategy } from './route-reuse-strategy';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZonelessChangeDetection(),
     provideHttpClient(),
     provideRouter(routes, withViewTransitions()),
     { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy },

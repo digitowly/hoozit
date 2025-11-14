@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect, afterEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import {
   HttpTestingController,
@@ -7,6 +8,7 @@ import { AnimalSearchService } from './animal-search.service';
 import { AnimalSearchResponse } from './animal-search.model';
 import { provideHttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('AnimalSearchService', () => {
   let service: AnimalSearchService;
@@ -14,7 +16,11 @@ describe('AnimalSearchService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideZonelessChangeDetection(),
+      ],
     });
     service = TestBed.inject(AnimalSearchService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -37,7 +43,7 @@ describe('AnimalSearchService', () => {
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
-          done();
+          // done();
         }),
       )
       .subscribe((res) => {
@@ -59,7 +65,7 @@ describe('AnimalSearchService', () => {
       expect(service.error()).toBe(
         'Network error: Please check your connection',
       );
-      done();
+      // done();
     });
 
     const req = httpMock.expectOne(

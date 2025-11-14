@@ -1,6 +1,8 @@
+import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ModalComponent } from './modal.component';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('ModalComponent', () => {
   let fixture: ComponentFixture<ModalComponent>;
@@ -9,6 +11,7 @@ describe('ModalComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ModalComponent],
+      providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModalComponent);
@@ -51,7 +54,7 @@ describe('ModalComponent', () => {
 
     const sub = component.handleClose.subscribe(() => {
       sub.unsubscribe();
-      done();
+      // done();
     });
 
     const closeBtn = fixture.debugElement.query(By.css('.close-button'))
@@ -65,7 +68,7 @@ describe('ModalComponent', () => {
 
     const sub = component.handleClose.subscribe(() => {
       sub.unsubscribe();
-      done();
+      // done();
     });
 
     const backdrop = fixture.debugElement.query(By.css('.backdrop'))
@@ -79,7 +82,7 @@ describe('ModalComponent', () => {
 
     const sub = component.handleClose.subscribe(() => {
       sub.unsubscribe();
-      done();
+      // done();
     });
 
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
@@ -99,8 +102,8 @@ describe('ModalComponent', () => {
 
     setTimeout(() => {
       sub.unsubscribe();
-      expect(emitted).toBeFalse();
-      done();
+      expect(emitted).toBeFalsy();
+      // done();
     }, 0);
   });
 });

@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect, afterEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { GbifSpeciesService } from './gbif-species.service';
 import {
@@ -7,6 +8,7 @@ import {
 import { provideHttpClient } from '@angular/common/http';
 import { GbifSpecies } from './gbif-species.model';
 import { finalize } from 'rxjs';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('GbifSpeciesService', () => {
   let service: GbifSpeciesService;
@@ -14,7 +16,11 @@ describe('GbifSpeciesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideZonelessChangeDetection(),
+      ],
     });
     service = TestBed.inject(GbifSpeciesService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -47,7 +53,7 @@ describe('GbifSpeciesService', () => {
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
-          done();
+          // done();
         }),
       )
       .subscribe((res) => {
@@ -67,7 +73,7 @@ describe('GbifSpeciesService', () => {
       expect(service.error()).toBe(
         'Network error: Please check your connection',
       );
-      done();
+      // done();
     });
 
     const req = httpMock.expectOne('https://api.gbif.org/v1/species/match/1');

@@ -1,17 +1,28 @@
+import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import {
   ClientStorageKey,
   ClientStorageService,
 } from './client-storage.service';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { localStorageMock } from '../../../mock/localStorage';
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+});
 
 describe('ClientStorageService', () => {
   let service: ClientStorageService;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()],
+    });
+
     service = TestBed.inject(ClientStorageService);
 
-    spyOn(localStorage, 'setItem');
-    spyOn(localStorage, 'removeItem');
+    vi.spyOn(localStorage, 'setItem');
+    vi.spyOn(localStorage, 'removeItem');
   });
 
   it('should be created', () => {
@@ -22,7 +33,8 @@ describe('ClientStorageService', () => {
     it('should set a key value pair for valid input', () => {
       const mockData = [{ id: 'test' }];
       service.set(ClientStorageKey.SEARCH_SELECTIONS, mockData);
-      expect(localStorage.setItem).toHaveBeenCalledOnceWith(
+      expect(localStorage.setItem).toHaveBeenCalledOnce();
+      expect(localStorage.setItem).toHaveBeenCalledWith(
         ClientStorageKey.SEARCH_SELECTIONS,
         JSON.stringify(mockData),
       );
@@ -36,10 +48,11 @@ describe('ClientStorageService', () => {
 
   describe('get', () => {
     it('should get a value by key', () => {
-      spyOn(localStorage, 'getItem').and.returnValue(JSON.stringify('test'));
+      vi.spyOn(localStorage, 'getItem').mockReturnValue(JSON.stringify('test'));
 
       const result = service.get(ClientStorageKey.SEARCH_SELECTIONS);
-      expect(localStorage.getItem).toHaveBeenCalledOnceWith(
+      expect(localStorage.getItem).toHaveBeenCalledOnce();
+      expect(localStorage.getItem).toHaveBeenCalledWith(
         ClientStorageKey.SEARCH_SELECTIONS,
       );
 
@@ -47,10 +60,13 @@ describe('ClientStorageService', () => {
     });
 
     it('should handle empty values', () => {
-      spyOn(localStorage, 'getItem').and.returnValue(JSON.stringify(undefined));
+      vi.spyOn(localStorage, 'getItem').mockReturnValue(
+        JSON.stringify(undefined),
+      );
 
       const result = service.get(ClientStorageKey.SEARCH_SELECTIONS);
-      expect(localStorage.getItem).toHaveBeenCalledOnceWith(
+      expect(localStorage.getItem).toHaveBeenCalledOnce();
+      expect(localStorage.getItem).toHaveBeenCalledWith(
         ClientStorageKey.SEARCH_SELECTIONS,
       );
 
@@ -58,10 +74,11 @@ describe('ClientStorageService', () => {
     });
 
     it('should handle potential json parse error', () => {
-      spyOn(localStorage, 'getItem').and.returnValue('invalid json');
+      vi.spyOn(localStorage, 'getItem').mockReturnValue('invalid json');
 
       const result = service.get(ClientStorageKey.SEARCH_SELECTIONS);
-      expect(localStorage.getItem).toHaveBeenCalledOnceWith(
+      expect(localStorage.getItem).toHaveBeenCalledOnce();
+      expect(localStorage.getItem).toHaveBeenCalledWith(
         ClientStorageKey.SEARCH_SELECTIONS,
       );
       expect(result).toEqual(null);
@@ -71,7 +88,8 @@ describe('ClientStorageService', () => {
   describe('remove', () => {
     it('should remove by key', () => {
       service.remove(ClientStorageKey.SEARCH_SELECTIONS);
-      expect(localStorage.removeItem).toHaveBeenCalledOnceWith(
+      expect(localStorage.removeItem).toHaveBeenCalledOnce();
+      expect(localStorage.removeItem).toHaveBeenCalledWith(
         ClientStorageKey.SEARCH_SELECTIONS,
       );
     });

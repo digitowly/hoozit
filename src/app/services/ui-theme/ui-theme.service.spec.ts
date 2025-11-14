@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect } from 'vitest';
 import { UiThemeService } from './ui-theme.service';
 
 function clearThemeCookie() {

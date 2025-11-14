@@ -1,12 +1,13 @@
+import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { HttpErrorService } from './http-error.service';
 
 describe('HttpErrorService', () => {
   let service: HttpErrorService;
-  let onErrorSpy: jasmine.Spy;
+  const onErrorSpy = vi.fn();
 
   beforeEach(() => {
     service = new HttpErrorService();
-    onErrorSpy = jasmine.createSpy('onError');
+    // onErrorSpy = jasmine.createSpy('onError');
   });
 
   it('should handle network error (status 0)', () => {
