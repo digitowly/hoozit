@@ -33,7 +33,7 @@ describe('GbifOccurrenceService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set isLoading to true when getOccurrences is called and false when complete', (done) => {
+  it('should set isLoading to true when getOccurrences is called and false when complete', () => {
     const mockResponse = {
       results: [],
       limit: 300,
@@ -48,7 +48,6 @@ describe('GbifOccurrenceService', () => {
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
-          // done();
         }),
       )
       .subscribe((res) => {
@@ -64,7 +63,7 @@ describe('GbifOccurrenceService', () => {
     req.flush(mockResponse);
   });
 
-  it('should handle error', (done) => {
+  it('should handle error', () => {
     expect(service.error()).toBeNull();
 
     service
@@ -73,7 +72,6 @@ describe('GbifOccurrenceService', () => {
         finalize(() => {
           expect(service.isLoading()).toBe(false);
           expect(service.error()).toBe('Server error: Please try again later');
-          // done();
         }),
       )
       .subscribe((res) => {

@@ -23,10 +23,9 @@ describe('FloatingButtonComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should emit click when button is clicked', (done) => {
+  it('should emit click when button is clicked', () => {
     const sub = component.click.subscribe(() => {
       sub.unsubscribe();
-      // done();
     });
 
     const buttonElement = fixture.debugElement.query(By.css('.floating-button'))

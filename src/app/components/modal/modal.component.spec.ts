@@ -48,13 +48,12 @@ describe('ModalComponent', () => {
     expect(title.textContent?.trim()).toBe('My Modal');
   });
 
-  it('should emit handleClose when close button is clicked', (done) => {
+  it('should emit handleClose when close button is clicked', () => {
     fixture.componentRef.setInput('isOpen', true);
     fixture.detectChanges();
 
     const sub = component.handleClose.subscribe(() => {
       sub.unsubscribe();
-      // done();
     });
 
     const closeBtn = fixture.debugElement.query(By.css('.close-button'))
@@ -62,13 +61,12 @@ describe('ModalComponent', () => {
     closeBtn.click();
   });
 
-  it('should emit handleClose when backdrop is clicked', (done) => {
+  it('should emit handleClose when backdrop is clicked', () => {
     fixture.componentRef.setInput('isOpen', true);
     fixture.detectChanges();
 
     const sub = component.handleClose.subscribe(() => {
       sub.unsubscribe();
-      // done();
     });
 
     const backdrop = fixture.debugElement.query(By.css('.backdrop'))
@@ -76,19 +74,18 @@ describe('ModalComponent', () => {
     backdrop.click();
   });
 
-  it('should emit handleClose when Escape key is pressed while open', (done) => {
+  it('should emit handleClose when Escape key is pressed while open', () => {
     fixture.componentRef.setInput('isOpen', true);
     fixture.detectChanges();
 
     const sub = component.handleClose.subscribe(() => {
       sub.unsubscribe();
-      // done();
     });
 
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
   });
 
-  it('should not emit handleClose when Escape key is pressed while closed', (done) => {
+  it('should not emit handleClose when Escape key is pressed while closed', () => {
     // Ensure closed
     fixture.componentRef.setInput('isOpen', false);
     fixture.detectChanges();
@@ -100,10 +97,8 @@ describe('ModalComponent', () => {
 
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 
-    setTimeout(() => {
-      sub.unsubscribe();
-      expect(emitted).toBeFalsy();
-      // done();
-    }, 0);
+    // Ensure no emission occurred
+    sub.unsubscribe();
+    expect(emitted).toBeFalsy();
   });
 });

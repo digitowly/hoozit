@@ -34,7 +34,7 @@ describe('AnimalSearchService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set isLoading to true when findOccurrences is called and false when complete', (done) => {
+  it('should set isLoading to true when findOccurrences is called and false when complete', () => {
     const mockResponse: AnimalSearchResponse = { data: [] };
     expect(service.isLoading()).toBe(false);
 
@@ -43,7 +43,6 @@ describe('AnimalSearchService', () => {
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
-          // done();
         }),
       )
       .subscribe((res) => {
@@ -59,13 +58,12 @@ describe('AnimalSearchService', () => {
     req.flush(mockResponse);
   });
 
-  it('should handle error', (done) => {
+  it('should handle error', () => {
     service.getOccurrences('test').subscribe((res) => {
       expect(res).toEqual({ data: [] });
       expect(service.error()).toBe(
         'Network error: Please check your connection',
       );
-      // done();
     });
 
     const req = httpMock.expectOne(

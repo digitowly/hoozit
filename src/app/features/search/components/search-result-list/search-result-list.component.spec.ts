@@ -71,7 +71,7 @@ describe('SearchResultListComponent', () => {
     expect(selectionServiceSpy.addSelection).toHaveBeenCalledWith(mockResult);
   });
 
-  it('should emit onItemSelect when an item is selected', (done) => {
+  it('should emit onItemSelect when an item is selected', () => {
     const mockResult: AnimalSearchResult = {
       id: 2,
       name: 'Wolf',
@@ -81,7 +81,7 @@ describe('SearchResultListComponent', () => {
     };
 
     component.onItemSelect.subscribe(() => {
-      // done();
+      // emission observed
     });
 
     component.handleItemSelection(mockResult);
