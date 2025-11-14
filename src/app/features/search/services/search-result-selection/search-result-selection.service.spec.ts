@@ -1,13 +1,15 @@
+import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { ClientStorageService } from '../../../../services/client-storage/client-storage.service';
 import { SearchResultSelectionService } from './search-result-selection.service';
 import { TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('SearchResultSelectionService', () => {
   let service: SearchResultSelectionService;
 
   const mockClientStorageService = {
-    set: jasmine.createSpy('set'),
-    get: jasmine.createSpy('get').and.returnValue([]),
+    set: vi.fn(),
+    get: vi.fn().mockReturnValue([]),
   };
 
   const mockSelection = {
@@ -31,6 +33,7 @@ describe('SearchResultSelectionService', () => {
       providers: [
         SearchResultSelectionService,
         { provide: ClientStorageService, useValue: mockClientStorageService },
+        provideZonelessChangeDetection(),
       ],
     });
     service = TestBed.inject(SearchResultSelectionService);

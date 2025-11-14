@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect, afterEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { GbifSpeciesService } from './gbif-species.service';
 import {
@@ -7,6 +8,7 @@ import {
 import { provideHttpClient } from '@angular/common/http';
 import { GbifSpecies } from './gbif-species.model';
 import { finalize } from 'rxjs';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('GbifSpeciesService', () => {
   let service: GbifSpeciesService;
@@ -14,7 +16,11 @@ describe('GbifSpeciesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideZonelessChangeDetection(),
+      ],
     });
     service = TestBed.inject(GbifSpeciesService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -28,7 +34,7 @@ describe('GbifSpeciesService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set isLoading to true when getSpecies is called and false when complete', (done) => {
+  it('should set isLoading to true when getSpecies is called and false when complete', () => {
     const mockResponse: GbifSpecies = {
       usage: {
         key: '1',
@@ -47,7 +53,6 @@ describe('GbifSpeciesService', () => {
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
-          done();
         }),
       )
       .subscribe((res) => {
@@ -61,13 +66,12 @@ describe('GbifSpeciesService', () => {
     req.flush(mockResponse);
   });
 
-  it('should handle error', (done) => {
+  it('should handle error', () => {
     service.get(1).subscribe((res) => {
       expect(res).toBeNull();
       expect(service.error()).toBe(
         'Network error: Please check your connection',
       );
-      done();
     });
 
     const req = httpMock.expectOne('https://api.gbif.org/v1/species/match/1');

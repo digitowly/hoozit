@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "habinaut-angular": {
+    "hoozit": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,12 +17,9 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/habinaut-angular",
+            "outputPath": "dist/hoozit",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -71,10 +68,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "habinaut-angular:build:production"
+              "buildTarget": "hoozit:build:production"
             },
             "development": {
-              "buildTarget": "habinaut-angular:build:development"
+              "buildTarget": "hoozit:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,31 +80,12 @@
           "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
+            "runner": "vitest",
+            "buildTarget": "hoozit:build:development",
             "codeCoverage": true,
-            "fileReplacements": [
-              {
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.development.ts"
-              }
-            ],
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
-            "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "scripts": []
+            "tsConfig": "tsconfig.spec.json"
           }
         }
       }

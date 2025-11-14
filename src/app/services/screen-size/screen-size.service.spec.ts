@@ -1,14 +1,19 @@
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { describe, beforeEach, it, expect, vi } from 'vitest';
+import { TestBed } from '@angular/core/testing';
 import { ScreenSize, ScreenSizeService } from './screen-size.service';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('ScreenSizeService', () => {
   let service: ScreenSizeService;
   let innerWidth: number;
 
   beforeEach(() => {
-    spyOnProperty(window, 'innerWidth', 'get').and.callFake(() => innerWidth);
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()],
+    });
 
-    TestBed.configureTestingModule({});
+    vi.spyOn(window, 'innerWidth', 'get').mockImplementation(() => innerWidth);
+
     service = TestBed.inject(ScreenSizeService);
   });
 
@@ -20,7 +25,7 @@ describe('ScreenSizeService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should initialize size based on current window width', fakeAsync(() => {
+  it('should initialize size based on current window width', () => {
     resizeTo(500);
     service.handleResize();
     expect(service.size()).toBe(ScreenSize.SMALL);
@@ -32,5 +37,5 @@ describe('ScreenSizeService', () => {
     resizeTo(1400);
     service.handleResize();
     expect(service.size()).toBe(ScreenSize.LARGE);
-  }));
+  });
 });

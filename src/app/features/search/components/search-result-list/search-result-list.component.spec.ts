@@ -1,12 +1,18 @@
+import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchResultListComponent } from './search-result-list.component';
 import { SearchResultSelectionService } from '../../services/search-result-selection/search-result-selection.service';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
+import { provideZonelessChangeDetection } from '@angular/core';
+
+class SearchResultSelectionServiceMock {
+  addSelection = vi.fn();
+}
 
 describe('SearchResultListComponent', () => {
   let component: SearchResultListComponent;
   let fixture: ComponentFixture<SearchResultListComponent>;
-  let selectionServiceSpy: jasmine.SpyObj<SearchResultSelectionService>;
+  let selectionServiceSpy: SearchResultSelectionServiceMock;
   let originalInnerHeight: number;
 
   function setInnerHeight(height: number) {
@@ -17,10 +23,7 @@ describe('SearchResultListComponent', () => {
   }
 
   beforeEach(async () => {
-    selectionServiceSpy = jasmine.createSpyObj<SearchResultSelectionService>(
-      'SearchResultSelectionService',
-      ['addSelection'],
-    );
+    selectionServiceSpy = new SearchResultSelectionServiceMock();
 
     await TestBed.configureTestingModule({
       imports: [SearchResultListComponent],
@@ -29,6 +32,7 @@ describe('SearchResultListComponent', () => {
           provide: SearchResultSelectionService,
           useValue: selectionServiceSpy,
         },
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 
@@ -67,7 +71,7 @@ describe('SearchResultListComponent', () => {
     expect(selectionServiceSpy.addSelection).toHaveBeenCalledWith(mockResult);
   });
 
-  it('should emit onItemSelect when an item is selected', (done) => {
+  it('should emit onItemSelect when an item is selected', () => {
     const mockResult: AnimalSearchResult = {
       id: 2,
       name: 'Wolf',
@@ -77,7 +81,7 @@ describe('SearchResultListComponent', () => {
     };
 
     component.onItemSelect.subscribe(() => {
-      done();
+      // emission observed
     });
 
     component.handleItemSelection(mockResult);

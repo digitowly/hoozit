@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect, afterEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { GbifOccurrenceService } from './gbif-occurrence.service';
 import {
@@ -6,6 +7,7 @@ import {
 } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('GbifOccurrenceService', () => {
   let service: GbifOccurrenceService;
@@ -13,7 +15,11 @@ describe('GbifOccurrenceService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideZonelessChangeDetection(),
+      ],
     });
     service = TestBed.inject(GbifOccurrenceService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -27,7 +33,7 @@ describe('GbifOccurrenceService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set isLoading to true when getOccurrences is called and false when complete', (done) => {
+  it('should set isLoading to true when getOccurrences is called and false when complete', () => {
     const mockResponse = {
       results: [],
       limit: 300,
@@ -42,7 +48,6 @@ describe('GbifOccurrenceService', () => {
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
-          done();
         }),
       )
       .subscribe((res) => {
@@ -58,7 +63,7 @@ describe('GbifOccurrenceService', () => {
     req.flush(mockResponse);
   });
 
-  it('should handle error', (done) => {
+  it('should handle error', () => {
     expect(service.error()).toBeNull();
 
     service
@@ -67,7 +72,6 @@ describe('GbifOccurrenceService', () => {
         finalize(() => {
           expect(service.isLoading()).toBe(false);
           expect(service.error()).toBe('Server error: Please try again later');
-          done();
         }),
       )
       .subscribe((res) => {

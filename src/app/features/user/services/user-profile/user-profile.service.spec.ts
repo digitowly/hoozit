@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect, afterEach } from 'vitest';
 import { UserProfileService } from './user-profile.service';
 import {
   HttpTestingController,
@@ -6,6 +7,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { UserProfileResponse } from './user-profile.model';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 const mockUserResponse: UserProfileResponse = {
   email: 'mockuser@mail.com',
@@ -21,7 +23,11 @@ describe('UserProfileService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideZonelessChangeDetection(),
+      ],
     });
     service = TestBed.inject(UserProfileService);
     httpMock = TestBed.inject(HttpTestingController);

@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect, afterEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import {
   HttpTestingController,
@@ -7,6 +8,7 @@ import { AnimalSearchService } from './animal-search.service';
 import { AnimalSearchResponse } from './animal-search.model';
 import { provideHttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('AnimalSearchService', () => {
   let service: AnimalSearchService;
@@ -14,7 +16,11 @@ describe('AnimalSearchService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideZonelessChangeDetection(),
+      ],
     });
     service = TestBed.inject(AnimalSearchService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -28,7 +34,7 @@ describe('AnimalSearchService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set isLoading to true when findOccurrences is called and false when complete', (done) => {
+  it('should set isLoading to true when findOccurrences is called and false when complete', () => {
     const mockResponse: AnimalSearchResponse = { data: [] };
     expect(service.isLoading()).toBe(false);
 
@@ -37,7 +43,6 @@ describe('AnimalSearchService', () => {
       .pipe(
         finalize(() => {
           expect(service.isLoading()).toBe(false);
-          done();
         }),
       )
       .subscribe((res) => {
@@ -53,13 +58,12 @@ describe('AnimalSearchService', () => {
     req.flush(mockResponse);
   });
 
-  it('should handle error', (done) => {
+  it('should handle error', () => {
     service.getOccurrences('test').subscribe((res) => {
       expect(res).toEqual({ data: [] });
       expect(service.error()).toBe(
         'Network error: Please check your connection',
       );
-      done();
     });
 
     const req = httpMock.expectOne(

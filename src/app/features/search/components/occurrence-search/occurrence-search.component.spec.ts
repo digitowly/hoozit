@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { OccurrenceSearchComponent } from './occurrence-search.component';
@@ -6,6 +7,12 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { SearchFormComponent } from '../search-form/search-form.component';
 import { SearchResultListComponent } from '../search-result-list/search-result-list.component';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { localStorageMock } from '../../../../../mock/localStorage';
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+});
 
 describe('OccurrenceSearchComponent', () => {
   let component: OccurrenceSearchComponent;
@@ -14,7 +21,11 @@ describe('OccurrenceSearchComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OccurrenceSearchComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideZonelessChangeDetection(),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OccurrenceSearchComponent);
@@ -93,8 +104,8 @@ describe('OccurrenceSearchComponent', () => {
     );
     const listCmp = listDE.componentInstance as SearchResultListComponent;
 
-    expect(searchFormCmp.isActive()).toBeTrue();
-    expect(listCmp.isLoading()).toBeTrue();
+    expect(searchFormCmp.isActive()).toBeTruthy();
+    expect(listCmp.isLoading()).toBeTruthy();
     expect(listCmp.list()).toEqual(occurrences);
   });
 });

@@ -1,4 +1,4 @@
-# Habinaut
+# Hoozit
 
 ```bash
 # serve for development with hot reload

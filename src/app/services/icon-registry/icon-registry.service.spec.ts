@@ -1,12 +1,18 @@
+import { describe, beforeEach, it, expect } from 'vitest';
 import { IconRegistryService } from './icon-registry.service';
 import { TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('IconRegistryService', () => {
   let service: IconRegistryService;
   let sanitizer: DomSanitizer;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()],
+    });
+
     service = TestBed.inject(IconRegistryService);
     sanitizer = TestBed.inject(DomSanitizer);
   });
