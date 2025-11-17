@@ -15,6 +15,7 @@ export class OccurrenceSearchComponent {
   isLoading = input(false);
   isActive = input(false);
   isResultListManuallyHidden = signal(false);
+  isResultListVisible = signal(false);
   onResultSelection = output();
   onSearch = output<string>();
 

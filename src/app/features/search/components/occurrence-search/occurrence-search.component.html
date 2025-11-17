@@ -2,15 +2,17 @@
   <search-form
     [defaultTerm]="defaultTerm()"
     [isActive]="isActive()"
+    [isResultListVisible]="isResultListVisible()"
     (onSearch)="handleSearch($event)"
     (onSearchTermChange)="showResultList()"
     (onSearchTermFocus)="showResultList()"
-    (click)="showResultList()"
+    (onHideResultList)="hideResultList()"
   />
   <search-result-list
     [list]="occurrences()"
     [isLoading]="isLoading()"
     [isManuallyHidden]="isResultListManuallyHidden()"
     (onItemSelect)="onSelect($event)"
+    (onVisibilityChange)="isResultListVisible.set($event)"
   />
 </div>

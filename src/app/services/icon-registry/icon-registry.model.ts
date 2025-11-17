@@ -1,1 +1,7 @@
-export type IconName = 'search' | 'cross' | 'map' | 'user' | 'home';
+export type IconName =
+  | 'search'
+  | 'cross'
+  | 'map'
+  | 'user'
+  | 'home'
+  | 'arrow-left';

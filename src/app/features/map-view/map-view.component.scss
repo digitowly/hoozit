@@ -17,7 +17,7 @@
   position: absolute;
   top: layout.$safe-area-inset;
   left: layout.$safe-area-inset;
-  width: calc(100% - 32px);
+  width: calc(100% - #{layout.$safe-area-inset} * 2);
 
   @media (min-width: 768px) {
     width:70%;

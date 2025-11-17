@@ -31,4 +31,10 @@ export function registerIcons(iconRegistry: IconRegistryService) {
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M1,11,12,2l11,9" fill="none" stroke="currentColor"/><path d="M20,8.5V22H4V8.5" fill="none" stroke="currentColor"/><polyline points="9.5 22 9.5 14 14.5 14 14.5 22" fill="none" stroke="currentColor"/></svg>
     `,
   );
+  iconRegistry.registerIcon(
+    'arrow-left',
+    `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="10 5 3 12 10 19" fill="none" stroke="currentColor" stroke-miterlimit="10"/><line x1="3" y1="12" x2="22" y2="12" stroke="currentColor" stroke-miterlimit="10"/></svg>
+    `,
+  );
 }

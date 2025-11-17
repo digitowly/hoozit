@@ -40,6 +40,10 @@ export class SearchFormComponent {
 
   @ViewChild('searchInput') searchInputRef!: ElementRef<HTMLInputElement>;
 
+  isResultListVisible = input(false);
+
+  onHideResultList = output();
+
   constructor() {
     effect(() => {
       if (this.defaultTerm()) {
@@ -86,6 +90,12 @@ export class SearchFormComponent {
     this.validateTerm(this.query.value).subscribe((term) => {
       if (term) this.onSearch.emit(term);
     });
+  }
+
+  hideResultList(event: Event) {
+    this.onHideResultList.emit();
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   private validateTerm(term: string | null) {

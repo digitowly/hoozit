@@ -35,7 +35,13 @@ export class SearchResultListComponent {
       !this.isManuallyHidden() && (this.list().length > 0 || this.isLoading()),
   );
 
-  constructor(private searchResultSelection: SearchResultSelectionService) {}
+  onVisibilityChange = output<boolean>();
+
+  constructor(private searchResultSelection: SearchResultSelectionService) {
+    effect(() => {
+      this.onVisibilityChange.emit(this.isVisible());
+    });
+  }
 
   handleItemSelection(result: AnimalSearchResult) {
     this.searchResultSelection.addSelection(result);

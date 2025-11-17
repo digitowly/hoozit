@@ -1,15 +1,27 @@
 <div (click)="searchInput.focus()">
   <form class="search-form" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+    <button
+      class="search-form-back-button"
+      [disabled]="!isResultListVisible()"
+      (click)="hideResultList($event)"
+    >
+      <app-icon name="arrow-left" size="size-medium" />
+    </button>
     <input
       #searchInput
       class="search-input"
+      [class.with-list]="isResultListVisible()"
       type="text"
       placeholder="E.g tawny owl, duck..."
       formControlName="query"
       (keydown)="onQueryChange()"
       (focus)="onQueryFocus()"
     />
-    <button type="submit" [disabled]="!searchForm.valid || searchForm.pending">
+    <button
+      class="search-form-submit-button"
+      type="submit"
+      [disabled]="!searchForm.valid || searchForm.pending"
+    >
       <app-icon name="search" size="size-medium" color="color-neutral-light" />
     </button>
   </form>

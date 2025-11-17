@@ -10,6 +10,7 @@
   background-color: var(--color-background-overlay);
   justify-content: space-between;
   cursor: text;
+  overflow: hidden;
 
   input {
     background-color: var(--color-background-overlay);
@@ -17,12 +18,32 @@
     outline: none;
     width: 100%;
     color: var(--color-text);
+    transform: translateX(-35px);
+    transition: all 0.3s ease-in-out;
+
+    &.with-list {
+      transform: translateX(0px);
+    }
   }
 
-  button {
-    margin-left: 0.5rem;
+  &-back-button {
     cursor: pointer;
-    border: none;
+    width: 45px;
+    height: 45px;
+    background-color: var(--color-background-overlay);
+    transition: all 0.3s ease-in-out;
+    opacity: 1;
+    transform: translateX(0px);
+
+    &:disabled {
+      opacity: 0;
+      transform: translateX(-50px);
+      cursor: none;
+    }
+  }
+
+  &-submit-button {
+    margin-left: 0.5rem;
     padding: 0.5rem 1rem;
     background-color: color.$primary-base;
     border-radius: 100%;
