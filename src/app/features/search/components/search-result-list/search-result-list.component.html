@@ -1,7 +1,16 @@
 @if (isVisible()) {
-  <div #listElement class="search-result-list" [style]="{ height: height() }">
+  <div
+    #listElement
+    class="search-result-list"
+    animate.leave="leaving"
+    [style]="{ height: height() }"
+  >
     @if (isLoading()) {
       <p>Loading...</p>
+    } @else if (searchInput().length < 3) {
+      <p>Keep typing</p>
+    } @else if (list().length === 0) {
+      <p>No results found</p>
     } @else {
       <ul>
         @for (item of list(); track $index) {

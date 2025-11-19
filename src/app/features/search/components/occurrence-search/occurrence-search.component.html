@@ -4,13 +4,14 @@
     [isActive]="isActive()"
     [isResultListVisible]="isResultListVisible()"
     (onSearch)="handleSearch($event)"
-    (onSearchTermChange)="showResultList()"
+    (onSearchTermChange)="onSearchTermChange($event)"
     (onSearchTermFocus)="showResultList()"
     (onHideResultList)="hideResultList()"
   />
   <search-result-list
     [list]="occurrences()"
     [isLoading]="isLoading()"
+    [searchInput]="searchTerm()"
     [isManuallyHidden]="isResultListManuallyHidden()"
     (onItemSelect)="onSelect($event)"
     (onVisibilityChange)="isResultListVisible.set($event)"

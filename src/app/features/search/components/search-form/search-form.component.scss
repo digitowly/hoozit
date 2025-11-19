@@ -11,6 +11,8 @@
   justify-content: space-between;
   cursor: text;
   overflow: hidden;
+  position: relative;
+  z-index: 1;
 
   input {
     background-color: var(--color-background-overlay);

@@ -34,7 +34,7 @@ export class SearchFormComponent {
 
   onSearch = output<string>();
 
-  onSearchTermChange = output();
+  onSearchTermChange = output<string>();
 
   onSearchTermFocus = output();
 
@@ -45,6 +45,17 @@ export class SearchFormComponent {
   onHideResultList = output();
 
   constructor() {
+    effect((onCleanup) => {
+      const blurOnEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') this.searchInputRef.nativeElement.blur();
+      };
+
+      window.addEventListener('keydown', blurOnEscape);
+      onCleanup(() => {
+        window.removeEventListener('keydown', blurOnEscape);
+      });
+    });
+
     effect(() => {
       if (this.defaultTerm()) {
         this.searchForm.patchValue({
@@ -77,7 +88,7 @@ export class SearchFormComponent {
   }
 
   onQueryChange() {
-    this.onSearchTermChange.emit();
+    this.onSearchTermChange.emit(this.query?.value ?? '');
   }
 
   onQueryFocus() {

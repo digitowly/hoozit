@@ -28,12 +28,11 @@ export class SearchResultListComponent {
 
   height = computed(() => this.calculateHeight());
 
+  searchInput = input('');
+
   isManuallyHidden = input(false);
 
-  isVisible = computed(
-    () =>
-      !this.isManuallyHidden() && (this.list().length > 0 || this.isLoading()),
-  );
+  isVisible = computed(() => !this.isManuallyHidden() && !!this.searchInput());
 
   onVisibilityChange = output<boolean>();
 

@@ -12,6 +12,7 @@ import { SearchFormComponent } from '../search-form/search-form.component';
 export class OccurrenceSearchComponent {
   defaultTerm = signal('');
   occurrences = input<AnimalSearchResult[]>([]);
+  searchTerm = signal('');
   isLoading = input(false);
   isActive = input(false);
   isResultListManuallyHidden = signal(false);
@@ -30,6 +31,11 @@ export class OccurrenceSearchComponent {
         window.removeEventListener('keydown', hideOnEscape);
       });
     });
+  }
+
+  onSearchTermChange(searchTerm: string) {
+    this.showResultList();
+    this.searchTerm.set(searchTerm);
   }
 
   showResultList() {
