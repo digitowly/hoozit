@@ -30,6 +30,7 @@ export class ModalComponent {
   }
 
   close() {
+    console.log('close');
     this.handleClose.emit();
   }
 }

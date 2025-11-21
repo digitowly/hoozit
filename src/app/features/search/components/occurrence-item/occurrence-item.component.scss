@@ -2,7 +2,8 @@
 @use "../../../../style/color.scss";
 @use "sass:color" as scolor;
 
-$thumbnail-size: 70px;
+$thumbnail-size-small: 50px;
+$thumbnail-size-large: 65px;
 
 .occurrence-item {
   display: flex;
@@ -11,12 +12,16 @@ $thumbnail-size: 70px;
   background-color: var(--color-background);
   color: var(--color-text);
   margin-bottom: 0.5rem;
-  height: $thumbnail-size;
+  height: $thumbnail-size-small;
   cursor: pointer;
   width: 100%;
   padding: 0;
   border-width: 0;
   transition: all 0.25s ease;
+
+  @media (min-width: 400px) {
+    height: $thumbnail-size-large;
+  }
 
   &:hover {
     background-color: var(--color-background-overlay);
@@ -42,7 +47,8 @@ $thumbnail-size: 70px;
     }
 
     &-subtitle {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
+      opacity: 0.5;
     }
 
     span {
@@ -53,8 +59,13 @@ $thumbnail-size: 70px;
   }
 
   .thumbnail {
-    width: $thumbnail-size;
-    height: $thumbnail-size;
+    width: $thumbnail-size-small;
+    height: $thumbnail-size-small;
+
+    @media (min-width: 400px) {
+      width: $thumbnail-size-large;
+      height: $thumbnail-size-large;
+    }
   }
 
   img {

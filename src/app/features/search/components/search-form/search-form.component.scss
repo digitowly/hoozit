@@ -6,13 +6,17 @@
   align-items: center;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: border.$radius;
-  padding: 0.5rem 0.5rem;
+  padding: 0.15rem 0.2rem;
   background-color: var(--color-background-overlay);
   justify-content: space-between;
   cursor: text;
   overflow: hidden;
   position: relative;
   z-index: 1;
+
+  @media (min-width: 768px) {
+    padding: 0.5rem 0.5rem;
+  }
 
   input {
     background-color: var(--color-background-overlay);
@@ -46,15 +50,21 @@
 
   &-submit-button {
     margin-left: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 0.5rem;
     background-color: color.$primary-base;
-    border-radius: 100%;
-    width: 45px;
-    height: 45px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: all 0.3s ease-in-out;
+
+    @media (min-width: 768px) {
+      padding: 0.5rem 1rem;
+      width: 45px;
+      height: 45px;
+    }
 
     &:disabled {
       cursor: not-allowed;
