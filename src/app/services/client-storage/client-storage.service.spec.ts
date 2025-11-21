@@ -7,14 +7,14 @@ import {
 import { provideZonelessChangeDetection } from '@angular/core';
 import { localStorageMock } from '../../../mock/localStorage';
 
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
-
 describe('ClientStorageService', () => {
   let service: ClientStorageService;
 
   beforeEach(() => {
+    Object.defineProperty(window, 'localStorage', {
+      value: { ...localStorageMock },
+    });
+
     TestBed.configureTestingModule({
       providers: [provideZonelessChangeDetection()],
     });

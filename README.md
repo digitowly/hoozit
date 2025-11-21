@@ -19,7 +19,7 @@ ng build
 
 ```bash
 # run tests
-ng test
+ng test --coverage
 ```
 ## Credit
 

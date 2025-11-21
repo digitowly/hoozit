@@ -85,7 +85,6 @@
           "options": {
             "runner": "vitest",
             "buildTarget": "hoozit:build:development",
-            "codeCoverage": true,
             "tsConfig": "tsconfig.spec.json"
           }
         }
