@@ -5,9 +5,7 @@ import {
   ClientStorageKey,
 } from '../../../../services/client-storage/client-storage.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class SearchResultSelectionService {
   selections = signal<AnimalSearchResult[]>([]);
 
