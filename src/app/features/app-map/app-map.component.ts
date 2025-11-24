@@ -4,6 +4,8 @@ import { GbifOccurrenceService } from '../../services/gbif/gbif-occurrence/gbif-
 import { MapService } from '../../services/map/map-service';
 import { LeafletService } from '../../services/map/leaflet/leaflet.service';
 import { SearchResultSelectionService } from '../search/services/search-result-selection/search-result-selection.service';
+import { Coordinate } from '../../model/coordinate';
+import { GeoService } from '../../services/geo/geo.service';
 
 @Component({
   selector: 'app-map',
@@ -19,10 +21,12 @@ import { SearchResultSelectionService } from '../search/services/search-result-s
 })
 export class AppMapComponent {
   private hasInitialCenter = signal(false);
+  private lastSearchCoordinate: Coordinate | null = null;
 
   constructor(
     private map: MapService,
     private userLocation: UserLocationService,
+    private geo: GeoService,
     private gbifOccurrenceService: GbifOccurrenceService,
     private searchResultSelection: SearchResultSelectionService,
   ) {
@@ -35,7 +39,24 @@ export class AppMapComponent {
 
     effect(() => {
       if (!this.userLocation.isValid()) return;
+
+      const currentCoordinate = this.userLocation.coordinate();
+
+      const locationChangedSignificantly =
+        !this.lastSearchCoordinate ||
+        this.geo.getDistance(currentCoordinate, this.lastSearchCoordinate) >=
+          this.gbifOccurrenceService.CACHE_THRESHOLD_KM;
+
+      if (!locationChangedSignificantly) {
+        return;
+      }
+
+      if (locationChangedSignificantly) {
+        this.lastSearchCoordinate = currentCoordinate;
+      }
+
       this.map.removeMarkers();
+
       for (const selection of this.searchResultSelection.selections()) {
         console.log(selection);
         const occurrences = this.gbifOccurrenceService.search(
