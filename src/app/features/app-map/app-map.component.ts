@@ -1,10 +1,9 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { UserLocationService } from '../../services/user/user-location/user-location.service';
 import { GbifOccurrenceService } from '../../services/gbif/gbif-occurrence/gbif-occurrence.service';
 import { MapService } from '../../services/map/map-service';
 import { LeafletService } from '../../services/map/leaflet/leaflet.service';
 import { SearchResultSelectionService } from '../search/services/search-result-selection/search-result-selection.service';
-import { AnimalSearchService } from '../../services/animal-search/animal-search.service';
 
 @Component({
   selector: 'app-map',
@@ -19,21 +18,24 @@ import { AnimalSearchService } from '../../services/animal-search/animal-search.
   styleUrl: './app-map.component.scss',
 })
 export class AppMapComponent {
+  private hasInitialCenter = signal(false);
+
   constructor(
     private map: MapService,
     private userLocation: UserLocationService,
     private gbifOccurrenceService: GbifOccurrenceService,
-    public animalSearch: AnimalSearchService,
     private searchResultSelection: SearchResultSelectionService,
   ) {
     this.userLocation.getLocation();
+    const initialLocation = this.userLocation.coordinate();
+
+    effect(() => {
+      this.map.init(initialLocation, 13);
+    });
 
     effect(() => {
       if (!this.userLocation.isValid()) return;
-      this.map.init(this.userLocation.coordinate(), 13);
-
       this.map.removeMarkers();
-      this.map.drawCircle(this.userLocation.coordinate());
       for (const selection of this.searchResultSelection.selections()) {
         console.log(selection);
         const occurrences = this.gbifOccurrenceService.search(
@@ -53,6 +55,18 @@ export class AppMapComponent {
           });
         });
       }
+    });
+
+    effect(() => {
+      if (userLocation.isValid() && !this.hasInitialCenter()) {
+        this.map.setCenter(this.userLocation.coordinate());
+        this.hasInitialCenter.set(true);
+      }
+    });
+
+    effect(() => {
+      if (!this.userLocation.isValid()) return;
+      this.map.repaintUserMarker(this.userLocation.coordinate());
     });
   }
 }

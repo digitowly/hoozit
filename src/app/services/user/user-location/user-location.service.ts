@@ -10,13 +10,18 @@ export class UserLocationService {
   private hasError = signal<boolean>(true);
   isValid = computed(() => this.isInitialized() && !this.hasError());
 
+  private watchId: number | null = null;
+
   getLocation() {
     if (!navigator.geolocation) {
       console.error('Geolocation is not supported by your browser');
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(
+    // Prevent starting multiple watchers
+    if (this.watchId !== null) return;
+
+    this.watchId = navigator.geolocation.watchPosition(
       (position) => {
         this.coordinate.set({
           latitude: position.coords.latitude,
