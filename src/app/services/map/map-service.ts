@@ -11,10 +11,11 @@ export abstract class MapService {
   abstract selectedMarker: WritableSignal<Marker | null>;
 
   abstract init(coordinate: Coordinate, zoom: number): void;
+  abstract setCenter(coordinate: Coordinate): void;
 
   abstract createMarker(marker: Marker): void;
   abstract onMarkerClick(marker: Marker): void;
   abstract removeMarkers(): void;
 
-  abstract drawCircle(coordinate: Coordinate): void;
+  abstract repaintUserMarker(coordinate: Coordinate): void;
 }

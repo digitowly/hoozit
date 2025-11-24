@@ -24,6 +24,14 @@ export class LeafletService extends MapService {
     }).addTo(this.map);
   }
 
+  override setCenter(coordinate: Coordinate) {
+    if (!this.map) return;
+    this.map.setView(
+      [coordinate.latitude, coordinate.longitude],
+      this.map.getZoom(),
+    );
+  }
+
   override createMarker(marker: Marker): void {
     if (!this.map) {
       console.error('Map not initialized');
@@ -59,9 +67,21 @@ export class LeafletService extends MapService {
     });
   }
 
-  override drawCircle(coordinate: Coordinate) {
+  override repaintUserMarker(coordinate: Coordinate) {
     if (!this.map) return;
+    // Remove existing marker if it exists
+    this.map.eachLayer((layer) => {
+      if (
+        layer instanceof L.Circle &&
+        layer.options.className === 'user-location-marker'
+      ) {
+        layer.remove();
+      }
+    });
+
+    // Add new marker at the new location
     L.circle([coordinate.latitude, coordinate.longitude], {
+      className: 'user-location-marker',
       color: 'blue',
       fillColor: '#blue',
       fillOpacity: 0.1,
