@@ -3,18 +3,26 @@ import { SearchResultSelectionService } from '../../services/search-result-selec
 import { ModalComponent } from '../../../../components/modal/modal.component';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
 import { IconComponent } from '../../../../components/icon/icon.component';
+import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'search-result-selection',
-  imports: [ModalComponent, IconComponent],
-  templateUrl: './search-result-selection.component.html',
-  styleUrl: './search-result-selection.component.scss',
+  selector: 'search-result-selection-list',
+  imports: [ModalComponent, IconComponent, NgClass],
+  templateUrl: './search-result-selection-list.component.html',
+  styleUrl: './search-result-selection-list.component.scss',
 })
-export class SearchResultSelectionComponent {
+export class SearchResultSelectionListComponent {
   isModalOpen = signal(false);
+
+  isListExpanded = signal(false);
+
   selected = signal<AnimalSearchResult | null>(null);
 
   constructor(public selections: SearchResultSelectionService) {}
+
+  toggleList() {
+    this.isListExpanded.update((o) => !o);
+  }
 
   select(selection: AnimalSearchResult) {
     this.selected.set(selection);

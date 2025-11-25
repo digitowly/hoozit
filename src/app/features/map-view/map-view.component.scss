@@ -12,8 +12,8 @@
   z-index: 10000;
 }
 
-.map-search-top {
-  z-index: 10000;
+.map-search-bar {
+  z-index: 1000;
   position: absolute;
   top: layout.$safe-area-inset;
   left: layout.$safe-area-inset;
@@ -23,4 +23,11 @@
     width:70%;
     max-width: 500px;
   }
+}
+
+.map-search-selection-list {
+  z-index: 999;
+  position: absolute;
+  top: layout.$safe-area-inset + 3.5rem;
+  left: layout.$safe-area-inset;
 }

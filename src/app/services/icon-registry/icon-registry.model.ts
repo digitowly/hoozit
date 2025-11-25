@@ -4,4 +4,5 @@ export type IconName =
   | 'map'
   | 'user'
   | 'home'
-  | 'arrow-left';
+  | 'arrow-left'
+  | 'chevron';

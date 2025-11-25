@@ -1,6 +1,6 @@
 <div>
   <app-map />
-  <div class="map-search-top">
+  <div class="map-search-bar">
     <occurrence-search
       [occurrences]="searchResults()"
       [isActive]="isSearchModalOpen()"
@@ -8,6 +8,8 @@
       (onSearch)="handleSearch($event)"
       [isLoading]="animalSearch.isLoading()"
     />
-    <search-result-selection />
+  </div>
+  <div class="map-search-selection-list">
+    <search-result-selection-list />
   </div>
 </div>
