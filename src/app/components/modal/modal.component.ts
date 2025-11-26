@@ -45,8 +45,15 @@ export class ModalComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     // Attach this component's projected content to a global portal (document.body)
-    this.portalHost = new DomPortalOutlet(this.document.body);
-    this.portalHost.attach(this.portal);
+    if (!this.document.body || !this.portal) {
+      return;
+    }
+    try {
+      this.portalHost = new DomPortalOutlet(this.document.body);
+      this.portalHost.attach(this.portal);
+    } catch {
+      // Swallow errors in non-DOM environments (e.g., some test runners/SSR)
+    }
   }
 
   close() {
@@ -57,11 +64,6 @@ export class ModalComponent implements AfterViewInit, OnDestroy {
     if (this.portalHost) {
       try {
         this.portalHost.detach();
-      } catch {
-        // ignore
-      }
-      try {
-        this.portalHost.dispose?.();
       } catch {
         // ignore
       }
