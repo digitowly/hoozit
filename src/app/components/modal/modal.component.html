@@ -1,14 +1,16 @@
-@if (isOpen()) {
-  <div class="backdrop" (click)="close()"></div>
-}
-<div class="modal" [ngClass]="{ closed: !isOpen() }">
-  <div class="content">
-    <div class="header">
-      <h2>{{ title() }}</h2>
-      <button class="close-button" (click)="close()">
-        <app-icon name="cross" size="size-medium" />
-      </button>
+<ng-template cdkPortal>
+  @if (isOpen()) {
+    <div class="backdrop" (click)="close()"></div>
+  }
+  <div class="modal" [ngClass]="{ closed: !isOpen() }">
+    <div class="content">
+      <div class="header">
+        <h2>{{ title() }}</h2>
+        <button class="close-button" (click)="close()">
+          <app-icon name="cross" size="size-medium" />
+        </button>
+      </div>
+      <ng-content />
     </div>
-    <ng-content />
   </div>
-</div>
+</ng-template>
