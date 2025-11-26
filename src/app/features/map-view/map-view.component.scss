@@ -30,4 +30,8 @@
   position: absolute;
   top: layout.$safe-area-inset + 3.5rem;
   left: layout.$safe-area-inset;
+
+  @media (min-width: 768px) {
+    top: layout.$safe-area-inset + 4.5rem;
+  }
 }

@@ -36,6 +36,15 @@ $animated-transition-height: -10px;
     transform: translateY($animated-transition-height) scale(0.65);
     transition: all 0.25s ease-out;
   }
+
+  li {
+    background-color: var(--color-background-overlay);
+    padding: 0.35rem;
+    border-radius: 10rem;
+    display: flex;
+    align-items: center;
+  }
+
 }
 
 .chevron {
@@ -45,7 +54,7 @@ $animated-transition-height: -10px;
   transform: rotate(90deg);
   transition: transform 0.25s ease-in-out;
   border-radius: 10rem;
-  padding: 0 0.3rem;
+  padding: 0 0.65rem;
 
   &--open {
     transform: rotate(270deg);
@@ -98,9 +107,8 @@ $animated-transition-height: -10px;
 }
 
 .toggle-button {
-
   background-color: transparent;
-  height: 30px;
+  height: 40px;
   display: flex;
 
   width: fit-content;
@@ -113,8 +121,8 @@ $animated-transition-height: -10px;
   img {
     border-radius: 50%;
     object-fit: cover;
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
   }
 }
 
