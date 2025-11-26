@@ -6,6 +6,7 @@ import { LeafletService } from '../../services/map/leaflet/leaflet.service';
 import { SearchResultSelectionService } from '../search/services/search-result-selection/search-result-selection.service';
 import { Coordinate } from '../../model/coordinate';
 import { GeoService } from '../../services/geo/geo.service';
+import { AnimalSearchResult } from '../../services/animal-search/animal-search.model';
 
 @Component({
   selector: 'app-map',
@@ -22,13 +23,14 @@ import { GeoService } from '../../services/geo/geo.service';
 export class AppMapComponent {
   private hasInitialCenter = signal(false);
   private lastSearchCoordinate: Coordinate | null = null;
+  private lastSelections: AnimalSearchResult[] = [];
 
   constructor(
     private map: MapService,
     private userLocation: UserLocationService,
     private geo: GeoService,
     private gbifOccurrenceService: GbifOccurrenceService,
-    private searchResultSelection: SearchResultSelectionService,
+    private selectionService: SearchResultSelectionService,
   ) {
     this.userLocation.getLocation();
     const initialLocation = this.userLocation.coordinate();
@@ -47,9 +49,14 @@ export class AppMapComponent {
         this.geo.getDistance(currentCoordinate, this.lastSearchCoordinate) >=
           this.gbifOccurrenceService.CACHE_THRESHOLD_KM;
 
-      if (!locationChangedSignificantly) {
+      if (
+        !locationChangedSignificantly &&
+        this.selectionService.hasIdenticalSelections(this.lastSelections)
+      ) {
         return;
       }
+
+      this.lastSelections = this.selectionService.selections();
 
       if (locationChangedSignificantly) {
         this.lastSearchCoordinate = currentCoordinate;
@@ -57,7 +64,7 @@ export class AppMapComponent {
 
       this.map.removeMarkers();
 
-      for (const selection of this.searchResultSelection.selections()) {
+      for (const selection of this.selectionService.selections()) {
         console.log(selection);
         const occurrences = this.gbifOccurrenceService.search(
           selection.gbif_key ?? '',
@@ -76,6 +83,7 @@ export class AppMapComponent {
           });
         });
       }
+      this.map.repaintUserMarker(this.userLocation.coordinate());
     });
 
     effect(() => {

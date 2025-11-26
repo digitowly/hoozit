@@ -60,4 +60,22 @@ describe('SearchResultSelectionService', () => {
     service.removeSelection(mockSelection.id);
     expect(service.selections()).toEqual([mockSelection2]);
   });
+
+  it('should check if two selections are equal', () => {
+    service.addSelection(mockSelection);
+    service.addSelection(mockSelection2);
+
+    const result1 = service.hasIdenticalSelections([
+      mockSelection,
+      mockSelection2,
+    ]);
+
+    const result2 = service.hasIdenticalSelections([]);
+
+    const result3 = service.hasIdenticalSelections([mockSelection]);
+
+    expect(result1).toBeTruthy();
+    expect(result2).toBeFalsy();
+    expect(result3).toBeFalsy();
+  });
 });

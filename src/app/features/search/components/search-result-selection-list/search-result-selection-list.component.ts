@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { SearchResultSelectionService } from '../../services/search-result-selection/search-result-selection.service';
 import { ModalComponent } from '../../../../components/modal/modal.component';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
@@ -17,6 +17,8 @@ export class SearchResultSelectionListComponent {
   isListExpanded = signal(false);
 
   selected = signal<AnimalSearchResult | null>(null);
+
+  isVisible = computed(() => this.selections.selections().length > 0);
 
   constructor(public selections: SearchResultSelectionService) {}
 

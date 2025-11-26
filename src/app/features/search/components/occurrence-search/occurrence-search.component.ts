@@ -49,6 +49,7 @@ export class OccurrenceSearchComponent {
   onSelect(result: AnimalSearchResult) {
     this.onResultSelection.emit();
     this.defaultTerm.set(result.name);
+    this.hideResultList();
   }
 
   handleSearch(searchTerm: string) {
