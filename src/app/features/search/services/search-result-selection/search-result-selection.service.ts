@@ -5,17 +5,17 @@ import {
   ClientStorageKey,
 } from '../../../../services/client-storage/client-storage.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+type SearchResultSelection = AnimalSearchResult;
+
+@Injectable({ providedIn: 'root' })
 export class SearchResultSelectionService {
-  selections = signal<AnimalSearchResult[]>([]);
+  selections = signal<SearchResultSelection[]>([]);
 
   constructor(private clientStorage: ClientStorageService) {
     this.initSelections();
   }
 
-  addSelection(selection: AnimalSearchResult) {
+  addSelection(selection: SearchResultSelection) {
     if (this.isSelected(selection)) return;
 
     const updatedSelections = [...this.selections(), selection];
@@ -41,6 +41,11 @@ export class SearchResultSelectionService {
     this.selections.set(updatedSelections);
   }
 
+  hasIdenticalSelections(selections: SearchResultSelection[]): boolean {
+    if (selections.length !== this.selections().length) return false;
+    return selections.every((selection) => this.isSelected(selection));
+  }
+
   private initSelections() {
     const storedSelections = this.getSelections();
 
@@ -49,11 +54,11 @@ export class SearchResultSelectionService {
     }
   }
 
-  private getSelections(): AnimalSearchResult[] | null {
+  private getSelections(): SearchResultSelection[] | null {
     return this.clientStorage.get(ClientStorageKey.SEARCH_SELECTIONS);
   }
 
-  private isSelected(selection: AnimalSearchResult): boolean {
+  private isSelected(selection: SearchResultSelection): boolean {
     return this.selections().some(({ id }) => id === selection.id);
   }
 }

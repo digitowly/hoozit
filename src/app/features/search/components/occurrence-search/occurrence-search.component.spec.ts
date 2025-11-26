@@ -10,15 +10,15 @@ import { AnimalSearchResult } from '../../../../services/animal-search/animal-se
 import { provideZonelessChangeDetection } from '@angular/core';
 import { localStorageMock } from '../../../../../mock/localStorage';
 
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
-
 describe('OccurrenceSearchComponent', () => {
   let component: OccurrenceSearchComponent;
   let fixture: ComponentFixture<OccurrenceSearchComponent>;
 
   beforeEach(async () => {
+    Object.defineProperty(window, 'localStorage', {
+      value: { ...localStorageMock },
+    });
+
     await TestBed.configureTestingModule({
       imports: [OccurrenceSearchComponent],
       providers: [

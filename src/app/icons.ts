@@ -37,4 +37,10 @@ export function registerIcons(iconRegistry: IconRegistryService) {
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="10 5 3 12 10 19" fill="none" stroke="currentColor" stroke-miterlimit="10"/><line x1="3" y1="12" x2="22" y2="12" stroke="currentColor" stroke-miterlimit="10"/></svg>
     `,
   );
+  iconRegistry.registerIcon(
+    'chevron',
+    `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="9 19 16 12 9 5" fill="none" stroke="currentColor" stroke-miterlimit="10"/></svg>
+      `,
+  );
 }

@@ -1,19 +1,33 @@
-import { NgClass } from '@angular/common';
-import { Component, effect, input, output } from '@angular/core';
+import { NgClass, DOCUMENT } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  effect,
+  Inject,
+  input,
+  OnDestroy,
+  output,
+  ViewChild,
+} from '@angular/core';
 import { IconComponent } from '../icon/icon.component';
+import { CdkPortal, DomPortalOutlet, PortalModule } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.scss',
-  imports: [NgClass, IconComponent],
+  standalone: true,
+  imports: [NgClass, IconComponent, PortalModule],
 })
-export class ModalComponent {
+export class ModalComponent implements AfterViewInit, OnDestroy {
   title = input('');
   isOpen = input(false);
   readonly handleClose = output();
 
-  constructor() {
+  @ViewChild(CdkPortal) portal!: CdkPortal;
+  private portalHost?: DomPortalOutlet;
+
+  constructor(@Inject(DOCUMENT) private document: Document) {
     effect((onCleanup) => {
       const handleKeydown = (e: KeyboardEvent) => {
         if (e.key === 'Escape' && this.isOpen()) {
@@ -29,7 +43,29 @@ export class ModalComponent {
     });
   }
 
+  ngAfterViewInit() {
+    // Attach this component's projected content to a global portal (document.body)
+    this.portalHost = new DomPortalOutlet(this.document.body);
+    this.portalHost.attach(this.portal);
+  }
+
   close() {
     this.handleClose.emit();
+  }
+
+  ngOnDestroy(): void {
+    if (this.portalHost) {
+      try {
+        this.portalHost.detach();
+      } catch {
+        // ignore
+      }
+      try {
+        this.portalHost.dispose?.();
+      } catch {
+        // ignore
+      }
+      this.portalHost = undefined;
+    }
   }
 }

@@ -1,0 +1,46 @@
+@if (isVisible()) {
+  <div>
+    <button class="toggle-button" (click)="toggleList()">
+      <div class="chevron" [ngClass]="{ 'chevron--open': isListExpanded() }">
+        <app-icon name="chevron" size="size-small" />
+      </div>
+      @if (!isListExpanded()) {
+        <ul class="list-collapsed" animate.leave="list-collapsed--leaving">
+          @for (selection of selections.selections(); track selection) {
+            <li>
+              <img [src]="selection.thumbnail" alt="{{ selection.name }}" />
+            </li>
+          }
+        </ul>
+      }
+    </button>
+    @if (isListExpanded()) {
+      <ul class="list-expanded" animate.leave="list-expanded--leaving">
+        @for (selection of selections.selections(); track selection) {
+          <div class="item">
+            <button class="item-open-button" (click)="select(selection)">
+              <img [src]="selection.thumbnail" alt="{{ selection.name }}" />
+              <div>
+                <p>
+                  {{ selection.name }}
+                </p>
+              </div>
+            </button>
+            <button
+              class="item-remove-button"
+              (click)="removeSelection(selection.id)"
+            >
+              <app-icon name="cross" size="size-small" />
+            </button>
+          </div>
+        }
+      </ul>
+    }
+
+    <app-modal
+      [title]="selected()?.name || ''"
+      [isOpen]="isModalOpen()"
+      (handleClose)="closeModal()"
+    />
+  </div>
+}
