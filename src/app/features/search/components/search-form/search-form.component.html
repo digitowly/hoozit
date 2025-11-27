@@ -17,13 +17,20 @@
       (keyup)="onQueryChange()"
       (focus)="onQueryFocus()"
     />
-    <button
-      class="search-form-submit-button"
-      type="submit"
-      [disabled]="!searchForm.valid || searchForm.pending"
-    >
-      <app-icon name="search" size="size-medium" color="color-neutral-light" />
-    </button>
+
+    @if (query?.value) {
+      <button
+        class="search-form-submit-button"
+        [disabled]="!searchForm.valid || searchForm.pending"
+        (click)="clearInput()"
+      >
+        <app-icon name="cross" size="size-medium" color="color-neutral-light" />
+      </button>
+    } @else {
+      <div class="search-form-search-icon">
+        <app-icon name="search" size="size-medium" />
+      </div>
+    }
   </form>
   @if (searchForm.hasError("requestError")) {
     {{ searchForm.getError("requestError") }}

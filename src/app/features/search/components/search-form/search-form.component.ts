@@ -23,6 +23,7 @@ import { IconComponent } from '../../../../components/icon/icon.component';
 })
 export class SearchFormComponent {
   isActive = input(false);
+
   defaultTerm = input('');
 
   searchForm = new FormGroup({
@@ -107,6 +108,10 @@ export class SearchFormComponent {
     this.onHideResultList.emit();
     event.preventDefault();
     event.stopPropagation();
+  }
+
+  clearInput() {
+    this.searchForm.reset();
   }
 
   private validateTerm(term: string | null) {

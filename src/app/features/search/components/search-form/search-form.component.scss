@@ -32,6 +32,11 @@
     }
   }
 
+  &-search-icon {
+    padding: 0.5rem;
+    opacity: 0.5;
+  }
+
   &-back-button {
     cursor: pointer;
     width: 45px;
@@ -51,8 +56,8 @@
   &-submit-button {
     margin-left: 0.5rem;
     padding: 0.25rem 0.5rem;
-    background-color: color.$primary-base;
     border-radius: 50%;
+    background-color: var(--color-primary);
     width: 30px;
     height: 30px;
     display: flex;
@@ -68,7 +73,6 @@
 
     &:disabled {
       cursor: not-allowed;
-      background-color: rgba(190, 255, 174, 0);
       opacity: 0.35;
     }
 
