@@ -21,7 +21,7 @@
     @if (query?.value) {
       <button
         class="search-form-submit-button"
-        [disabled]="!searchForm.valid || searchForm.pending"
+        [disabled]="searchForm.pending"
         (click)="clearInput()"
       >
         <app-icon name="cross" size="size-medium" color="color-neutral-light" />
