@@ -1,6 +1,6 @@
 
 $animated-transition-height: -10px;
-
+$toggle-element-size: 40px;
 
 .list-expanded {
   margin-top: 0.5rem;
@@ -28,21 +28,22 @@ $animated-transition-height: -10px;
 
   @starting-style {
     opacity: 0;
-    transform: translateY($animated-transition-height) scale(0.65);
+    transform: translateY($animated-transition-height) scale(0.55);
   }
 
   &--leaving {
     opacity: 0;
-    transform: translateY($animated-transition-height) scale(0.65);
+    transform: translateY($animated-transition-height) scale(0.55);
     transition: all 0.25s ease-out;
   }
 
   li {
     background-color: var(--color-background-overlay);
-    padding: 0.35rem;
-    border-radius: 10rem;
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: $toggle-element-size;
+    height: $toggle-element-size;
   }
 
 }
@@ -51,10 +52,14 @@ $animated-transition-height: -10px;
   background-color: var(--color-background-overlay);
   display: flex;
   align-items: center;
+  justify-content: center;
   transform: rotate(90deg);
   transition: transform 0.25s ease-in-out;
-  border-radius: 10rem;
-  padding: 0 0.65rem;
+  border-radius: 100%;
+  height: $toggle-element-size;
+  min-width: $toggle-element-size;
+  position: relative;
+  z-index: 1;
 
   &--open {
     transform: rotate(270deg);
@@ -91,7 +96,6 @@ $animated-transition-height: -10px;
     align-items: center;
     gap: 0.5rem;
     border-radius: 10rem;
-    padding: 0 0.5rem;
   }
 
   p {
@@ -108,21 +112,26 @@ $animated-transition-height: -10px;
 
 .toggle-button {
   background-color: transparent;
-  height: 40px;
+  border-radius: 100%;
   display: flex;
-
-  width: fit-content;
+  width: $toggle-element-size;
+  height: $toggle-element-size;
   transition: all 0.25s ease-in-out;
 
   ul {
+    transform: translateX(-10px);
     display: flex;
+
+    li {
+      transform: translateX(-10px);
+    }
   }
 
   img {
-    border-radius: 50%;
+    border-radius: 100%;
     object-fit: cover;
-    width: 25px;
-    height: 25px;
+    width: $toggle-element-size - 10px;
+    height: $toggle-element-size - 10px;
   }
 }
 

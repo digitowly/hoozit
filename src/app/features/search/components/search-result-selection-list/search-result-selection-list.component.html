@@ -6,8 +6,21 @@
       </div>
       @if (!isListExpanded()) {
         <ul class="list-collapsed" animate.leave="list-collapsed--leaving">
-          @for (selection of selections.selections(); track selection) {
-            <li>
+          @for (
+            selection of selections.selections();
+            track selection;
+            let index = $index
+          ) {
+            <li
+              [style.padding-left]="index === 0 ? '15px' : '0px'"
+              [style.width]="index === 0 ? '55px' : '40px'"
+              [style.border-bottom-right-radius]="
+                index === selections.selections().length - 1 ? '50%' : ''
+              "
+              [style.border-top-right-radius]="
+                index === selections.selections().length - 1 ? '50%' : ''
+              "
+            >
               <img [src]="selection.thumbnail" alt="{{ selection.name }}" />
             </li>
           }
