@@ -16,7 +16,7 @@ export function registerIcons(iconRegistry: IconRegistryService) {
   iconRegistry.registerIcon(
     'map',
     `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" fill="none" stroke="currentColor" stroke-miterlimit="10"/><line x1="8" y1="2" x2="8" y2="18" stroke="currentColor" stroke-miterlimit="10"/><line x1="16" y1="6" x2="16" y2="22" stroke="currentColor" stroke-miterlimit="10"/></svg>
+    <svg stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M9 19L3.78974 20.7368C3.40122 20.8663 3 20.5771 3 20.1675L3 5.43246C3 5.1742 3.16526 4.94491 3.41026 4.86325L9 3M9 19L15 21M9 19L9 3M15 21L20.5897 19.1368C20.8347 19.0551 21 18.8258 21 18.5675L21 3.83246C21 3.42292 20.5988 3.13374 20.2103 3.26325L15 5M15 21L15 5M15 5L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
     `,
   );
   iconRegistry.registerIcon(
@@ -28,13 +28,13 @@ export function registerIcons(iconRegistry: IconRegistryService) {
   iconRegistry.registerIcon(
     'user',
     `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="4" fill="none" stroke="currentColor"/><polyline points="4.5 21 4.5 17 7.5 14 12 15.5 16.5 14 19.5 17 19.5 21" fill="none" stroke="currentColor"/></svg>
+    <svg stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4.271 18.3457C4.271 18.3457 6.50002 15.5 12 15.5C17.5 15.5 19.7291 18.3457 19.7291 18.3457" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
     `,
   );
   iconRegistry.registerIcon(
     'home',
     `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M1,11,12,2l11,9" fill="none" stroke="currentColor"/><path d="M20,8.5V22H4V8.5" fill="none" stroke="currentColor"/><polyline points="9.5 22 9.5 14 14.5 14 14.5 22" fill="none" stroke="currentColor"/></svg>
+    <svg stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M17 21H7C4.79086 21 3 19.2091 3 17V10.7076C3 9.30887 3.73061 8.01175 4.92679 7.28679L9.92679 4.25649C11.2011 3.48421 12.7989 3.48421 14.0732 4.25649L19.0732 7.28679C20.2694 8.01175 21 9.30887 21 10.7076V17C21 19.2091 19.2091 21 17 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9 17H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
     `,
   );
   iconRegistry.registerIcon(
