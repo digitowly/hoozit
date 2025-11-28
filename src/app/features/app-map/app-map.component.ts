@@ -7,10 +7,12 @@ import { SearchResultSelectionService } from '../search/services/search-result-s
 import { Coordinate } from '../../model/coordinate';
 import { GeoService } from '../../services/geo/geo.service';
 import { AnimalSearchResult } from '../../services/animal-search/animal-search.model';
+import { IconComponent } from '../../components/icon/icon.component';
+import { FloatingButtonComponent } from '../../components/floating-button/floating-button.component';
 
 @Component({
   selector: 'app-map',
-  imports: [],
+  imports: [IconComponent, FloatingButtonComponent],
   providers: [
     {
       provide: MapService,
@@ -97,5 +99,9 @@ export class AppMapComponent {
       if (!this.userLocation.isValid()) return;
       this.map.repaintUserMarker(this.userLocation.coordinate());
     });
+  }
+
+  centerToUserLocation() {
+    this.map.setCenter(this.userLocation.coordinate());
   }
 }

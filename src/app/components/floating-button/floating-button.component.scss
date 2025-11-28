@@ -7,7 +7,7 @@ $size: 60px;
   border-radius: 100%;
   border: none;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  background-color: rgb(255, 255, 255);
+  background-color: var(--color-background-overlay);
   display: flex;
   justify-content: center;
   align-items: center;

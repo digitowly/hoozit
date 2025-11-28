@@ -7,7 +7,7 @@ import { Coordinate } from '../../../model/coordinate';
 export class UserLocationService {
   coordinate = signal<Coordinate>({ latitude: 50, longitude: 50 });
   private isInitialized = signal<boolean>(false);
-  private hasError = signal<boolean>(true);
+  hasError = signal<boolean>(true);
   isValid = computed(() => this.isInitialized() && !this.hasError());
 
   private watchId: number | null = null;
