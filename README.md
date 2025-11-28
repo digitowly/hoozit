@@ -23,6 +23,11 @@ ng test --coverage
 ```
 ## Credit
 
+### Data
+
+- [GBIF](https://www.gbif.org/)
+
 ### Icons
 
-[Angular Icons](https://www.angularicons.com/)
+- [Angular Icons](https://www.angularicons.com/)
+- [iconoir](https://iconoir.com/)
