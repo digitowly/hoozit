@@ -1,0 +1,40 @@
+{
+  "$schema": "https://raw.githubusercontent.com/angular/angular/main/packages/service-worker/config/schema.json",
+  "index": "/index.html",
+  "navigationUrls": [
+    { "positive": true, "regex": "/.*" },
+    { "positive": false, "regex": "/[^/]+\\.[^/]+$" },
+    { "positive": false, "regex": "/assets/.*" }
+  ],
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/ngsw-worker.js",
+          "/**/*.css",
+          "/**/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/icons/**",
+          "/**/*.svg",
+          "/**/*.png",
+          "/**/*.jpg",
+          "/**/*.jpeg"
+        ]
+      }
+    }
+  ]
+}

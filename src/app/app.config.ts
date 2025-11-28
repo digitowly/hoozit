@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  isDevMode,
   provideZonelessChangeDetection,
 } from '@angular/core';
 import {
@@ -11,6 +12,7 @@ import {
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { CustomRouteReuseStrategy } from './route-reuse-strategy';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,5 +20,9 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideRouter(routes, withViewTransitions()),
     { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy },
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 };
