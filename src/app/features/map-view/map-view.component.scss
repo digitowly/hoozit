@@ -1,4 +1,5 @@
 @use "../../style/layout";
+@use "../../style/breakpoint";
 
 .map-trigger-row {
   display: flex;
@@ -19,7 +20,7 @@
   left: layout.$safe-area-inset;
   width: calc(100% - #{layout.$safe-area-inset} * 2);
 
-  @media (min-width: 768px) {
+  @media (min-width: breakpoint.$md) {
     width:70%;
     max-width: 500px;
   }
@@ -31,7 +32,7 @@
   top: layout.$safe-area-inset + 3.5rem;
   left: layout.$safe-area-inset;
 
-  @media (min-width: 768px) {
+  @media (min-width: breakpoint.$md) {
     top: layout.$safe-area-inset + 4.5rem;
   }
 }

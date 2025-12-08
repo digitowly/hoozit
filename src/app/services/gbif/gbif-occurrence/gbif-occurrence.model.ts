@@ -9,4 +9,7 @@ interface GbifOccurrence {
   decimalLongitude: number;
   country: string;
   scientificName: string;
+  locality: string;
+  eventDate: string;
+  institutionCode: string;
 }

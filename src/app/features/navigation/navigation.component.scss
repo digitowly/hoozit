@@ -1,5 +1,6 @@
 @use "../../style/color";
 @use "../../style/layout";
+@use "../../style/breakpoint";
 
 $link-size: 52px;
 
@@ -13,7 +14,7 @@ $link-size: 52px;
   box-shadow: 0 2px 4px color.$shadow;
   z-index: 10000;
 
-  @media (min-width: 768px) {
+  @media (min-width: breakpoint.$md) {
     top: layout.$safe-area-inset;
     right: layout.$safe-area-inset;
   }

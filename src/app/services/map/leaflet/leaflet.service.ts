@@ -1,12 +1,12 @@
 import { Injectable, signal } from '@angular/core';
 import { Coordinate } from '../../../model/coordinate';
-import { MapService, Marker } from '../map-service';
+import { MapService, MapMarker } from '../map-service';
 import * as L from 'leaflet';
 
 @Injectable({ providedIn: 'root' })
 export class LeafletService extends MapService {
   private map: L.Map | null = null;
-  override selectedMarker = signal<Marker | null>(null);
+  override selectedMarker = signal<MapMarker | null>(null);
 
   override init(coordinate: Coordinate, zoom: number = 13) {
     if (this.map) {
@@ -32,7 +32,10 @@ export class LeafletService extends MapService {
     );
   }
 
-  override createMarker(marker: Marker): void {
+  override createMarker(
+    marker: MapMarker,
+    onTap: (marker: MapMarker) => void,
+  ): void {
     if (!this.map) {
       console.error('Map not initialized');
       return;
@@ -50,11 +53,13 @@ export class LeafletService extends MapService {
           shadowSize: [41, 41],
         }),
       )
-      .on('click', () => this.onMarkerClick(marker))
-      .bindPopup(marker.content);
+      .on('click', () => {
+        this.onMarkerClick(marker);
+        onTap(marker);
+      });
   }
 
-  override onMarkerClick(marker: Marker) {
+  override onMarkerClick(marker: MapMarker) {
     this.selectedMarker.set(marker);
   }
 

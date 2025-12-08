@@ -1,5 +1,6 @@
 @use "../../../../style/border";
 @use "../../../../style/color";
+@use "../../../../style/breakpoint";
 
 .search-form {
   display: flex;
@@ -14,7 +15,7 @@
   position: relative;
   z-index: 1;
 
-  @media (min-width: 768px) {
+  @media (min-width: breakpoint.$md) {
     padding: 0.5rem 0.5rem;
   }
 
@@ -65,7 +66,7 @@
     align-items: center;
     transition: all 0.3s ease-in-out;
 
-    @media (min-width: 768px) {
+    @media (min-width: breakpoint.$md) {
       padding: 0.5rem 1rem;
       width: 45px;
       height: 45px;

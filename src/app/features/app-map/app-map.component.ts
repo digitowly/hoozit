@@ -1,7 +1,7 @@
 import { Component, effect, signal } from '@angular/core';
 import { UserLocationService } from '../../services/user/user-location/user-location.service';
 import { GbifOccurrenceService } from '../../services/gbif/gbif-occurrence/gbif-occurrence.service';
-import { MapService } from '../../services/map/map-service';
+import { MapService, MapMarker } from '../../services/map/map-service';
 import { LeafletService } from '../../services/map/leaflet/leaflet.service';
 import { SearchResultSelectionService } from '../search/services/search-result-selection/search-result-selection.service';
 import { Coordinate } from '../../model/coordinate';
@@ -9,10 +9,11 @@ import { GeoService } from '../../services/geo/geo.service';
 import { AnimalSearchResult } from '../../services/animal-search/animal-search.model';
 import { IconComponent } from '../../components/icon/icon.component';
 import { FloatingButtonComponent } from '../../components/floating-button/floating-button.component';
+import { ModalComponent } from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-map',
-  imports: [IconComponent, FloatingButtonComponent],
+  imports: [IconComponent, FloatingButtonComponent, ModalComponent],
   providers: [
     {
       provide: MapService,
@@ -23,6 +24,9 @@ import { FloatingButtonComponent } from '../../components/floating-button/floati
   styleUrl: './app-map.component.scss',
 })
 export class AppMapComponent {
+  isModalOpen = signal(false);
+  selectedMarker = signal<MapMarker | null>(null);
+
   private hasInitialCenter = signal(false);
   private lastSearchCoordinate: Coordinate | null = null;
   private lastSelections: AnimalSearchResult[] = [];
@@ -67,21 +71,33 @@ export class AppMapComponent {
       this.map.removeMarkers();
 
       for (const selection of this.selectionService.selections()) {
-        console.log(selection);
         const occurrences = this.gbifOccurrenceService.search(
           selection.gbif_key ?? '',
           this.userLocation.coordinate(),
         );
         occurrences.subscribe((species) => {
           species?.results.forEach((occurrence) => {
-            this.map.createMarker({
-              coordinate: {
-                latitude: occurrence.decimalLatitude,
-                longitude: occurrence.decimalLongitude,
+            console.log(occurrence);
+            this.map.createMarker(
+              {
+                coordinate: {
+                  latitude: occurrence.decimalLatitude,
+                  longitude: occurrence.decimalLongitude,
+                },
+                icon: selection.thumbnail ?? '',
+                content: {
+                  title: selection.name,
+                  scientificName: selection.binomial_name,
+                  loyalty: occurrence.locality,
+                  date: occurrence.eventDate,
+                  institutionCode: occurrence.institutionCode,
+                },
               },
-              icon: selection.thumbnail ?? '',
-              content: `<b>${occurrence.scientificName}</b><br/>${occurrence.country}<br/>`,
-            });
+              (marker) => {
+                this.isModalOpen.set(true);
+                this.selectedMarker.set(marker);
+              },
+            );
           });
         });
       }

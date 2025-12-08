@@ -1,4 +1,5 @@
 @use "../../style/layout";
+@use "../../style/breakpoint";
 
 #map {
   height: 100vh;
@@ -11,7 +12,11 @@
 
 .map-location-center {
   position: absolute;
-  bottom: layout.$safe-area-inset;
-  left: layout.$safe-area-inset;
+  bottom: calc(#{layout.$safe-area-inset} + 5rem);
+  right: layout.$safe-area-inset;
   z-index: 99;
+
+  @media (min-width: breakpoint.$md) {
+    bottom: layout.$safe-area-inset;
+  }
 }

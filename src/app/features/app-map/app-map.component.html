@@ -4,3 +4,15 @@
     <app-icon name="map-arrow" size="size-medium" color="color-neutral-light" />
   </floating-button>
 </div>
+<app-modal
+  modalType="compact"
+  [title]="selectedMarker()?.content?.title || ''"
+  [isOpen]="!!selectedMarker() && isModalOpen()"
+  (handleClose)="isModalOpen.set(false)"
+>
+  <!--  <p>{{ selectedMarker()?.content }}</p>-->
+  <p>{{ selectedMarker()?.content?.scientificName }}</p>
+  <p>{{ selectedMarker()?.content?.institutionCode }}</p>
+  <p>{{ selectedMarker()?.content?.loyalty }}</p>
+  <p>{{ selectedMarker()?.content?.date }}</p>
+</app-modal>

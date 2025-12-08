@@ -1,8 +1,11 @@
 <ng-template cdkPortal>
-  @if (isOpen()) {
+  @if (isOpen() && modalType() === "large") {
     <div class="backdrop" (click)="close()"></div>
   }
-  <div class="modal" [ngClass]="{ closed: !isOpen() }">
+  <div
+    class="modal"
+    [ngClass]="{ closed: !isOpen(), compact: modalType() === 'compact' }"
+  >
     <div class="content">
       <div class="header">
         <h2>{{ title() }}</h2>

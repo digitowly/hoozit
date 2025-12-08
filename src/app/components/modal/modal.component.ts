@@ -12,6 +12,8 @@ import {
 import { IconComponent } from '../icon/icon.component';
 import { CdkPortal, DomPortalOutlet, PortalModule } from '@angular/cdk/portal';
 
+type ModalType = 'large' | 'compact';
+
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
@@ -20,8 +22,12 @@ import { CdkPortal, DomPortalOutlet, PortalModule } from '@angular/cdk/portal';
   imports: [NgClass, IconComponent, PortalModule],
 })
 export class ModalComponent implements AfterViewInit, OnDestroy {
+  modalType = input<ModalType>('large');
+
   title = input('');
+
   isOpen = input(false);
+
   readonly handleClose = output();
 
   @ViewChild(CdkPortal) portal!: CdkPortal;
