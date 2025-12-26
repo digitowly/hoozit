@@ -50,9 +50,11 @@
       </ul>
     }
 
-    <app-modal
-      [title]="selected()?.name || ''"
+    <species-overview-modal
       [isOpen]="isModalOpen()"
+      [isLoading]="speciesContent.isLoading()"
+      [title]="selected()?.name || ''"
+      [introduction]="selectedIntroduction()"
       (handleClose)="closeModal()"
     />
   </div>
