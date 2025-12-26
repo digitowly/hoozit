@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { IconComponent } from '../icon/icon.component';
 import { CdkPortal, DomPortalOutlet, PortalModule } from '@angular/cdk/portal';
+import { ImageSource } from '../../model/image';
 
 type ModalType = 'large' | 'compact';
 
@@ -26,7 +27,11 @@ export class ModalComponent implements AfterViewInit, OnDestroy {
 
   title = input('');
 
+  heroImage = input<ImageSource | null>(null);
+
   isOpen = input(false);
+
+  isLoading = input(false);
 
   readonly handleClose = output();
 

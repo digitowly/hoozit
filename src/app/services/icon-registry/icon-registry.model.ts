@@ -6,4 +6,5 @@ export type IconName =
   | 'user'
   | 'home'
   | 'arrow-left'
-  | 'chevron';
+  | 'chevron'
+  | 'arrow-link';

@@ -6,14 +6,39 @@
     class="modal"
     [ngClass]="{ closed: !isOpen(), compact: modalType() === 'compact' }"
   >
-    <div class="content">
-      <div class="header">
-        <h2>{{ title() }}</h2>
-        <button class="close-button" (click)="close()">
-          <app-icon name="cross" size="size-medium" />
-        </button>
+    @if (heroImage()?.url && !isLoading()) {
+      <div class="hero-image">
+        <img [src]="heroImage()?.url" alt="{{ heroImage()?.alt }}" />
+        <div class="hero-image-source">
+          <span>{{ heroImage()?.origin }}</span>
+          <span>{{ " | " }}</span>
+          @if (heroImage()?.photographer && heroImage()?.photographer_url) {
+            <a [href]="heroImage()?.photographer_url" target="_blank">
+              {{ heroImage()?.photographer }}
+            </a>
+          } @else if (heroImage()?.photographer) {
+            <span>{{ heroImage()?.photographer }}</span>
+          }
+        </div>
       </div>
-      <ng-content />
+    }
+    <div class="header">
+      <button class="close-button" (click)="close()">
+        <app-icon name="cross" size="size-medium" />
+      </button>
+    </div>
+    <div
+      class="content"
+      [ngClass]="{
+        'with-hero-image': !!heroImage()?.url,
+      }"
+    >
+      @if (isLoading()) {
+        <p>Loading...</p>
+      } @else {
+        <h2>{{ title() }}</h2>
+        <ng-content />
+      }
     </div>
   </div>
 </ng-template>
