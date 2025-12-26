@@ -3,33 +3,106 @@
 @use "../../style/layout";
 @use "../../style/breakpoint";
 
+$hero-image-height: 250px;
+
 .modal {
   position: fixed;
   bottom: 0;
   left: 0;
   background-color: var(--color-background);
   width: 100%;
-  height: 90%;
-  transform: translateY(0);
+  height: 95%;
+  transform: translateY(0) translateZ(0);
   z-index: 1000000;
   transition: all ease-in 0.25s;
-  border-radius: border.$radius;
+  border-radius: border.$radius border.$radius 0 0;
+  overflow: scroll;
+  isolation: isolate;
+  //backface-visibility: hidden;
+  //will-change: transform;
+
+  @media (min-width: breakpoint.$sm) {
+    max-width: 650px;
+    left: 50%;
+    top: 50%;
+    border-radius: border.$radius;
+    transform: translate(-50%, -50%);
+    transition: all ease-in-out 0.35s;
+  }
 
   &.closed {
     transform: translateY(110%);
+
+    @media (min-width: breakpoint.$sm) {
+      transform: translate(-50%, 170%);
+    }
+  }
+
+  .hero-image {
+    width: 100%;
+    height: $hero-image-height;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: contain;
+
+    &-source {
+      padding: 0 1rem;
+      opacity: 0.5;
+      position: absolute;
+      bottom: -1.5rem;
+      right: 0;
+      display: flex;
+      gap: 0.25rem;
+
+      span, a {
+        font-size: 0.75rem;
+      }
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
   }
 
   .content {
-    padding: 1rem;
+    padding: 0 1rem 1rem 1rem;
+
+    @media (min-width: breakpoint.$sm) {
+      padding: 0 2rem 2rem 2rem;
+    }
+
+    &.with-hero-image {
+      padding: 1rem;
+      margin-top: $hero-image-height - 50px;
+
+      @media (min-width: breakpoint.$sm) {
+        padding: 2rem;
+      }
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+
   }
 
   .header {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     align-items: center;
     margin-bottom: 0.25rem;
     max-height: 50px;
+    position: sticky;
+    padding: 0 layout.$safe-area-inset;
+    top: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
   }
 
   &.compact {
@@ -37,24 +110,47 @@
     backdrop-filter: blur(15px);
     margin: layout.$safe-area-inset;
     height: 30%;
+    max-height: 250px;
     width: calc(100% - #{layout.$safe-area-inset} * 2);
     box-shadow: 0 6px 20px color.$shadow;
+    border-radius: border.$radius;
 
-      @media (min-width: breakpoint.$md) {
-        width: 500px;
+    @media (min-width: breakpoint.$sm) {
+      transform: translate(-50%, 50%);
+    }
+
+    .content {
+      margin-top: 0;
+    }
+
+    &.closed {
+      @media (min-width: breakpoint.$sm) {
+        transform: translate(-50%, 170%);
       }
+    }
+
+    @media (min-width: breakpoint.$md) {
+      width: 500px;
+    }
   }
 }
 
 .backdrop {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
   z-index: 99900;
   width: 100%;
   height: 100%;
+  transition: all ease-in 0.25s;
+  background-color: var(--color-background);
+  opacity: 0.65;
+  isolation: isolate;
 
-  background-color: rgba(0, 0, 0, 0.5);
+  @media (min-width: breakpoint.$sm) {
+    opacity: 0.9;
+  }
+
 }
 
 .close-button {
@@ -76,7 +172,5 @@
   &:active {
     transform: scale(1.1);
     background: var(--color-background-overlay);
-
-    //background: rgb(225, 225, 225);
   }
 }

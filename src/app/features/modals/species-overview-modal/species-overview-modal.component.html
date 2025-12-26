@@ -1,0 +1,15 @@
+<app-modal
+  [title]="title()"
+  [isOpen]="isOpen()"
+  [isLoading]="isLoading()"
+  [heroImage]="heroImage"
+  (handleClose)="handleClose.emit()"
+>
+  @for (paragraph of introduction()?.content?.paragraphs; track paragraph) {
+    <p>{{ paragraph }}</p>
+  }
+
+  @for (source of introduction()?.content?.sources; track source.url) {
+    <source-link [url]="source.url" [label]="source.name" />
+  }
+</app-modal>
