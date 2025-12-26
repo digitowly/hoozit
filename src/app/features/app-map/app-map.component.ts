@@ -77,7 +77,6 @@ export class AppMapComponent {
         );
         occurrences.subscribe((species) => {
           species?.results.forEach((occurrence) => {
-            console.log(occurrence);
             this.map.createMarker(
               {
                 coordinate: {
