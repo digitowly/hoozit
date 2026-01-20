@@ -5,7 +5,7 @@ import {
   ClientStorageKey,
 } from '../../../../services/client-storage/client-storage.service';
 
-type SearchResultSelection = AnimalSearchResult;
+export type SearchResultSelection = AnimalSearchResult;
 
 @Injectable({ providedIn: 'root' })
 export class SearchResultSelectionService {

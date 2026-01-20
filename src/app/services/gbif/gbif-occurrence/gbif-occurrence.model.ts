@@ -2,7 +2,7 @@ export interface GbifOccurrenceResponse {
   results: GbifOccurrence[];
 }
 
-interface GbifOccurrence {
+export interface GbifOccurrence {
   key: number;
   taxonKey: number;
   decimalLatitude: number;

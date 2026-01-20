@@ -18,8 +18,6 @@ $hero-image-height: 250px;
   border-radius: border.$radius border.$radius 0 0;
   overflow: scroll;
   isolation: isolate;
-  //backface-visibility: hidden;
-  //will-change: transform;
 
   @media (min-width: breakpoint.$sm) {
     max-width: 650px;
@@ -148,7 +146,7 @@ $hero-image-height: 250px;
   isolation: isolate;
 
   @media (min-width: breakpoint.$sm) {
-    opacity: 0.9;
+    opacity: 0.95;
   }
 
 }
