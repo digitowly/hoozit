@@ -16,9 +16,9 @@
 .map-search-bar {
   z-index: 1000;
   position: absolute;
-  top: layout.$safe-area-inset;
-  left: layout.$safe-area-inset;
-  width: calc(100% - #{layout.$safe-area-inset} * 2);
+  top: layout.$safe-area-inset-sm;
+  left: layout.$safe-area-inset-sm;
+  width: calc(100% - #{layout.$safe-area-inset-sm} * 2);
 
   @media (min-width: breakpoint.$md) {
     width:70%;
@@ -29,10 +29,10 @@
 .map-search-selection-list {
   z-index: 999;
   position: absolute;
-  top: layout.$safe-area-inset + 3.5rem;
-  left: layout.$safe-area-inset;
+  top: layout.$safe-area-inset-sm + 3.5rem;
+  left: layout.$safe-area-inset-sm;
 
   @media (min-width: breakpoint.$md) {
-    top: layout.$safe-area-inset + 4.5rem;
+    top: layout.$safe-area-inset-sm + 4.5rem;
   }
 }
