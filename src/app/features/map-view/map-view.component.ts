@@ -1,8 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { AppMapComponent } from '../app-map/app-map.component';
 import { OccurrenceSearchComponent } from '../search/components/occurrence-search/occurrence-search.component';
 import { AnimalSearchService } from '../../services/animal-search/animal-search.service';
-import { AnimalSearchResult } from '../../services/animal-search/animal-search.model';
 import { SearchResultSelectionListComponent } from '../search/components/search-result-selection-list/search-result-selection-list.component';
 
 @Component({
@@ -16,14 +15,19 @@ import { SearchResultSelectionListComponent } from '../search/components/search-
   styleUrl: './map-view.component.scss',
 })
 export class MapViewComponent {
-  searchResults = signal<AnimalSearchResult[]>([]);
+  private readonly animalSearchService = inject(AnimalSearchService);
+
   isSearchModalOpen = signal(false);
 
-  handleSearch(searchTerm: string) {
-    this.animalSearch.getOccurrences(searchTerm).subscribe((result) => {
-      this.searchResults.set(result.data);
-    });
-  }
+  occurrences = computed(
+    () => this.animalSearchService.resource.value()?.data || [],
+  );
 
-  constructor(public animalSearch: AnimalSearchService) {}
+  isSearchLoading = computed(() =>
+    this.animalSearchService.resource.isLoading(),
+  );
+
+  handleSearch(searchTerm: string) {
+    this.animalSearchService.searchAnimals(searchTerm);
+  }
 }

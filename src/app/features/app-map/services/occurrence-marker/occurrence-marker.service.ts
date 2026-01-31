@@ -6,7 +6,7 @@ import { Coordinate } from '../../../../model/coordinate';
 import { MapMarker, MapService } from '../../../../services/map/map-service';
 import { GbifOccurrence } from '../../../../services/gbif/gbif-occurrence/gbif-occurrence.model';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
-import { GeoService } from '../../../../services/geo/geo.service';
+import { GeoHelper } from '../../../../utils/geo/geo-helper';
 
 type MapMarkerData = {
   timestamp: number;
@@ -17,7 +17,6 @@ type MapMarkerData = {
 export class OccurrenceMarkerService {
   private gbifService = inject(GbifOccurrenceService);
   private selectionsService = inject(SearchResultSelectionService);
-  private geoService = inject(GeoService);
   private lastSearchCoordinate: Coordinate | null = null;
   private lastSelections: AnimalSearchResult[] = [];
 
@@ -95,10 +94,8 @@ export class OccurrenceMarkerService {
   private hasLocationChangedSignificantly(currentCoordinate: Coordinate) {
     return (
       !this.lastSearchCoordinate ||
-      this.geoService.getDistance(
-        currentCoordinate,
-        this.lastSearchCoordinate,
-      ) >= this.gbifService.CACHE_THRESHOLD_KM
+      GeoHelper.getDistance(currentCoordinate, this.lastSearchCoordinate) >=
+        this.gbifService.CACHE_THRESHOLD_KM
     );
   }
 

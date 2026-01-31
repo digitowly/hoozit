@@ -7,7 +7,7 @@
       @if (!isListExpanded()) {
         <ul class="list-collapsed" animate.leave="list-collapsed--leaving">
           @for (
-            selection of selections.selections();
+            selection of selections();
             track selection;
             let index = $index
           ) {
@@ -15,10 +15,10 @@
               [style.padding-left]="index === 0 ? '15px' : '0px'"
               [style.width]="index === 0 ? '55px' : '40px'"
               [style.border-bottom-right-radius]="
-                index === selections.selections().length - 1 ? '10rem' : ''
+                index === selections().length - 1 ? '10rem' : ''
               "
               [style.border-top-right-radius]="
-                index === selections.selections().length - 1 ? '10rem' : ''
+                index === selections().length - 1 ? '10rem' : ''
               "
             >
               <img [src]="selection.thumbnail" alt="{{ selection.name }}" />
@@ -29,7 +29,7 @@
     </button>
     @if (isListExpanded()) {
       <ul class="list-expanded" animate.leave="list-expanded--leaving">
-        @for (selection of selections.selections(); track selection) {
+        @for (selection of selections(); track selection) {
           <div class="item">
             <button class="item-open-button" (click)="select(selection)">
               <img [src]="selection.thumbnail" alt="{{ selection.name }}" />
@@ -52,9 +52,9 @@
 
     <species-overview-modal
       [isOpen]="isModalOpen()"
-      [isLoading]="speciesContent.isLoading()"
+      [isLoading]="isIntroductionLoading()"
       [title]="selected()?.name || ''"
-      [introduction]="selectedIntroduction()"
+      [introduction]="introduction()"
       (handleClose)="closeModal()"
     />
   </div>

@@ -1,74 +1,66 @@
-import { describe, beforeEach, it, expect, afterEach } from 'vitest';
+import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
 import { AnimalSearchService } from './animal-search.service';
 import { AnimalSearchResponse } from './animal-search.model';
-import { provideHttpClient } from '@angular/common/http';
-import { finalize } from 'rxjs';
 import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('AnimalSearchService', () => {
   let service: AnimalSearchService;
-  let httpMock: HttpTestingController;
 
   beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn());
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        provideZonelessChangeDetection(),
-      ],
+      providers: [provideZonelessChangeDetection()],
     });
     service = TestBed.inject(AnimalSearchService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set isLoading to true when findOccurrences is called and false when complete', () => {
+  it('should set isLoading to true when searchAnimals is called and false when complete', async () => {
     const mockResponse: AnimalSearchResponse = { data: [] };
-    expect(service.isLoading()).toBe(false);
+    (fetch as any).mockResolvedValue({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
 
-    service
-      .getOccurrences('test')
-      .pipe(
-        finalize(() => {
-          expect(service.isLoading()).toBe(false);
-        }),
-      )
-      .subscribe((res) => {
-        expect(res).toEqual(mockResponse);
-      });
+    // Wait for initial load if any (due to signal being initialized)
+    TestBed.tick();
+    await new Promise((resolve) => setTimeout(resolve));
+    TestBed.tick();
 
-    expect(service.isLoading()).toBe(true);
+    expect(service.resource.isLoading()).toBe(false);
+    expect(service.resource.value()).toBe(null);
 
-    const req = httpMock.expectOne(
-      'http://localhost:8082/api/animals/search?q=test&lang=de',
+    service.searchAnimals('test');
+
+    // Wait for the resource to load
+    TestBed.tick();
+    await new Promise((resolve) => setTimeout(resolve));
+    TestBed.tick();
+
+    expect(service.resource.value()).toEqual(mockResponse);
+    expect(service.resource.isLoading()).toBe(false);
+
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining('q=test'),
+      expect.any(Object),
     );
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
   });
 
-  it('should handle error', () => {
-    service.getOccurrences('test').subscribe((res) => {
-      expect(res).toEqual({ data: [] });
-      expect(service.error()).toBe(
-        'Network error: Please check your connection',
-      );
-    });
+  it('should handle error', async () => {
+    (fetch as any).mockRejectedValue(new Error('Network error'));
 
-    const req = httpMock.expectOne(
-      'http://localhost:8082/api/animals/search?q=test&lang=de',
-    );
-    req.error(new ProgressEvent('Network error'), { status: 0 });
+    service.searchAnimals('test');
+
+    TestBed.tick();
+    await new Promise((resolve) => setTimeout(resolve));
+    TestBed.tick();
+
+    expect(service.resource.error()).toBeTruthy();
+    // Accessing .value() when in error state throws in Angular Resource
+    expect(() => service.resource.value()).toThrow();
   });
 });

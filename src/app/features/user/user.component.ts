@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { UserProfileService } from './services/user-profile/user-profile.service';
+import { Component, computed, inject } from '@angular/core';
 import { ToggleButtonComponent } from '../../components/toggle-button/toggle-button.component';
 import { UiThemeService } from '../../services/ui-theme/ui-theme.service';
+import { UserDataService } from '../../services/user/user-data/user-data.service';
 
 @Component({
   selector: 'user',
@@ -10,14 +10,19 @@ import { UiThemeService } from '../../services/ui-theme/ui-theme.service';
   imports: [ToggleButtonComponent],
 })
 export class UserComponent {
-  constructor(
-    public user: UserProfileService,
-    public theme: UiThemeService,
-  ) {
-    user.get();
+  private readonly userDataService = inject(UserDataService);
+  private readonly themeService = inject(UiThemeService);
+
+  user = computed(() => this.userDataService.userResource.value());
+  isUserLoading = computed(() => this.userDataService.userResource.isLoading());
+
+  isThemeToggleChecked = computed(() => this.themeService.theme() === 'dark');
+
+  async logoutUser() {
+    await this.userDataService.logout();
   }
 
-  toggleTheme(isDark: boolean) {
-    this.theme.toggleTheme();
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 }

@@ -1,20 +1,20 @@
 <div>
   light
   <toggle-button
-    [isChecked]="theme.theme() == 'dark'"
-    (onChange)="theme.toggleTheme()"
+    [isChecked]="isThemeToggleChecked()"
+    (onChange)="toggleTheme()"
   />
   dark
-  @if (user.isLoading()) {
+  @if (isUserLoading()) {
     <p>loading</p>
-  } @else if (!user.data()) {
+  } @else if (!user()) {
     <p>No user logged in</p>
     <a href="http://localhost:8000/user/login/google">Login with Google</a>
   } @else {
-    <p>{{ user.data()?.email }}</p>
-    <p>{{ user.data()?.nickname }}</p>
-    <p>{{ user.data()?.expertise_tier }}</p>
-    <p>{{ user.data()?.account_tier }}</p>
-    <button (click)="user.logout()">logout</button>
+    <p>{{ user()?.email }}</p>
+    <p>{{ user()?.nickname }}</p>
+    <p>{{ user()?.role }}</p>
+    <p>{{ user()?.account_tier }}</p>
+    <button (click)="logoutUser()">logout</button>
   }
 </div>
