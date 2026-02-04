@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authSpeciesResourceGuard } from './guards/auth-species-resource-guard/auth-species-resource.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -27,10 +28,11 @@ export const routes: Routes = [
     data: { reuse: true },
   },
   {
-    path: 'occurrence-resources',
+    path: 'species-resources',
     loadComponent: () =>
-      import('../app/features/occurrence-resource/occurrence-resource.component').then(
-        ({ OccurrenceResourceComponent }) => OccurrenceResourceComponent,
+      import('./features/species-resource/species-resource.component').then(
+        ({ SpeciesResourceComponent }) => SpeciesResourceComponent,
       ),
+    canActivate: [authSpeciesResourceGuard],
   },
 ];

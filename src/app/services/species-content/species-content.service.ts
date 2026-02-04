@@ -1,7 +1,6 @@
 import { Injectable, signal, resource } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { SpeciesIntroduction } from './species-content.model';
-import { handleHttpError } from '../../utils/http-error/http-error';
 
 @Injectable({ providedIn: 'root' })
 export class SpeciesContentService {
