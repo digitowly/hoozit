@@ -1,0 +1,6 @@
+<autosuggest
+  [entries]="speciesEntries()"
+  (onQueryChange)="onAutoSuggestChange($event)"
+/>
+<input type="text" [formField]="occurrenceResourceForm.url" />
+<button (click)="onSubmit()">send</button>

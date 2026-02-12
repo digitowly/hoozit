@@ -1,6 +1,8 @@
 import { Injectable, resource, signal } from '@angular/core';
 import { AnimalSearchResponse } from './animal-search.model';
 import { environment } from '../../../environments/environment';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,15 +10,21 @@ import { environment } from '../../../environments/environment';
 export class AnimalSearchService {
   private readonly apiUrl = `${environment.verdexUrl}/animals/search`;
 
-  private readonly searchQuery = signal('');
+  private readonly searchQuery$ = new Subject<string>();
+
+  private readonly debouncedQuery = toSignal(
+    this.searchQuery$.pipe(debounceTime(300), distinctUntilChanged()),
+    { initialValue: '' },
+  );
 
   resource = resource({
-    params: () => ({ q: this.searchQuery(), lang: 'de' }),
+    params: () => ({ q: this.debouncedQuery(), lang: 'de' }),
     loader: ({ params }) => this.fetchAnimals(params.q),
   });
 
   searchAnimals(name: string) {
-    this.searchQuery.set(name);
+    if (name.length < 3) return;
+    this.searchQuery$.next(name);
   }
 
   private async fetchAnimals(

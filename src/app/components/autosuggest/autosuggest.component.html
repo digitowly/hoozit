@@ -1,0 +1,54 @@
+<div ngCombobox filterMode="auto-select">
+  <div #origin class="autocomplete">
+    <span class="search-icon">
+      @if (selectedIcon()) {
+        <img
+          class="selected-icon"
+          [src]="selectedIcon()"
+          alt="Selected entry"
+        />
+      } @else {
+        <app-icon name="search" size="size-medium" />
+      }
+    </span>
+
+    <input
+      aria-label="Label dropdown"
+      placeholder="Select a country"
+      (valueChange)="handleValueChange($event)"
+      ngComboboxInput
+    />
+  </div>
+  <ng-template ngComboboxPopupContainer>
+    <ng-template
+      [cdkConnectedOverlay]="{ origin, usePopover: 'inline', matchWidth: true }"
+      [cdkConnectedOverlayOpen]="true"
+    >
+      <div class="popup">
+        @if (suggestions().length === 0) {
+          <div class="no-results">No results found</div>
+        }
+        <div ngListbox>
+          @for (suggestion of suggestions(); track suggestion) {
+            <div ngOption [value]="suggestion" [label]="suggestion.label">
+              @if (suggestion.icon) {
+                <img
+                  class="option-image"
+                  [src]="suggestion.icon"
+                  alt="{{ suggestion.label }}"
+                />
+              }
+              <span class="option-label">{{ suggestion.label }}</span>
+              <span
+                class="check-icon material-symbols-outlined"
+                translate="no"
+                aria-hidden="true"
+                >check</span
+              >
+            </div>
+          }
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

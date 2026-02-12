@@ -1,0 +1,85 @@
+import {
+  afterRenderEffect,
+  Component,
+  computed,
+  input,
+  output,
+  signal,
+  viewChild,
+  viewChildren,
+} from '@angular/core';
+import { Listbox, Option } from '@angular/aria/listbox';
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxPopupContainer,
+} from '@angular/aria/combobox';
+import { FormsModule } from '@angular/forms';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { AutoSuggestEntry } from './autosuggest.model';
+import { IconComponent } from '../icon/icon.component';
+
+@Component({
+  selector: 'autosuggest',
+  imports: [
+    FormsModule,
+    CdkConnectedOverlay,
+    Option,
+    Combobox,
+    ComboboxInput,
+    ComboboxPopupContainer,
+    Listbox,
+    IconComponent,
+  ],
+  templateUrl: './autosuggest.component.html',
+  styleUrl: './autosuggest.component.scss',
+})
+export class AutosuggestComponent {
+  readonly listbox = viewChild<Listbox<string>>(Listbox);
+
+  readonly options = viewChildren<Option<string>>(Option);
+
+  readonly combobox = viewChild<Combobox<string>>(Combobox);
+
+  readonly onQueryChange = output<string>();
+
+  readonly query = signal('');
+
+  readonly entries = input<AutoSuggestEntry[]>([]);
+
+  readonly suggestions = computed(() => {
+    return this.entries().filter((entry) =>
+      entry.label.toLowerCase().startsWith(this.query().toLowerCase()),
+    );
+  });
+
+  readonly selectedIcon = computed(() => {
+    return this.suggestions().find(
+      (entry) => entry.label.toLowerCase() === this.query().toLowerCase(),
+    )?.icon;
+  });
+
+  handleValueChange(value: string) {
+    this.query.set(value);
+    this.onQueryChange.emit(value);
+  }
+
+  constructor() {
+    // Scrolls to the active item when the active option changes.
+    // The slight delay here is to ensure animations are done before scrolling.
+    afterRenderEffect(() => {
+      const option = this.options().find((opt) => opt.active());
+      setTimeout(
+        () => option?.element.scrollIntoView({ block: 'nearest' }),
+        50,
+      );
+    });
+
+    // Resets the listbox scroll position when the combobox is closed.
+    afterRenderEffect(() => {
+      if (!this.combobox()?.expanded()) {
+        setTimeout(() => this.listbox()?.element.scrollTo(0, 0), 150);
+      }
+    });
+  }
+}
