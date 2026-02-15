@@ -1,0 +1,10 @@
+@use "../../style/breakpoint";
+
+.content {
+  padding: 1.5rem;
+  line-height: 1.5;
+
+  @media (min-width: breakpoint.$md) {
+    padding: 2.5rem;
+  }
+}

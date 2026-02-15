@@ -1,4 +1,4 @@
-<div>
+<content-container>
   <div>
     light
     <toggle-button
@@ -17,7 +17,16 @@
       <p>{{ user()?.nickname }}</p>
       <p>{{ user()?.role }}</p>
       <p>{{ user()?.account_tier }}</p>
+
+      @if (hasSpeciesResourcePermission()) {
+        <div>
+          <a href="/species-resources">submit resource</a>
+        </div>
+      }
     </div>
-    <button (click)="logoutUser()">logout</button>
+
+    <div class="settings-section">
+      <button (click)="logoutUser()">logout</button>
+    </div>
   }
-</div>
+</content-container>

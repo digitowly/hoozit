@@ -1,6 +1,20 @@
-<autosuggest
-  [entries]="speciesEntries()"
-  (onQueryChange)="onAutoSuggestChange($event)"
-/>
-<input type="text" [formField]="occurrenceResourceForm.url" />
-<button (click)="onSubmit()">send</button>
+<content-container>
+  <field-container label="Species" name="species">
+    <autosuggest
+      id="species"
+      placeholder="Search for species"
+      [entries]="speciesEntries()"
+      (onQueryChange)="onAutoSuggestChange($event)"
+    />
+  </field-container>
+
+  <field-container label="Url" name="url">
+    <input
+      id="url"
+      placeholder="Enter url"
+      type="text"
+      [formField]="occurrenceResourceForm.url"
+    />
+  </field-container>
+  <button (click)="onSubmit()">send</button>
+</content-container>

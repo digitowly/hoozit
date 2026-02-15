@@ -1,20 +1,22 @@
 <div ngCombobox filterMode="auto-select">
   <div #origin class="autocomplete">
-    <span class="search-icon">
-      @if (selectedIcon()) {
+    @if (selectedIcon()) {
+      <span class="entry-icon">
         <img
           class="selected-icon"
           [src]="selectedIcon()"
           alt="Selected entry"
         />
-      } @else {
+      </span>
+    } @else {
+      <span class="search-icon">
         <app-icon name="search" size="size-medium" />
-      }
-    </span>
+      </span>
+    }
 
     <input
       aria-label="Label dropdown"
-      placeholder="Select a country"
+      [placeholder]="placeholder()"
       (valueChange)="handleValueChange($event)"
       ngComboboxInput
     />

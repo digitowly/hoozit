@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
 import {
   CreateSpeciesResourceParams,
@@ -9,60 +9,57 @@ import { AutosuggestComponent } from '../../components/autosuggest/autosuggest.c
 import { AnimalSearchService } from '../../services/animal-search/animal-search.service';
 import { AutoSuggestEntry } from '../../components/autosuggest/autosuggest.model';
 import { AnimalSearchResult } from '../../services/animal-search/animal-search.model';
+import { SpeciesAutosuggestService } from '../../services/forms/species-autosuggest/species-autosuggest.service';
+import { ContentContainerComponent } from '../../components/content-container/content-container.component';
+import { FieldContainerComponent } from '../../components/forms/field-container/field-container.component';
 
 @Component({
   selector: 'occurrence-resource',
-  imports: [FormField, AutosuggestComponent],
+  imports: [
+    FormField,
+    AutosuggestComponent,
+    ContentContainerComponent,
+    FieldContainerComponent,
+  ],
   templateUrl: './species-resource.component.html',
   styleUrl: './species-resource.component.scss',
 })
 export class SpeciesResourceComponent {
-  private readonly animalSearchService = inject(AnimalSearchService);
-
-  readonly speciesEntries = computed(
-    () =>
-      this.animalSearchService.resource
-        .value()
-        ?.data?.map(this.mapToAutoSuggestEntry) || [],
+  private readonly speciesResourceService = inject(SpeciesResourceService);
+  private readonly speciesAutosuggestService = inject(
+    SpeciesAutosuggestService,
   );
 
-  private readonly speciesResourceService = inject(SpeciesResourceService);
+  readonly speciesEntries = computed(() =>
+    this.speciesAutosuggestService.speciesEntries(),
+  );
 
-  formModel = signal({
+  readonly formModel = signal({
     binomialName: '',
     url: '',
     type: 'image',
   });
 
   onAutoSuggestChange(input: string) {
-    console.log(input);
-    this.animalSearchService.searchAnimals(input);
-    const entry = this.speciesEntries().find(
-      (e) => e.label.toLowerCase() === input.toLowerCase(),
-    );
-    if (entry) {
-      this.formModel.update((o) => ({ ...o, binomialName: entry.value }));
-    }
-  }
-
-  private mapToAutoSuggestEntry(species: AnimalSearchResult): AutoSuggestEntry {
-    return {
-      label: species.name,
-      value: species.binomial_name,
-      icon: species.thumbnail,
-    };
+    this.speciesAutosuggestService.onChange(input);
   }
 
   readonly isSubmitting = signal(false);
 
-  occurrenceResourceForm = form(this.formModel);
+  occurrenceResourceForm = form(this.formModel, {});
+
+  autoSuggestEffect = effect(() => {
+    this.occurrenceResourceForm.binomialName().value.update(() => {
+      return this.speciesAutosuggestService.selectedEntry()?.value || '';
+    });
+  });
 
   async onSubmit() {
     const formData = this.formModel();
     console.log({ formData });
 
     const params: CreateSpeciesResourceParams = {
-      binomialName: formData.binomialName,
+      binomial_name: formData.binomialName,
       url: formData.url,
       description: 'test',
       type: 'image',
@@ -70,16 +67,15 @@ export class SpeciesResourceComponent {
 
     console.log({ params });
 
-    //
-    // this.isSubmitting.set(true);
-    // try {
-    //   await firstValueFrom(
-    //     this.speciesResourceService.createOccurrenceResource(params),
-    //   );
-    // } catch (e) {
-    //   // error
-    // } finally {
-    //   this.isSubmitting.set(false);
-    // }
+    this.isSubmitting.set(true);
+    try {
+      await firstValueFrom(
+        this.speciesResourceService.createOccurrenceResource(params),
+      );
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.isSubmitting.set(false);
+    }
   }
 }

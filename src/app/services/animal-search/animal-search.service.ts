@@ -12,12 +12,12 @@ export class AnimalSearchService {
 
   private readonly searchQuery$ = new Subject<string>();
 
-  private readonly debouncedQuery = toSignal(
+  readonly debouncedQuery = toSignal(
     this.searchQuery$.pipe(debounceTime(300), distinctUntilChanged()),
     { initialValue: '' },
   );
 
-  resource = resource({
+  readonly resource = resource({
     params: () => ({ q: this.debouncedQuery(), lang: 'de' }),
     loader: ({ params }) => this.fetchAnimals(params.q),
   });

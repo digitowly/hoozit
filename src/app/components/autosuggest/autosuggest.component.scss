@@ -11,16 +11,22 @@
 }
 
 .search-icon {
-  left: 0.75rem;
+  left: 1rem;
   position: absolute;
   color: var(--quaternary-contrast);
+}
+
+.entry-icon {
+  left: 0.5rem;
+  top: 0.5rem;
+  position: absolute;
 }
 
 [ngComboboxInput] {
   width: 16rem;
   font-size: 1rem;
   border-radius: 0.25rem;
-  padding: 0.75rem 0.5rem 0.75rem 2.5rem;
+  padding: 0.75rem 0.5rem 0.75rem 3rem;
   color: var(--primary-contrast);
   outline-color: var(--hot-pink);
   border: 1px solid var(--quinary-contrast);
@@ -37,7 +43,7 @@
 
 .popup {
   width: 100%;
-  margin-top: 8px;
+  margin-top: 0.25re;
   padding: 0.5rem;
   max-height: 11rem;
   border-radius: 0.5rem;

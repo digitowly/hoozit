@@ -4,7 +4,7 @@ import { environment } from '../../../../environments/environment';
 
 export interface CreateSpeciesResourceParams {
   type: 'image' | 'text';
-  binomialName: string;
+  binomial_name: string;
   url: string;
   description: string;
 }

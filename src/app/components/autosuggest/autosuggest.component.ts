@@ -41,6 +41,8 @@ export class AutosuggestComponent {
 
   readonly combobox = viewChild<Combobox<string>>(Combobox);
 
+  readonly placeholder = input('');
+
   readonly onQueryChange = output<string>();
 
   readonly query = signal('');

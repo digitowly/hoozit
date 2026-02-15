@@ -3,15 +3,20 @@ import { ToggleButtonComponent } from '../../components/toggle-button/toggle-but
 import { UiThemeService } from '../../services/ui-theme/ui-theme.service';
 import { UserDataService } from '../../services/user/user-data/user-data.service';
 import { environment } from '../../../environments/environment';
+import { ContentContainerComponent } from '../../components/content-container/content-container.component';
+import { PermissionsService } from '../../services/permissions/permissions.service';
+import { Permission } from '../../services/permissions/permissions.model';
 
 @Component({
   selector: 'user',
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
-  imports: [ToggleButtonComponent],
+  imports: [ToggleButtonComponent, ContentContainerComponent],
 })
 export class UserComponent {
   private readonly userDataService = inject(UserDataService);
+
+  private readonly permissionsService = inject(PermissionsService);
 
   private readonly themeService = inject(UiThemeService);
 
@@ -20,6 +25,10 @@ export class UserComponent {
   isUserLoading = computed(() => this.userDataService.userResource.isLoading());
 
   isThemeToggleChecked = computed(() => this.themeService.theme() === 'dark');
+
+  hasSpeciesResourcePermission = computed(() =>
+    this.permissionsService.hasUserPermissions([Permission.RESOURCE_SUBMIT]),
+  );
 
   get googleLoginUrl(): string {
     return `${environment.rangoUrl}/user/login/google`;
