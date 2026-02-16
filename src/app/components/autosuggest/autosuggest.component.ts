@@ -66,22 +66,34 @@ export class AutosuggestComponent {
     this.onQueryChange.emit(value);
   }
 
+  scrollToActiveOption() {
+    const options = this.options();
+    const option = options.find((opt) => opt.active());
+    if (option) {
+      setTimeout(() => option.element.scrollIntoView({ block: 'nearest' }), 50);
+    }
+  }
+
+  resetListboxScroll() {
+    const expanded = this.combobox()?.expanded();
+    if (expanded === false) {
+      const listbox = this.listbox();
+      if (listbox) {
+        setTimeout(() => listbox.element.scrollTo(0, 0), 150);
+      }
+    }
+  }
+
   constructor() {
     // Scrolls to the active item when the active option changes.
     // The slight delay here is to ensure animations are done before scrolling.
     afterRenderEffect(() => {
-      const option = this.options().find((opt) => opt.active());
-      setTimeout(
-        () => option?.element.scrollIntoView({ block: 'nearest' }),
-        50,
-      );
+      this.scrollToActiveOption();
     });
 
     // Resets the listbox scroll position when the combobox is closed.
     afterRenderEffect(() => {
-      if (!this.combobox()?.expanded()) {
-        setTimeout(() => this.listbox()?.element.scrollTo(0, 0), 150);
-      }
+      this.resetListboxScroll();
     });
   }
 }
