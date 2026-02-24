@@ -4,6 +4,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
 }
 
 .toggle-switch {
@@ -22,6 +23,7 @@
     opacity: 0;
     width: 0;
     height: 0;
+    display: none;
 
     &:checked + .slider {
       background-color: color.$info;

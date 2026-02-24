@@ -1,32 +1,97 @@
 <content-container>
-  <div>
-    light
-    <toggle-button
-      [isChecked]="isThemeToggleChecked()"
-      (onChange)="toggleTheme()"
-    />
-    dark
-  </div>
-  @if (isUserLoading()) {
-    <p>loading</p>
-  } @else if (!user()) {
-    <a [href]="googleLoginUrl">Login with Google</a>
-  } @else {
-    <div>
-      <p>{{ user()?.email }}</p>
-      <p>{{ user()?.nickname }}</p>
-      <p>{{ user()?.role }}</p>
-      <p>{{ user()?.account_tier }}</p>
+  <div class="user-profile-view">
+    <div class="page-header">
+      <h1 class="page-title">Profile</h1>
+    </div>
 
-      @if (hasSpeciesResourcePermission()) {
-        <div>
-          <a href="/species-resources">submit resource</a>
+    @if (isUserLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+      </div>
+    } @else if (!user()) {
+      <div class="login-card">
+        <div class="login-content">
+          <app-icon name="user" size="size-large" />
+          <h2>Welcome back</h2>
+          <p>
+            Please sign in to access your account settings and personal data.
+          </p>
+          <a [href]="googleLoginUrl" class="login-button">
+            <app-icon name="google" size="size-medium" />
+            <span>Login with Google</span>
+          </a>
         </div>
-      }
-    </div>
+      </div>
+    } @else {
+      <div class="profile-layout">
+        <section class="profile-main-card">
+          <div class="profile-header">
+            <div class="avatar-container">
+              @if (user()?.image) {
+                <img
+                  [src]="user()?.image"
+                  [alt]="user()?.nickname"
+                  class="avatar"
+                />
+              } @else {
+                <div class="avatar-placeholder">
+                  {{ user()?.nickname?.charAt(0)?.toUpperCase() }}
+                </div>
+              }
+            </div>
+            <div class="user-info">
+              <h2 class="nickname">{{ user()?.nickname }}</h2>
+              <p class="email">{{ user()?.email }}</p>
+              <span class="detail-value badge">{{ user()?.role }}</span>
+              <span class="detail-value badge">{{ user()?.account_tier }}</span>
+            </div>
+          </div>
+        </section>
 
-    <div class="settings-section">
-      <button (click)="logoutUser()">logout</button>
-    </div>
-  }
+        <section class="actions-section">
+          <h3 class="section-title">Quick Actions</h3>
+          <div class="actions-grid">
+            @if (hasSpeciesResourcePermission()) {
+              <a href="/species-resources" class="action-card">
+                <app-icon name="arrow-link" size="size-medium" />
+                <div class="action-text">
+                  <span class="action-label">Submit Resource</span>
+                  <span class="action-description"
+                    >Add new species data to our database.</span
+                  >
+                </div>
+              </a>
+            }
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <h3 class="section-title">Settings</h3>
+          <div class="settings-grid">
+            <div class="settings-card">
+              <div class="setting-item">
+                <div class="setting-text">
+                  <span class="setting-label">Dark Mode</span>
+                  <span class="setting-description"
+                    >Toggle between light and dark theme.</span
+                  >
+                </div>
+                <toggle-button
+                  [isChecked]="isThemeToggleChecked()"
+                  (onChange)="toggleTheme()"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="profile-footer">
+          <button class="logout-button" (click)="logoutUser()">
+            <app-icon name="logout" size="size-medium" />
+            <span>Sign out</span>
+          </button>
+        </footer>
+      </div>
+    }
+  </div>
 </content-container>

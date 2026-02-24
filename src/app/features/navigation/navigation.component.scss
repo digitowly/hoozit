@@ -9,7 +9,8 @@ $link-size-lg: 74px;
 .navigation {
   position: fixed;
   bottom: layout.$safe-area-inset-md;
-  right: layout.$safe-area-inset-md;
+  left: 50%;
+  transform: translateX(-50%);
   height: 78px;
   background-color: var(--color-background-overlay);
   //border-radius: 1.5rem;
@@ -18,16 +19,21 @@ $link-size-lg: 74px;
   display: flex;
   z-index: 10000;
   width: calc(100% - (#{layout.$safe-area-inset-md} * 2));
+  max-width: 400px;
 
   @media (min-width: breakpoint.$xs) {
     max-height: 70px;
     width: auto;
+    left: auto;
+    right: layout.$safe-area-inset-md;
+    transform: none;
   }
 
   @media (min-width: breakpoint.$md) {
     border-radius: 1rem;
     top: layout.$safe-area-inset-sm;
     right: layout.$safe-area-inset-sm;
+    bottom: auto;
   }
 
   nav {

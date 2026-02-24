@@ -7,11 +7,13 @@ import { ContentContainerComponent } from '../../components/content-container/co
 import { PermissionsService } from '../../services/permissions/permissions.service';
 import { Permission } from '../../services/permissions/permissions.model';
 
+import { IconComponent } from '../../components/icon/icon.component';
+
 @Component({
   selector: 'user',
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
-  imports: [ToggleButtonComponent, ContentContainerComponent],
+  imports: [ToggleButtonComponent, ContentContainerComponent, IconComponent],
 })
 export class UserComponent {
   private readonly userDataService = inject(UserDataService);
