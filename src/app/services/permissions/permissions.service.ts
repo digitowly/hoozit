@@ -18,9 +18,11 @@ export class PermissionsService {
   hasUserPermissions(permissions: Permission[]): Observable<boolean> {
     return this.getPermissions().pipe(
       map((response) => response.permissions || []),
+
       map((userPermissions) =>
         userPermissions.some((p) => permissions.includes(p as Permission)),
       ),
+
       catchError((err) => {
         console.error('Error fetching user permissions', err);
         return of(false);

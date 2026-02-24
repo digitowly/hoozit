@@ -23,14 +23,19 @@ export class UserComponent {
 
   private readonly themeService = inject(UiThemeService);
 
-  user = computed(() => this.userDataService.userResource.value());
+  readonly user = computed(() => this.userDataService.userResource.value());
 
-  isUserLoading = computed(() => this.userDataService.userResource.isLoading());
+  readonly isUserLoading = computed(() =>
+    this.userDataService.userResource.isLoading(),
+  );
 
-  isThemeToggleChecked = computed(() => this.themeService.theme() === 'dark');
+  readonly isThemeToggleChecked = computed(
+    () => this.themeService.theme() === 'dark',
+  );
 
-  hasSpeciesResourcePermission = toSignal(
+  readonly hasSpeciesResourcePermission = toSignal(
     this.permissionsService.hasUserPermissions([Permission.RESOURCE_SUBMIT]),
+    { initialValue: false },
   );
 
   get googleLoginUrl(): string {
