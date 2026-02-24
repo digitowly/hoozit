@@ -8,6 +8,7 @@ import { PermissionsService } from '../../services/permissions/permissions.servi
 import { Permission } from '../../services/permissions/permissions.model';
 
 import { IconComponent } from '../../components/icon/icon.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'user',
@@ -28,7 +29,7 @@ export class UserComponent {
 
   isThemeToggleChecked = computed(() => this.themeService.theme() === 'dark');
 
-  hasSpeciesResourcePermission = computed(() =>
+  hasSpeciesResourcePermission = toSignal(
     this.permissionsService.hasUserPermissions([Permission.RESOURCE_SUBMIT]),
   );
 
