@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="4915431133669985304" datatype="html">
+        <source>Profile</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4200317694838753109" datatype="html">
+        <source>Welcome back</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3667803148393664242" datatype="html">
+        <source> Please sign in to access your account settings and personal data. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8999284073934392732" datatype="html">
+        <source>Login with Google</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8865441445972974631" datatype="html">
+        <source>Submit Resource</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="linenumber">57,58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1424790870406927603" datatype="html">
+        <source>Add new species data to our database.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4930506384627295710" datatype="html">
+        <source>Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="linenumber">68,69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3279636347259347513" datatype="html">
+        <source>Dark Mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="linenumber">73,74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5957942244130611026" datatype="html">
+        <source>Toggle between light and dark theme.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="linenumber">75,76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2949848596707725099" datatype="html">
+        <source>Sign out</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="linenumber">90,91</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
