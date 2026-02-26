@@ -26,6 +26,7 @@ import { FieldContainerComponent } from '../../components/forms/field-container/
 })
 export class SpeciesResourceComponent {
   private readonly speciesResourceService = inject(SpeciesResourceService);
+
   private readonly speciesAutosuggestService = inject(
     SpeciesAutosuggestService,
   );
@@ -44,17 +45,30 @@ export class SpeciesResourceComponent {
     this.speciesAutosuggestService.onChange(input);
   }
 
-  readonly isSubmitting = signal(false);
+  readonly submissionState = signal<
+    'initial' | 'loading' | 'success' | 'error'
+  >('initial');
 
-  occurrenceResourceForm = form(this.formModel, {});
+  readonly isSubmittable = computed(() => {
+    if (this.submissionState() === 'loading') return false;
+    return (
+      this.formModel().binomialName !== '' && this.formModel().url.length > 0
+    );
+  });
+
+  speciesResourceForm = form(this.formModel, {});
 
   autoSuggestEffect = effect(() => {
-    this.occurrenceResourceForm.binomialName().value.update(() => {
+    this.speciesResourceForm.binomialName().value.update(() => {
       return this.speciesAutosuggestService.selectedEntry()?.value || '';
     });
   });
 
   async onSubmit() {
+    if (!this.isSubmittable()) {
+      this.submissionState.set('error');
+      return;
+    }
     const formData = this.formModel();
     console.log({ formData });
 
@@ -67,15 +81,17 @@ export class SpeciesResourceComponent {
 
     console.log({ params });
 
-    this.isSubmitting.set(true);
+    this.submissionState.set('loading');
     try {
       await firstValueFrom(
         this.speciesResourceService.createOccurrenceResource(params),
       );
+      this.submissionState.set('success');
     } catch (e) {
       console.error(e);
+      this.submissionState.set('error');
     } finally {
-      this.isSubmitting.set(false);
+      this.speciesResourceForm.url().value.set('');
     }
   }
 }

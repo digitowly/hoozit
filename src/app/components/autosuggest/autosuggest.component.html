@@ -16,6 +16,7 @@
 
     <input
       aria-label="Label dropdown"
+      [disabled]="disabled()"
       [placeholder]="placeholder()"
       (valueChange)="handleValueChange($event)"
       ngComboboxInput

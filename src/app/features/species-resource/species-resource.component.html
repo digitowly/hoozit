@@ -3,6 +3,7 @@
     <autosuggest
       id="species"
       placeholder="Search for species"
+      [disabled]="submissionState() === 'loading'"
       [entries]="speciesEntries()"
       (onQueryChange)="onAutoSuggestChange($event)"
     />
@@ -13,8 +14,21 @@
       id="url"
       placeholder="Enter url"
       type="text"
-      [formField]="occurrenceResourceForm.url"
+      [formField]="speciesResourceForm.url"
     />
   </field-container>
+
   <button (click)="onSubmit()">send</button>
+
+  @switch (submissionState()) {
+    @case ("success") {
+      <p>success</p>
+    }
+    @case ("error") {
+      <p>Please select a species and enter a URL</p>
+    }
+    @case ("loading") {
+      <p>loading</p>
+    }
+  }
 </content-container>

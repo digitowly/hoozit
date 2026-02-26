@@ -43,6 +43,8 @@ export class AutosuggestComponent {
 
   readonly placeholder = input('');
 
+  readonly disabled = input(false);
+
   readonly onQueryChange = output<string>();
 
   readonly query = signal('');
@@ -96,4 +98,6 @@ export class AutosuggestComponent {
       this.resetListboxScroll();
     });
   }
+
+  protected readonly decodeURI = decodeURI;
 }
