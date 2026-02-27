@@ -9,12 +9,18 @@ import { Permission } from '../../services/permissions/permissions.model';
 
 import { IconComponent } from '../../components/icon/icon.component';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'user',
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
-  imports: [ToggleButtonComponent, ContentContainerComponent, IconComponent],
+  imports: [
+    ToggleButtonComponent,
+    ContentContainerComponent,
+    IconComponent,
+    RouterLink,
+  ],
 })
 export class UserComponent {
   private readonly userDataService = inject(UserDataService);
