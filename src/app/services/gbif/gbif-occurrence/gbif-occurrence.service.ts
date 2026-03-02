@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, finalize, Observable, of } from 'rxjs';
 import { Coordinate } from '../../../model/coordinate';
@@ -23,11 +23,6 @@ export class GbifOccurrenceService {
 
   private readonly cache = new Map<string, GbifOccurrenceResponseCache>();
 
-  private readonly urlParams = new URLSearchParams({
-    hasCoordinate: 'true',
-    limit: '300',
-  });
-
   search(
     taxonKey: string,
     coordinate: Coordinate,
@@ -43,15 +38,14 @@ export class GbifOccurrenceService {
 
     this.isLoading.set(true);
 
-    this.urlParams.set('taxonKey', taxonKey);
-
-    this.urlParams.set(
-      'geometry',
-      this.createCoordinatePolygon(coordinate, 0.1),
-    );
+    const params = new HttpParams()
+      .set('hasCoordinate', 'true')
+      .set('limit', '300')
+      .set('taxonKey', taxonKey)
+      .set('geometry', this.createCoordinatePolygon(coordinate, 0.1));
 
     return this.httpClient
-      .get<GbifOccurrenceResponse>(`${this.baseUrl}/search?${this.urlParams}`)
+      .get<GbifOccurrenceResponse>(`${this.baseUrl}/search`, { params })
       .pipe(
         catchError((err) => of(handleHttpError(err, this.error.set))),
         finalize(() => this.isLoading.set(false)),
