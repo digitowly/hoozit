@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "postbuild": "cp -r dist/hoozit/browser/en-US/assets dist/hoozit/browser/assets && cp -r dist/hoozit/browser/en-US/app-icons dist/hoozit/browser/app-icons && cp -r dist/hoozit/browser/en-US/media dist/hoozit/browser/media && rm -rf dist/hoozit/browser/*/assets dist/hoozit/browser/*/app-icons dist/hoozit/browser/*/media"
   },
   "private": true,
   "dependencies": {
