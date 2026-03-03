@@ -5,7 +5,7 @@
         <app-icon name="chevron" size="size-small" />
       </div>
       @if (!isListExpanded()) {
-        <ul class="list-collapsed" animate.leave="list-collapsed--leaving">
+        <ul class="list-collapsed">
           @for (
             selection of selections();
             track selection;
@@ -28,7 +28,7 @@
       }
     </button>
     @if (isListExpanded()) {
-      <ul class="list-expanded" animate.leave="list-expanded--leaving">
+      <ul class="list-expanded">
         @for (selection of selections(); track selection) {
           <div class="item">
             <button class="item-open-button" (click)="select(selection)">
