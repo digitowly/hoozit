@@ -51,11 +51,7 @@ export class AutosuggestComponent {
 
   readonly entries = input<AutoSuggestEntry[]>([]);
 
-  readonly suggestions = computed(() => {
-    return this.entries().filter((entry) =>
-      entry.label.toLowerCase().startsWith(this.query().toLowerCase()),
-    );
-  });
+  readonly suggestions = computed(() => this.entries());
 
   readonly selectedIcon = computed(() => {
     return this.suggestions().find(
@@ -65,7 +61,12 @@ export class AutosuggestComponent {
 
   handleValueChange(value: string) {
     this.query.set(value);
-    this.onQueryChange.emit(value);
+    const isSelection = this.entries().some(
+      (e) => e.label.toLowerCase() === value.toLowerCase(),
+    );
+    if (!isSelection) {
+      this.onQueryChange.emit(value);
+    }
   }
 
   scrollToActiveOption() {
