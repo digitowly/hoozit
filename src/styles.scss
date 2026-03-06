@@ -26,6 +26,18 @@ body {
   color: var(--color-text);
 }
 
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.1rem; }
+h4 { font-size: 1rem; }
+
 button {
   cursor: pointer;
   border: none;
@@ -41,12 +53,12 @@ button {
 }
 
 input {
+  width: 100%;
   padding: 0.75rem;
-  border: none;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
   border-radius: 0.25rem;
-  background-color: var(--color-background-overlay);
+  background-color: var(--color-background);
   color: var(--color-text);
-  min-width: 16rem;
 }
 
 a {

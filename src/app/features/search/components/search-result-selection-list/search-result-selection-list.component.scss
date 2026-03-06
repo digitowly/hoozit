@@ -79,8 +79,8 @@ $toggle-element-size: 40px;
   }
 
   &-open-button {
-    background-color: transparent;
     margin-left: auto;
+    background: transparent;
   }
 
   button {
@@ -93,6 +93,7 @@ $toggle-element-size: 40px;
 
   p {
     font-size: 0.85rem;
+    margin: 0;
   }
 
   img {

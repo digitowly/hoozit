@@ -12,6 +12,7 @@ import { AnimalSearchResult } from '../../services/animal-search/animal-search.m
 import { SpeciesAutosuggestService } from '../../services/forms/species-autosuggest/species-autosuggest.service';
 import { ContentContainerComponent } from '../../components/content-container/content-container.component';
 import { FieldContainerComponent } from '../../components/forms/field-container/field-container.component';
+import { FormContainerComponent } from '../../components/forms/form-container/form-container.component';
 
 @Component({
   selector: 'occurrence-resource',
@@ -20,6 +21,7 @@ import { FieldContainerComponent } from '../../components/forms/field-container/
     AutosuggestComponent,
     ContentContainerComponent,
     FieldContainerComponent,
+    FormContainerComponent,
   ],
   templateUrl: './species-resource.component.html',
   styleUrl: './species-resource.component.scss',

@@ -1,34 +1,38 @@
 <content-container>
-  <field-container label="Species" name="species">
-    <autosuggest
-      id="species"
-      placeholder="Search for species"
-      [disabled]="submissionState() === 'loading'"
-      [entries]="speciesEntries()"
-      (onQueryChange)="onAutoSuggestChange($event)"
-    />
-  </field-container>
+  <form-container title="Submit Resource">
+    <field-container label="Species" name="species">
+      <autosuggest
+        id="species"
+        placeholder="Search for species"
+        [disabled]="submissionState() === 'loading'"
+        [entries]="speciesEntries()"
+        (onQueryChange)="onAutoSuggestChange($event)"
+      />
+    </field-container>
 
-  <field-container label="Url" name="url">
-    <input
-      id="url"
-      placeholder="Enter url"
-      type="text"
-      [formField]="speciesResourceForm.url"
-    />
-  </field-container>
+    <field-container label="URL" name="url">
+      <input
+        id="url"
+        placeholder="Enter resource URL"
+        type="text"
+        [formField]="speciesResourceForm.url"
+      />
+    </field-container>
 
-  <button (click)="onSubmit()">send</button>
+    <div formFooter>
+      <button (click)="onSubmit()" [disabled]="!isSubmittable()">Submit</button>
 
-  @switch (submissionState()) {
-    @case ("success") {
-      <p>success</p>
-    }
-    @case ("error") {
-      <p>Please select a species and enter a URL</p>
-    }
-    @case ("loading") {
-      <p>loading</p>
-    }
-  }
+      @switch (submissionState()) {
+        @case ("success") {
+          <p class="status status--success">Resource submitted successfully.</p>
+        }
+        @case ("error") {
+          <p class="status status--error">Please select a species and enter a URL.</p>
+        }
+        @case ("loading") {
+          <p class="status">Submitting…</p>
+        }
+      }
+    </div>
+  </form-container>
 </content-container>

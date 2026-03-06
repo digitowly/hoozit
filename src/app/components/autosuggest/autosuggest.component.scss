@@ -31,8 +31,8 @@
   padding: 0.75rem 0.5rem 0.75rem 3rem;
   color: var(--primary-contrast);
   outline-color: var(--hot-pink);
-  border: 1px solid var(--quinary-contrast);
-  background-color: var(--color-background-overlay);
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  background-color: var(--color-background);
 }
 
 [ngComboboxInput]::placeholder {
