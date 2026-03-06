@@ -46,6 +46,7 @@ export class AutosuggestComponent {
   readonly disabled = input(false);
 
   readonly onQueryChange = output<string>();
+  readonly onSelect = output<AutoSuggestEntry>();
 
   readonly query = signal('');
 
@@ -61,10 +62,12 @@ export class AutosuggestComponent {
 
   handleValueChange(value: string) {
     this.query.set(value);
-    const isSelection = this.entries().some(
+    const selected = this.entries().find(
       (e) => e.label.toLowerCase() === value.toLowerCase(),
     );
-    if (!isSelection) {
+    if (selected) {
+      this.onSelect.emit(selected);
+    } else {
       this.onQueryChange.emit(value);
     }
   }

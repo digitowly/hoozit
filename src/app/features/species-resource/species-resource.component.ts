@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
 import {
   CreateSpeciesResourceParams,
@@ -6,9 +6,7 @@ import {
 } from './service/species-resource.service';
 import { firstValueFrom } from 'rxjs';
 import { AutosuggestComponent } from '../../components/autosuggest/autosuggest.component';
-import { AnimalSearchService } from '../../services/animal-search/animal-search.service';
 import { AutoSuggestEntry } from '../../components/autosuggest/autosuggest.model';
-import { AnimalSearchResult } from '../../services/animal-search/animal-search.model';
 import { SpeciesAutosuggestService } from '../../services/forms/species-autosuggest/species-autosuggest.service';
 import { ContentContainerComponent } from '../../components/content-container/content-container.component';
 import { FieldContainerComponent } from '../../components/forms/field-container/field-container.component';
@@ -47,6 +45,10 @@ export class SpeciesResourceComponent {
     this.speciesAutosuggestService.onChange(input);
   }
 
+  onAutoSuggestSelect(entry: AutoSuggestEntry) {
+    this.speciesResourceForm.binomialName().value.set(entry.value);
+  }
+
   readonly submissionState = signal<
     'initial' | 'loading' | 'success' | 'error'
   >('initial');
@@ -54,34 +56,24 @@ export class SpeciesResourceComponent {
   readonly isSubmittable = computed(() => {
     if (this.submissionState() === 'loading') return false;
     return (
-      this.formModel().binomialName !== '' && this.formModel().url.length > 0
+      this.speciesResourceForm.binomialName().value() !== '' &&
+      this.speciesResourceForm.url().value().length > 0
     );
   });
 
   speciesResourceForm = form(this.formModel, {});
-
-  autoSuggestEffect = effect(() => {
-    this.speciesResourceForm.binomialName().value.update(() => {
-      return this.speciesAutosuggestService.selectedEntry()?.value || '';
-    });
-  });
 
   async onSubmit() {
     if (!this.isSubmittable()) {
       this.submissionState.set('error');
       return;
     }
-    const formData = this.formModel();
-    console.log({ formData });
-
     const params: CreateSpeciesResourceParams = {
-      binomial_name: formData.binomialName,
-      url: formData.url,
+      binomial_name: this.speciesResourceForm.binomialName().value(),
+      url: this.speciesResourceForm.url().value(),
       description: 'test',
       type: 'image',
     };
-
-    console.log({ params });
 
     this.submissionState.set('loading');
     try {

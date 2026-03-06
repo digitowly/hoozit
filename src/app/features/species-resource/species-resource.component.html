@@ -7,6 +7,7 @@
         [disabled]="submissionState() === 'loading'"
         [entries]="speciesEntries()"
         (onQueryChange)="onAutoSuggestChange($event)"
+        (onSelect)="onAutoSuggestSelect($event)"
       />
     </field-container>
 
@@ -20,7 +21,7 @@
     </field-container>
 
     <div formFooter>
-      <button (click)="onSubmit()" [disabled]="!isSubmittable()">Submit</button>
+      <button class="btn-primary" (click)="onSubmit()" [disabled]="!isSubmittable()">Submit</button>
 
       @switch (submissionState()) {
         @case ("success") {
