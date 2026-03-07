@@ -39,27 +39,18 @@ describe('AutosuggestComponent', () => {
     expect(component.query()).toBe('');
   });
 
-  it('should filter suggestions based on query', () => {
+  it('should return all entries as suggestions regardless of query', () => {
     component.handleValueChange('Ap');
-    expect(component.suggestions()).toEqual([
-      { label: 'Apple', value: 'apple', icon: 'apple-icon.png' },
-    ]);
-
-    component.handleValueChange('an');
-    // startsWith('an') is false for 'Banana' (case-insensitive)
-    expect(component.suggestions()).toEqual([]);
+    expect(component.suggestions()).toEqual(mockEntries);
 
     component.handleValueChange('Ba');
-    expect(component.suggestions()).toEqual([
-      { label: 'Banana', value: 'banana', icon: 'banana-icon.png' },
-    ]);
+    expect(component.suggestions()).toEqual(mockEntries);
   });
 
-  it('should be case-insensitive when filtering', () => {
-    component.handleValueChange('apple');
-    expect(component.suggestions()).toEqual([
-      { label: 'Apple', value: 'apple', icon: 'apple-icon.png' },
-    ]);
+  it('should reflect updated entries as suggestions', () => {
+    const filtered = [{ label: 'Apple', value: 'apple', icon: 'apple-icon.png' }];
+    fixture.componentRef.setInput('entries', filtered);
+    expect(component.suggestions()).toEqual(filtered);
   });
 
   it('should emit onQueryChange when handleValueChange is called', () => {
