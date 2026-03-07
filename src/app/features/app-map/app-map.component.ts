@@ -1,4 +1,4 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { UserLocationService } from '../../services/user/user-location/user-location.service';
 import { MapService, MapMarker } from '../../services/map/map-service';
 import { LeafletService } from '../../services/map/leaflet/leaflet.service';
@@ -6,6 +6,9 @@ import { IconComponent } from '../../components/icon/icon.component';
 import { FloatingButtonComponent } from '../../components/floating-button/floating-button.component';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { OccurrenceMarkerService } from './services/occurrence-marker/occurrence-marker.service';
+import { ModalService } from '../../services/modal/modal.service';
+
+const MODAL_ID = 'map-marker';
 
 @Component({
   selector: 'app-map',
@@ -20,8 +23,10 @@ import { OccurrenceMarkerService } from './services/occurrence-marker/occurrence
   styleUrl: './app-map.component.scss',
 })
 export class AppMapComponent {
-  readonly isModalOpen = signal(false);
+  readonly modalId = MODAL_ID;
   readonly selectedMarker = signal<MapMarker | null>(null);
+
+  private readonly modalService = inject(ModalService);
 
   private hasInitialCenter = signal(false);
 
@@ -46,7 +51,7 @@ export class AppMapComponent {
           this.userLocation.coordinate(),
           (marker) => {
             this.mapService.createMarker(marker, (marker) => {
-              this.isModalOpen.set(true);
+              this.modalService.open(this.modalId);
               this.selectedMarker.set(marker);
             });
           },

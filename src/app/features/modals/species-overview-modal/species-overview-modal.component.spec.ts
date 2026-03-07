@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SpeciesOverviewModalComponent } from './species-overview-modal.component';
+import { inputBinding, signal } from '@angular/core';
 
 describe('SpeciesOverviewModalComponent', () => {
   let component: SpeciesOverviewModalComponent;
@@ -12,7 +13,9 @@ describe('SpeciesOverviewModalComponent', () => {
       imports: [SpeciesOverviewModalComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SpeciesOverviewModalComponent);
+    fixture = TestBed.createComponent(SpeciesOverviewModalComponent, {
+      bindings: [inputBinding('modalId', signal('test'))],
+    });
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

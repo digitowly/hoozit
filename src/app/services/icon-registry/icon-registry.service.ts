@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { IconName } from './icon-registry.model';
 
 @Injectable({ providedIn: 'root' })
 export class IconRegistryService {
-  private icons = new Map<IconName, SafeHtml>();
+  private readonly sanitizer = inject(DomSanitizer);
 
-  constructor(private sanitizer: DomSanitizer) {}
+  private readonly icons = new Map<IconName, SafeHtml>();
 
   registerIcon(name: IconName, svg: string) {
     const safeSvg = this.sanitizer.bypassSecurityTrustHtml(svg);

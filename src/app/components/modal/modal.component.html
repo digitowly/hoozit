@@ -1,10 +1,10 @@
-<ng-template cdkPortal>
-  @if (isOpen() && modalType() === "large") {
+<ng-template #modalTemplate>
+  @if (open() && modalType() === "large") {
     <div class="backdrop" (click)="close()"></div>
   }
   <div
     class="modal"
-    [ngClass]="{ closed: !isOpen(), compact: modalType() === 'compact' }"
+    [ngClass]="{ closed: !open(), compact: modalType() === 'compact' }"
   >
     @if (heroImage()?.url && !isLoading()) {
       <div class="hero-image">
@@ -23,6 +23,9 @@
       </div>
     }
     <div class="header">
+      @if (modalType() === 'compact' && title()) {
+        <h2 class="header-title">{{ title() }}</h2>
+      }
       <button class="close-button" (click)="close()">
         <app-icon name="cross" size="size-medium" />
       </button>
@@ -36,7 +39,9 @@
       @if (isLoading()) {
         <p>Loading...</p>
       } @else {
-        <h2>{{ title() }}</h2>
+        @if (modalType() === 'large') {
+          <h2>{{ title() }}</h2>
+        }
         <ng-content />
       }
     </div>

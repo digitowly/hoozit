@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
@@ -6,9 +6,9 @@ import { filter } from 'rxjs';
 export class ModalService {
   private readonly openIds = signal<ReadonlySet<string>>(new Set());
 
-  constructor(router: Router) {
-    router.events
-      .pipe(filter((e) => e instanceof NavigationStart))
+  constructor() {
+    inject(Router)
+      .events.pipe(filter((e) => e instanceof NavigationStart))
       .subscribe(() => this.closeAll());
   }
 

@@ -1,4 +1,4 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { IconRegistryService } from '../../services/icon-registry/icon-registry.service';
 import { IconName } from '../../services/icon-registry/icon-registry.model';
 
@@ -12,11 +12,11 @@ type Size = 'size-small' | 'size-medium' | 'size-large';
   styleUrl: './icon.component.scss',
 })
 export class IconComponent {
-  name = input<IconName | null>(null);
-  color = input<Color>('color-primary-dark');
-  size = input<Size>('size-medium');
+  readonly name = input<IconName | null>(null);
+  readonly color = input<Color>('color-primary-dark');
+  readonly size = input<Size>('size-medium');
 
-  svg = computed(() => this.iconRegistry.getIcon(this.name()));
+  private readonly iconRegistry = inject(IconRegistryService);
 
-  constructor(private iconRegistry: IconRegistryService) {}
+  readonly svg = computed(() => this.iconRegistry.getIcon(this.name()));
 }

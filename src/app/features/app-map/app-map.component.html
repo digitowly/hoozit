@@ -6,9 +6,9 @@
 </div>
 <app-modal
   modalType="compact"
+  [modalId]="modalId"
   [title]="selectedMarker()?.content?.title || ''"
-  [isOpen]="!!selectedMarker() && isModalOpen()"
-  (handleClose)="isModalOpen.set(false)"
+  (handleClose)="selectedMarker.set(null)"
 >
   <!--  <p>{{ selectedMarker()?.content }}</p>-->
   <p>{{ selectedMarker()?.content?.scientificName }}</p>

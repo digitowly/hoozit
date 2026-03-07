@@ -163,6 +163,17 @@ $hero-image-height: 250px;
       transform: translate(-50%, calc(50% + 2rem));
     }
 
+    .header {
+      justify-content: space-between;
+
+      .header-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0;
+        padding-left: 0.25rem;
+      }
+    }
+
     .content {
       margin-top: 0;
     }

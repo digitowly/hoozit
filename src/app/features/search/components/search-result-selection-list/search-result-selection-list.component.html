@@ -51,7 +51,7 @@
     }
 
     <species-overview-modal
-      [isOpen]="isModalOpen()"
+      [modalId]="modalId"
       [isLoading]="isIntroductionLoading()"
       [title]="selected()?.name || ''"
       [introduction]="introduction()"
