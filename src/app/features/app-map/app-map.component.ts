@@ -1,18 +1,18 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { UserLocationService } from '../../services/user/user-location/user-location.service';
 import { MapService, MapMarker } from '../../services/map/map-service';
 import { LeafletService } from '../../services/map/leaflet/leaflet.service';
 import { IconComponent } from '../../components/icon/icon.component';
 import { FloatingButtonComponent } from '../../components/floating-button/floating-button.component';
-import { ModalComponent } from '../../components/modal/modal.component';
 import { OccurrenceMarkerService } from './services/occurrence-marker/occurrence-marker.service';
 import { ModalService } from '../../services/modal/modal.service';
+import { OccurrencePreviewModalComponent } from '../modals/occurrence-preview-modal/occurrence-preview-modal.component';
 
 const MODAL_ID = 'map-marker';
 
 @Component({
   selector: 'app-map',
-  imports: [IconComponent, FloatingButtonComponent, ModalComponent],
+  imports: [IconComponent, FloatingButtonComponent, OccurrencePreviewModalComponent],
   providers: [
     {
       provide: MapService,
@@ -27,6 +27,8 @@ export class AppMapComponent {
   readonly selectedMarker = signal<MapMarker | null>(null);
 
   private readonly modalService = inject(ModalService);
+
+  readonly isModalOpen = computed(() => this.modalService.isOpen(this.modalId));
 
   private hasInitialCenter = signal(false);
 

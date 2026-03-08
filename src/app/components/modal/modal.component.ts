@@ -1,6 +1,6 @@
 import { NgClass, DOCUMENT } from '@angular/common';
 import {
-  AfterViewInit,
+  afterNextRender,
   ApplicationRef,
   Component,
   computed,
@@ -10,6 +10,7 @@ import {
   input,
   OnDestroy,
   output,
+  signal,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -26,7 +27,7 @@ type ModalType = 'large' | 'compact';
   standalone: true,
   imports: [NgClass, IconComponent],
 })
-export class ModalComponent implements AfterViewInit, OnDestroy {
+export class ModalComponent implements OnDestroy {
   readonly modalType = input<ModalType>('large');
   readonly modalId = input.required<string>();
   readonly title = input('');
@@ -45,7 +46,11 @@ export class ModalComponent implements AfterViewInit, OnDestroy {
   private viewRef?: EmbeddedViewRef<void>;
   private containerEl?: HTMLElement;
 
+  private readonly viewReady = signal(false);
+
   constructor() {
+    afterNextRender(() => this.viewReady.set(true));
+
     effect((onCleanup) => {
       const handleKeydown = (e: KeyboardEvent) => {
         if (e.key === 'Escape' && this.open()) {
@@ -55,16 +60,16 @@ export class ModalComponent implements AfterViewInit, OnDestroy {
       window.addEventListener('keydown', handleKeydown);
       onCleanup(() => window.removeEventListener('keydown', handleKeydown));
     });
-  }
 
-  ngAfterViewInit() {
-    if (!this.document.body || !this.modalTemplate) return;
-    this.cleanupView();
-    this.containerEl = this.document.createElement('div');
-    this.document.body.appendChild(this.containerEl);
-    this.viewRef = this.modalTemplate.createEmbeddedView(undefined);
-    this.appRef.attachView(this.viewRef);
-    this.viewRef.rootNodes.forEach((n) => this.containerEl!.appendChild(n));
+    effect((onCleanup) => {
+      if (!this.viewReady()) return;
+      if (this.open()) {
+        this.attachView();
+      } else {
+        const id = setTimeout(() => this.cleanupView(), 400);
+        onCleanup(() => clearTimeout(id));
+      }
+    });
   }
 
   close() {
@@ -74,6 +79,15 @@ export class ModalComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.cleanupView();
+  }
+
+  private attachView() {
+    if (this.viewRef || !this.document.body || !this.modalTemplate) return;
+    this.containerEl = this.document.createElement('div');
+    this.document.body.appendChild(this.containerEl);
+    this.viewRef = this.modalTemplate.createEmbeddedView(undefined);
+    this.appRef.attachView(this.viewRef);
+    this.viewRef.rootNodes.forEach((n) => this.containerEl!.appendChild(n));
   }
 
   private cleanupView() {
