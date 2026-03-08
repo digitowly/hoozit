@@ -79,4 +79,37 @@ describe('ModalService', () => {
     service.close('a');
     expect(service.isOpen('a')).toBe(false);
   });
+
+  it('should set body overflow hidden when a large modal is open', () => {
+    service.open('a', 'large');
+    TestBed.tick();
+    expect(document.body.style.overflow).toBe('hidden');
+  });
+
+  it('should restore body overflow when the large modal is closed', () => {
+    service.open('a', 'large');
+    TestBed.tick();
+    service.close('a');
+    TestBed.tick();
+    expect(document.body.style.overflow).toBe('');
+  });
+
+  it('should not set body overflow hidden for compact modals', () => {
+    service.open('a', 'compact');
+    TestBed.tick();
+    expect(document.body.style.overflow).not.toBe('hidden');
+  });
+
+  it('should keep body overflow hidden while any large modal remains open', () => {
+    service.open('a', 'large');
+    service.open('b', 'large');
+    TestBed.tick();
+    service.close('a');
+    TestBed.tick();
+    expect(document.body.style.overflow).toBe('hidden');
+
+    service.close('b');
+    TestBed.tick();
+    expect(document.body.style.overflow).toBe('');
+  });
 });

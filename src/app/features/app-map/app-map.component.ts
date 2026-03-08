@@ -51,7 +51,7 @@ export class AppMapComponent {
           this.userLocation.coordinate(),
           (marker) => {
             this.mapService.createMarker(marker, (marker) => {
-              this.modalService.open(this.modalId);
+              this.modalService.open(this.modalId, 'compact');
               this.selectedMarker.set(marker);
             });
           },

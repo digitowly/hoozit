@@ -1,34 +1,43 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
+type ModalType = 'large' | 'compact';
+
 @Injectable({ providedIn: 'root' })
 export class ModalService {
-  private readonly openIds = signal<ReadonlySet<string>>(new Set());
+  private readonly openModals = signal<ReadonlyMap<string, ModalType>>(new Map());
+  private readonly document = inject(DOCUMENT);
 
   constructor() {
     inject(Router)
       .events.pipe(filter((e) => e instanceof NavigationStart))
       .subscribe(() => this.closeAll());
+
+    effect(() => {
+      const hasLarge = [...this.openModals().values()].some((t) => t === 'large');
+      this.document.body.style.overflow = hasLarge ? 'hidden' : '';
+    });
   }
 
-  open(id: string): void {
-    this.openIds.update((s) => new Set([...s, id]));
+  open(id: string, type: ModalType = 'large'): void {
+    this.openModals.update((m) => new Map([...m, [id, type]]));
   }
 
   close(id: string): void {
-    this.openIds.update((s) => {
-      const next = new Set(s);
+    this.openModals.update((m) => {
+      const next = new Map(m);
       next.delete(id);
       return next;
     });
   }
 
   closeAll(): void {
-    this.openIds.set(new Set());
+    this.openModals.set(new Map());
   }
 
   isOpen(id: string): boolean {
-    return this.openIds().has(id);
+    return this.openModals().has(id);
   }
 }
