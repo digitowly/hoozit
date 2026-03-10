@@ -6,8 +6,8 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
-      import('../app/features/user/user.component').then(
-        ({ UserComponent }) => UserComponent,
+      import('../app/features/home/home.component').then(
+        ({ HomeComponent }) => HomeComponent,
       ),
     data: { reuse: true },
   },
