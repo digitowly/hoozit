@@ -1,4 +1,5 @@
 @use "./app/style/color";
+@use "./app/style/shadow";
 
 @import url("leaflet/dist/leaflet.css");
 
@@ -25,9 +26,70 @@ body {
   color: var(--color-text);
 }
 
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.1rem; }
+h4 { font-size: 1rem; }
+
 button {
   cursor: pointer;
   border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  box-shadow: shadow.$sm;
+  background-color: var(--color-background-overlay);
+  color: var(--color-text);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-background-overlay) 90%, white);
+  }
+}
+
+.btn-primary {
+  padding: 0.65rem 1.75rem;
+  border-radius: 1rem;
+  background-color: color.$primary-base;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 14px color-mix(in srgb, #{color.$primary-base} 40%, transparent);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+
+  &:hover:not(:disabled) {
+    background-color: color.$primary-light;
+    box-shadow: 0 6px 18px color-mix(in srgb, #{color.$primary-base} 50%, transparent);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px color-mix(in srgb, #{color.$primary-base} 30%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 0.25rem;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+a {
+  color: inherit;
 }
 
 a {

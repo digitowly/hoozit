@@ -11,15 +11,15 @@ import { ImageSource } from '../../../model/image';
   styleUrl: './species-overview-modal.component.scss',
 })
 export class SpeciesOverviewModalComponent {
-  isOpen = input(false);
+  readonly modalId = input.required<string>();
 
-  isLoading = input(false);
+  readonly isLoading = input(false);
 
-  title = input('');
+  readonly title = input('');
 
-  introduction = input<SpeciesIntroduction | null>(null);
+  readonly introduction = input<SpeciesIntroduction | null>(null);
 
-  handleClose = output();
+  readonly handleClose = output();
 
   get heroImage(): ImageSource | null {
     if (!this.introduction()) return null;

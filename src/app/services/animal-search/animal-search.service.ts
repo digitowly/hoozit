@@ -1,9 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { Injectable, resource, signal } from '@angular/core';
 import { AnimalSearchResponse } from './animal-search.model';
-import { catchError, finalize, Observable, of } from 'rxjs';
-import { HttpErrorService } from '../http-error/http-error.service';
 import { environment } from '../../../environments/environment';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,31 +10,32 @@ import { environment } from '../../../environments/environment';
 export class AnimalSearchService {
   private readonly apiUrl = `${environment.verdexUrl}/animals/search`;
 
-  private readonly httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
+  private readonly searchQuery$ = new Subject<string>();
 
-  isLoading = signal<boolean>(false);
-  error = signal<string | null>(null);
+  readonly debouncedQuery = toSignal(
+    this.searchQuery$.pipe(debounceTime(300), distinctUntilChanged()),
+    { initialValue: '' },
+  );
 
-  constructor(
-    private http: HttpClient,
-    private httpErrorService: HttpErrorService,
-  ) {}
+  readonly resource = resource({
+    params: () => ({ q: this.debouncedQuery(), lang: 'de' }),
+    loader: ({ params }) => this.fetchAnimals(params.q),
+  });
 
-  getOccurrences(name: string): Observable<AnimalSearchResponse> {
-    this.isLoading.set(true);
+  searchAnimals(name: string) {
+    if (name.length < 3) return;
+    this.searchQuery$.next(name);
+  }
+
+  private async fetchAnimals(
+    name: string,
+  ): Promise<AnimalSearchResponse | null> {
+    if (!name) return null;
+
     const url = `${this.apiUrl}?q=${name}&lang=de`;
-    return this.http.get<AnimalSearchResponse>(url, this.httpOptions).pipe(
-      catchError((err) => {
-        this.httpErrorService.handleError(err, (message) =>
-          this.error.set(message),
-        );
-        return of({ data: [] });
-      }),
-      finalize(() => this.isLoading.set(false)),
-    );
+    const response = await fetch(url, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    return await response.json();
   }
 }

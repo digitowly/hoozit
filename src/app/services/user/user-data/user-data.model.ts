@@ -1,7 +1,7 @@
-export interface UserProfileResponse {
+export interface UserDataResponse {
   email: string;
   nickname: string;
   image: string;
-  expertise_tier: string;
+  role: string;
   account_tier: string;
 }

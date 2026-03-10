@@ -31,12 +31,6 @@ $toggle-element-size: 40px;
     transform: translateY($animated-transition-height) scale(0.55);
   }
 
-  &--leaving {
-    opacity: 0;
-    transform: translateY($animated-transition-height) scale(0.55);
-    transition: all 0.25s ease-out;
-  }
-
   li {
     background-color: var(--color-background-overlay);
     display: flex;
@@ -45,7 +39,6 @@ $toggle-element-size: 40px;
     width: $toggle-element-size;
     height: $toggle-element-size;
   }
-
 }
 
 .chevron {
@@ -86,8 +79,8 @@ $toggle-element-size: 40px;
   }
 
   &-open-button {
-    background-color: transparent;
     margin-left: auto;
+    background: transparent;
   }
 
   button {
@@ -100,6 +93,7 @@ $toggle-element-size: 40px;
 
   p {
     font-size: 0.85rem;
+    margin: 0;
   }
 
   img {

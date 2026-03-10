@@ -2,11 +2,11 @@
   <app-map />
   <div class="map-search-bar">
     <occurrence-search
-      [occurrences]="searchResults()"
+      [occurrences]="occurrences()"
       [isActive]="isSearchModalOpen()"
       (onResultSelection)="isSearchModalOpen.set(false)"
       (onSearch)="handleSearch($event)"
-      [isLoading]="animalSearch.isLoading()"
+      [isLoading]="isSearchLoading()"
     />
   </div>
   <div class="map-search-selection-list">

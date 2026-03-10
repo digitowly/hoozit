@@ -1,20 +1,96 @@
-<div>
-  light
-  <toggle-button
-    [isChecked]="theme.theme() == 'dark'"
-    (onChange)="theme.toggleTheme()"
-  />
-  dark
-  @if (user.isLoading()) {
-    <p>loading</p>
-  } @else if (!user.data()) {
-    <p>No user logged in</p>
-    <a href="http://localhost:8000/user/login/google">Login with Google</a>
-  } @else {
-    <p>{{ user.data()?.email }}</p>
-    <p>{{ user.data()?.nickname }}</p>
-    <p>{{ user.data()?.expertise_tier }}</p>
-    <p>{{ user.data()?.account_tier }}</p>
-    <button (click)="user.logout()">logout</button>
-  }
-</div>
+<content-container>
+  <div class="user-profile-view">
+    <div class="page-header">
+      <h1 i18n class="page-title">Profile</h1>
+    </div>
+
+    @if (isUserLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+      </div>
+    } @else if (!user()) {
+      <div class="login-card">
+        <div class="login-content">
+          <app-icon name="user" size="size-large" />
+          <h2 i18n>Welcome back</h2>
+          <p i18n>
+            Please sign in to access your account settings and personal data.
+          </p>
+          <a [href]="googleLoginUrl" class="login-button">
+            <app-icon name="google" size="size-medium" />
+            <span i18n>Login with Google</span>
+          </a>
+        </div>
+      </div>
+    } @else {
+      <div class="profile-layout">
+        <section class="profile-main-card">
+          <div class="profile-header">
+            <div class="avatar-container">
+              @if (user()?.image) {
+                <img
+                  [src]="user()?.image"
+                  [alt]="user()?.nickname"
+                  class="avatar"
+                />
+              } @else {
+                <div class="avatar-placeholder">
+                  {{ user()?.nickname?.charAt(0)?.toUpperCase() }}
+                </div>
+              }
+            </div>
+            <div class="user-info">
+              <h2 class="nickname">{{ user()?.nickname }}</h2>
+              <p class="email">{{ user()?.email }}</p>
+              <span class="detail-value badge">{{ user()?.role }}</span>
+              <span class="detail-value badge">{{ user()?.account_tier }}</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="actions-section">
+          <div class="actions-grid">
+            @if (hasSpeciesResourcePermission()) {
+              <a routerLink="/species-resources" class="action-card">
+                <app-icon name="arrow-link" size="size-medium" />
+                <div class="action-text">
+                  <span i18n class="action-label">Submit Resource</span>
+                  <span i18n class="action-description"
+                    >Add new species data to our database.</span
+                  >
+                </div>
+              </a>
+            }
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <h3 i18n class="section-title">Settings</h3>
+          <div class="settings-grid">
+            <div class="settings-card">
+              <div class="setting-item">
+                <div class="setting-text">
+                  <span i18n class="setting-label">Dark Mode</span>
+                  <span i18n class="setting-description"
+                    >Toggle between light and dark theme.</span
+                  >
+                </div>
+                <toggle-button
+                  [isChecked]="isThemeToggleChecked()"
+                  (onChange)="toggleTheme()"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="profile-footer">
+          <button class="logout-button" (click)="logoutUser()">
+            <app-icon name="logout" size="size-medium" />
+            <span i18n>Sign out</span>
+          </button>
+        </footer>
+      </div>
+    }
+  </div>
+</content-container>

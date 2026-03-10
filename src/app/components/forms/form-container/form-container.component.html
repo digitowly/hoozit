@@ -1,0 +1,9 @@
+<div class="form-wrapper">
+  @if (title()) {
+    <h1 class="form-title">{{ title() }}</h1>
+  }
+  <ng-content />
+  <div class="form-footer">
+    <ng-content select="[formFooter]" />
+  </div>
+</div>

@@ -7,4 +7,6 @@ export type IconName =
   | 'home'
   | 'arrow-left'
   | 'chevron'
-  | 'arrow-link';
+  | 'arrow-link'
+  | 'logout'
+  | 'google';

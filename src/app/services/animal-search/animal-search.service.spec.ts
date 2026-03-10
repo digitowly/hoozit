@@ -1,74 +1,116 @@
-import { describe, beforeEach, it, expect, afterEach } from 'vitest';
+import { describe, afterEach, beforeEach, it, expect, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
 import { AnimalSearchService } from './animal-search.service';
 import { AnimalSearchResponse } from './animal-search.model';
-import { provideHttpClient } from '@angular/common/http';
-import { finalize } from 'rxjs';
 import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('AnimalSearchService', () => {
   let service: AnimalSearchService;
-  let httpMock: HttpTestingController;
 
   beforeEach(() => {
+    vi.useFakeTimers();
+    vi.stubGlobal('fetch', vi.fn());
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        provideZonelessChangeDetection(),
-      ],
+      providers: [provideZonelessChangeDetection()],
     });
     service = TestBed.inject(AnimalSearchService);
-    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    httpMock.verify();
+    vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set isLoading to true when findOccurrences is called and false when complete', () => {
-    const mockResponse: AnimalSearchResponse = { data: [] };
-    expect(service.isLoading()).toBe(false);
+  it('should not search if query length is less than 3', async () => {
+    service.searchAnimals('te');
+    vi.advanceTimersByTime(300);
+    TestBed.tick();
 
-    service
-      .getOccurrences('test')
-      .pipe(
-        finalize(() => {
-          expect(service.isLoading()).toBe(false);
-        }),
-      )
-      .subscribe((res) => {
-        expect(res).toEqual(mockResponse);
-      });
-
-    expect(service.isLoading()).toBe(true);
-
-    const req = httpMock.expectOne(
-      'http://localhost:8082/api/animals/search?q=test&lang=de',
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    expect(fetch).not.toHaveBeenCalled();
+    expect(service.resource.value()).toBeFalsy();
   });
 
-  it('should handle error', () => {
-    service.getOccurrences('test').subscribe((res) => {
-      expect(res).toEqual({ data: [] });
-      expect(service.error()).toBe(
-        'Network error: Please check your connection',
-      );
-    });
+  it('should not search if query length is less than 3 even after time passes', async () => {
+    service.searchAnimals('te');
+    vi.advanceTimersByTime(1000);
+    TestBed.tick();
 
-    const req = httpMock.expectOne(
-      'http://localhost:8082/api/animals/search?q=test&lang=de',
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('should only search when name changes (distinctUntilChanged)', async () => {
+    (fetch as any).mockResolvedValue({
+      ok: true,
+      json: async () => ({ data: [] }),
+    } as Response);
+
+    service.searchAnimals('test');
+    vi.advanceTimersByTime(300);
+    TestBed.tick();
+    await vi.waitFor(() => expect(service.resource.isLoading()).toBe(false));
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    service.searchAnimals('test');
+    vi.advanceTimersByTime(300);
+    TestBed.tick();
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set isLoading to true when searchAnimals is called and false when complete', async () => {
+    const mockResponse: AnimalSearchResponse = { data: [] };
+    (fetch as any).mockResolvedValue({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
+
+    // Initial check
+    TestBed.tick();
+    // Wait for the initial load which might be triggered by empty query
+    if (service.resource.isLoading()) {
+      await vi.waitFor(() => expect(service.resource.isLoading()).toBe(false));
+    }
+    expect(service.resource.isLoading()).toBe(false);
+
+    service.searchAnimals('test');
+
+    vi.advanceTimersByTime(300);
+    TestBed.tick();
+
+    expect(service.resource.isLoading()).toBe(true);
+
+    // Wait for the fetch promise to resolve
+    await vi.waitFor(() => expect(service.resource.isLoading()).toBe(false));
+
+    expect(service.resource.value()).toEqual(mockResponse);
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining('q=test'),
+      expect.any(Object),
     );
-    req.error(new ProgressEvent('Network error'), { status: 0 });
+  });
+
+  it('should handle error', async () => {
+    (fetch as any).mockRejectedValue(new Error('Network error'));
+
+    service.searchAnimals('test');
+    vi.advanceTimersByTime(300);
+    TestBed.tick();
+
+    await vi.waitFor(() => expect(service.resource.isLoading()).toBe(false));
+
+    expect(service.resource.error()).toBeTruthy();
+    expect(() => service.resource.value()).toThrow();
+  });
+
+  it('should return null from fetchAnimals if name is empty', async () => {
+    TestBed.tick();
+    if (service.resource.isLoading()) {
+      await vi.waitFor(() => expect(service.resource.isLoading()).toBe(false));
+    }
+    expect(service.resource.value()).toBeFalsy();
+    expect(fetch).not.toHaveBeenCalled();
   });
 });

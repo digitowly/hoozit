@@ -1,0 +1,33 @@
+<app-modal
+  modalType="compact"
+  [modalId]="modalId()"
+  [title]="marker()?.content?.title || ''"
+  (handleClose)="handleClose.emit()"
+>
+  <div class="marker-details">
+    @if (marker()?.content?.scientificName; as name) {
+      <div class="detail-item detail-item--featured">
+        <span class="detail-label">Scientific name</span>
+        <em class="detail-value">{{ name }}</em>
+      </div>
+    }
+    @if (marker()?.content?.institutionCode; as code) {
+      <div class="detail-item">
+        <span class="detail-label">Institution</span>
+        <span class="detail-value">{{ code }}</span>
+      </div>
+    }
+    @if (marker()?.content?.loyalty; as loyalty) {
+      <div class="detail-item">
+        <span class="detail-label">Basis</span>
+        <span class="detail-value">{{ loyalty }}</span>
+      </div>
+    }
+    @if (marker()?.content?.date; as date) {
+      <div class="detail-item">
+        <span class="detail-label">Date</span>
+        <span class="detail-value">{{ date }}</span>
+      </div>
+    }
+  </div>
+</app-modal>

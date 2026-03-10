@@ -1,0 +1,25 @@
+@use "../../../style/breakpoint";
+@use "../../../style/shadow";
+
+.form-wrapper {
+  max-width: 520px;
+
+  @media (min-width: breakpoint.$sm) {
+    background: var(--color-background-overlay);
+    border-radius: 1.25rem;
+    padding: 2rem;
+    box-shadow: shadow.$sm;
+  }
+}
+
+.form-title {
+  margin-bottom: 1.75rem;
+}
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}

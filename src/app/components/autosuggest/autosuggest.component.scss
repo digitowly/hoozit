@@ -1,0 +1,114 @@
+@use "../../style/shadow";
+
+:host {
+  width: 100%;
+}
+
+.autocomplete {
+  display: flex;
+  position: relative;
+  align-items: center;
+  width: 100%;
+}
+
+.search-icon {
+  left: 1rem;
+  position: absolute;
+  color: var(--quaternary-contrast);
+}
+
+.entry-icon {
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+}
+
+[ngComboboxInput] {
+  width: 100%;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  padding: 0.75rem 0.5rem 0.75rem 3rem;
+  color: var(--primary-contrast);
+  outline-color: var(--hot-pink);
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  background-color: var(--color-background);
+}
+
+[ngComboboxInput]::placeholder {
+  color: var(--quaternary-contrast);
+}
+
+[ngCombobox]:has([aria-expanded='false']) .popup {
+  display: none;
+}
+
+.popup {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  max-height: 16rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-background);
+  box-shadow: shadow.$lg;
+  font-size: 0.9rem;
+}
+
+.no-results {
+  padding: 1rem;
+}
+
+[ngListbox] {
+  gap: 2px;
+  height: 100%;
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+}
+[ngOption] {
+  display: flex;
+  cursor: pointer;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 1px;
+  padding: 0.625rem 1rem;
+  min-height: 2.75rem;
+  border-radius: 0.5rem;
+}
+[ngOption]:hover {
+  background-color: color-mix(in srgb, var(--primary-contrast) 5%, transparent);
+}
+[ngOption][data-active='true'] {
+  outline-offset: -2px;
+  outline: 2px solid var(--hot-pink);
+}
+[ngOption][aria-selected='true'] {
+  color: var(--hot-pink);
+  background-color: color-mix(in srgb, var(--hot-pink) 5%, transparent);
+}
+[ngOption]:not([aria-selected='true']) .check-icon {
+  display: none;
+}
+.option-label {
+  flex: 1;
+}
+
+.option-image {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.check-icon {
+  font-size: 0.9rem;
+}
+
+.selected-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}

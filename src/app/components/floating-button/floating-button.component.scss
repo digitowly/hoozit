@@ -1,3 +1,5 @@
+@use '../../style/shadow';
+
 $size: 60px;
 
 .floating-button {
@@ -6,7 +8,9 @@ $size: 60px;
   height: $size;
   border-radius: 100%;
   border: none;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  //box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: shadow.$lg;
+
   background-color: var(--color-background-overlay);
   display: flex;
   justify-content: center;

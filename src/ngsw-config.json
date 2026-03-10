@@ -2,9 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/angular/angular/main/packages/service-worker/config/schema.json",
   "index": "/index.html",
   "navigationUrls": [
-    { "positive": true, "regex": "/.*" },
-    { "positive": false, "regex": "/[^/]+\\.[^/]+$" },
-    { "positive": false, "regex": "/assets/.*" }
+    "/**"
   ],
   "assetGroups": [
     {

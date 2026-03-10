@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Coordinate } from '../../model/coordinate';
 
 @Injectable({ providedIn: 'root' })
-export class GeoService {
-  public getDistance(coord1: Coordinate, coord2: Coordinate): number {
+export class GeoHelper {
+  public static getDistance(coord1: Coordinate, coord2: Coordinate): number {
     const R = 6371; // Radius of the earth in km
     const dLat = this.deg2rad(coord2.latitude - coord1.latitude);
     const dLon = this.deg2rad(coord2.longitude - coord1.longitude);
@@ -17,7 +17,7 @@ export class GeoService {
     return R * c;
   }
 
-  private deg2rad(deg: number): number {
+  private static deg2rad(deg: number): number {
     return deg * (Math.PI / 180);
   }
 }

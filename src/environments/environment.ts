@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  verdexUrl: 'https://verdex.fly.dev/api',
+  verdexUrl: 'https://hoozit.app/api/verdex',
+  rangoUrl: 'https://hoozit.app/api/rango',
   gbifUrl: 'https://api.gbif.org/v1',
-  rangoUrl: 'https://rango-production.up.railway.app/api',
 };

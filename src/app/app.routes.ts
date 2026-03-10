@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
+import { authSpeciesResourceGuard } from './guards/auth-species-resource-guard/auth-species-resource.guard';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'home',
     loadComponent: () =>
-      import('../app/features/user/user.component').then(
-        (m) => m.UserComponent,
+      import('../app/features/home/home.component').then(
+        ({ HomeComponent }) => HomeComponent,
       ),
     data: { reuse: true },
   },
@@ -13,7 +15,7 @@ export const routes: Routes = [
     path: 'map',
     loadComponent: () =>
       import('../app/features/map-view/map-view.component').then(
-        (m) => m.MapViewComponent,
+        ({ MapViewComponent }) => MapViewComponent,
       ),
     data: { reuse: true },
   },
@@ -21,8 +23,16 @@ export const routes: Routes = [
     path: 'user',
     loadComponent: () =>
       import('../app/features/user/user.component').then(
-        (m) => m.UserComponent,
+        ({ UserComponent }) => UserComponent,
       ),
     data: { reuse: true },
+  },
+  {
+    path: 'species-resources',
+    loadComponent: () =>
+      import('./features/species-resource/species-resource.component').then(
+        ({ SpeciesResourceComponent }) => SpeciesResourceComponent,
+      ),
+    canActivate: [authSpeciesResourceGuard],
   },
 ];

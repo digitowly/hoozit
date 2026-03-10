@@ -12,7 +12,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import { of } from 'rxjs';
 import { IconComponent } from '../../../../components/icon/icon.component';
 
 @Component({
@@ -70,18 +70,6 @@ export class SearchFormComponent {
         this.searchInputRef.nativeElement.focus();
       }
     });
-
-    effect(() => {
-      this.query?.valueChanges
-        .pipe(
-          debounceTime(300),
-          distinctUntilChanged(),
-          switchMap((term) => {
-            return this.validateTerm(term);
-          }),
-        )
-        .subscribe(() => this.onSubmit());
-    });
   }
 
   get query() {
@@ -90,6 +78,7 @@ export class SearchFormComponent {
 
   onQueryChange() {
     this.onSearchTermChange.emit(this.query?.value ?? '');
+    this.onSubmit();
   }
 
   onQueryFocus() {

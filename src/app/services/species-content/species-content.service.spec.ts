@@ -1,69 +1,57 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SpeciesContentService } from './species-content.service';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { AnimalSearchResponse } from '../animal-search/animal-search.model';
-import { finalize } from 'rxjs';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('SpeciesContentService', () => {
   let service: SpeciesContentService;
-  let httpMock: HttpTestingController;
 
   beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn());
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideZonelessChangeDetection()],
     });
     service = TestBed.inject(SpeciesContentService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set isLoading to true when findOccurrences is called and false when complete', () => {
-    const mockResponse: AnimalSearchResponse = { data: [] };
-    expect(service.isLoading()).toBe(false);
+  it('should set isLoading to true when getIntroduction is called and false when complete', async () => {
+    const mockResponse = { data: 'test' };
+    (fetch as any).mockResolvedValue({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
 
-    service
-      .getIntroduction(42)
-      .pipe(
-        finalize(() => {
-          expect(service.isLoading()).toBe(false);
-        }),
-      )
-      .subscribe((res) => {
-        expect(res).toEqual(mockResponse);
-      });
+    TestBed.tick();
+    await new Promise((resolve) => setTimeout(resolve));
+    TestBed.tick();
 
-    expect(service.isLoading()).toBe(true);
+    expect(service.introductionResource.isLoading()).toBe(false);
 
-    const req = httpMock.expectOne(
-      'http://localhost:8082/api/animals/42/content/introduction?lang=de',
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    service.getIntroduction(42);
+
+    TestBed.tick();
+    await new Promise((resolve) => setTimeout(resolve));
+    TestBed.tick();
+
+    expect(service.introductionResource.value()).toEqual(mockResponse);
+    expect(service.introductionResource.isLoading()).toBe(false);
   });
 
-  it('should handle error', () => {
-    service.getIntroduction(42).subscribe((res) => {
-      expect(res).toEqual({ data: [] });
-      expect(service.error()).toBe(
-        'Network error: Please check your connection',
-      );
-    });
+  it('should handle error', async () => {
+    (fetch as any).mockRejectedValue(new Error('Network error'));
 
-    const req = httpMock.expectOne(
-      'http://localhost:8082/api/animals/42/content/introduction?lang=de',
-    );
-    req.error(new ProgressEvent('Network error'), { status: 0 });
+    service.getIntroduction(42);
+
+    TestBed.tick();
+    await new Promise((resolve) => setTimeout(resolve));
+    TestBed.tick();
+
+    // Service catches error and returns null
+    expect(service.introductionResource.value()).toBe(null);
+    expect(service.introductionResource.error()).toBeUndefined();
   });
 });

@@ -12,11 +12,11 @@
 
 .map-location-center {
   position: absolute;
-  bottom: calc(#{layout.$safe-area-inset} + 5rem);
-  right: layout.$safe-area-inset;
+  bottom: calc(#{layout.$safe-area-inset-md} + 5.5rem);
+  right: layout.$safe-area-inset-md;
   z-index: 99;
 
   @media (min-width: breakpoint.$md) {
-    bottom: layout.$safe-area-inset;
+    bottom: layout.$safe-area-inset-sm;
   }
 }

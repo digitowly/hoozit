@@ -1,7 +1,7 @@
 {
   "name": "Hoozit",
   "short_name": "Hoozit",
-  "start_url": "/map",
+  "start_url": "./map",
   "display": "standalone",
   "background_color": "#0b0f17",
   "theme_color": "#0b0f17",

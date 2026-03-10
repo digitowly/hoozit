@@ -1,0 +1,15 @@
+<content-container>
+  <div class="home-view">
+    @if (!isUserLoading() && user()) {
+      <h1 class="greeting" i18n>Hello, {{ user()!.nickname }}</h1>
+    } @else {
+      <h1 class="greeting" i18n>Welcome to Hoozit</h1>
+    }
+
+    <div class="notice">
+      <p i18n>
+        This app is in early development. Some features may be missing or incomplete.
+      </p>
+    </div>
+  </div>
+</content-container>

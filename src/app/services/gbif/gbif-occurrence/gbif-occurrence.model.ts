@@ -1,8 +1,10 @@
+import { Coordinate } from '../../../model/coordinate';
+
 export interface GbifOccurrenceResponse {
   results: GbifOccurrence[];
 }
 
-interface GbifOccurrence {
+export interface GbifOccurrence {
   key: number;
   taxonKey: number;
   decimalLatitude: number;
@@ -12,4 +14,9 @@ interface GbifOccurrence {
   locality: string;
   eventDate: string;
   institutionCode: string;
+}
+
+export interface GbifOccurrenceResponseCache {
+  coordinate: Coordinate;
+  response: GbifOccurrenceResponse;
 }
