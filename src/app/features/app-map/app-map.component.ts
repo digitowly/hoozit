@@ -3,16 +3,17 @@ import { UserLocationService } from '../../services/user/user-location/user-loca
 import { MapService, MapMarker } from '../../services/map/map-service';
 import { LeafletService } from '../../services/map/leaflet/leaflet.service';
 import { IconComponent } from '../../components/icon/icon.component';
-import { FloatingButtonComponent } from '../../components/floating-button/floating-button.component';
 import { OccurrenceMarkerService } from './services/occurrence-marker/occurrence-marker.service';
 import { ModalService } from '../../services/modal/modal.service';
 import { OccurrencePreviewModalComponent } from '../modals/occurrence-preview-modal/occurrence-preview-modal.component';
+import { LogOccurrenceModalComponent } from '../modals/log-occurrence-modal/log-occurrence-modal.component';
 
 const MODAL_ID = 'map-marker';
+const LOG_OCCURRENCE_MODAL_ID = 'log-occurrence';
 
 @Component({
   selector: 'app-map',
-  imports: [IconComponent, FloatingButtonComponent, OccurrencePreviewModalComponent],
+  imports: [IconComponent, OccurrencePreviewModalComponent, LogOccurrenceModalComponent],
   providers: [
     {
       provide: MapService,
@@ -24,11 +25,14 @@ const MODAL_ID = 'map-marker';
 })
 export class AppMapComponent {
   readonly modalId = MODAL_ID;
+  readonly logOccurrenceModalId = LOG_OCCURRENCE_MODAL_ID;
   readonly selectedMarker = signal<MapMarker | null>(null);
 
   private readonly modalService = inject(ModalService);
 
   readonly isModalOpen = computed(() => this.modalService.isOpen(this.modalId));
+  readonly isLogOccurrenceModalOpen = computed(() => this.modalService.isOpen(this.logOccurrenceModalId));
+  readonly isAnyModalOpen = computed(() => this.isModalOpen() || this.isLogOccurrenceModalOpen());
 
   private hasInitialCenter = signal(false);
 
@@ -76,5 +80,9 @@ export class AppMapComponent {
 
   centerToUserLocation() {
     this.mapService.setCenter(this.userLocation.coordinate());
+  }
+
+  openLogOccurrenceModal() {
+    this.modalService.open(this.logOccurrenceModalId);
   }
 }

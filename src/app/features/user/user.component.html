@@ -16,10 +16,7 @@
           <p i18n>
             Please sign in to access your account settings and personal data.
           </p>
-          <a [href]="googleLoginUrl" class="login-button">
-            <app-icon name="google" size="size-medium" />
-            <span i18n>Login with Google</span>
-          </a>
+          <login-button provider="google" />
         </div>
       </div>
     } @else {

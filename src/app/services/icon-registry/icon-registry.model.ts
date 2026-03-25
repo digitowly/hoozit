@@ -8,5 +8,6 @@ export type IconName =
   | 'arrow-left'
   | 'chevron'
   | 'arrow-link'
+  | 'plus'
   | 'logout'
   | 'google';

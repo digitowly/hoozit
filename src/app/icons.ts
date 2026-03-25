@@ -67,4 +67,9 @@ export function registerIcons(iconRegistry: IconRegistryService) {
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" ><path d="M12.19,10.642V13.9h5.388A5.13,5.13,0,0,1,12.19,18,6,6,0,0,1,12.19,6a5.346,5.346,0,0,1,3.788,1.464l2.576-2.485A9.116,9.116,0,0,0,12.19,2.5a9.5,9.5,0,0,0,0,19c5.483,0,9.12-3.855,9.12-9.283a8.6,8.6,0,0,0-.15-1.575Z"/></svg>
     `,
   );
+  iconRegistry.registerIcon(
+    'plus',
+    `
+    <svg stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M6 12H12M18 12H12M12 12V6M12 12V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`,
+  );
 }

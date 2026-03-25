@@ -1,5 +1,8 @@
 @use "../../style/layout";
 @use "../../style/breakpoint";
+@use "../../style/shadow";
+
+$btn-size: 56px;
 
 #map {
   height: 100vh;
@@ -10,13 +13,42 @@
   z-index: 1;
 }
 
-.map-location-center {
+.map-fab-group {
   position: absolute;
   bottom: calc(#{layout.$safe-area-inset-md} + 5.5rem);
   right: layout.$safe-area-inset-md;
   z-index: 99;
 
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: shadow.$lg;
+  background: var(--color-background-overlay);
+
   @media (min-width: breakpoint.$md) {
     bottom: layout.$safe-area-inset-sm;
+  }
+
+  &__btn {
+    width: $btn-size;
+    height: $btn-size;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+
+    &:active {
+      background: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    margin: 0 12px;
+    background: rgba(128, 128, 128, 0.25);
   }
 }

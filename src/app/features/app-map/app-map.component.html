@@ -1,9 +1,17 @@
 <div id="map"></div>
-@if (!isModalOpen()) {
-  <div class="map-location-center">
-    <floating-button (click)="centerToUserLocation()">
-      <app-icon name="map-arrow" size="size-medium" color="color-neutral-light" />
-    </floating-button>
+@if (!isAnyModalOpen()) {
+  <div class="map-fab-group">
+    <!--    <button class="map-fab-group__btn" (click)="openLogOccurrenceModal()">-->
+    <!--      <app-icon name="plus" size="size-medium" color="color-neutral-light" />-->
+    <!--    </button>-->
+    <div class="map-fab-group__divider"></div>
+    <button class="map-fab-group__btn" (click)="centerToUserLocation()">
+      <app-icon
+        name="map-arrow"
+        size="size-medium"
+        color="color-neutral-light"
+      />
+    </button>
   </div>
 }
 <occurrence-preview-modal
@@ -11,3 +19,7 @@
   [marker]="selectedMarker()"
   (handleClose)="selectedMarker.set(null)"
 />
+<!--<log-occurrence-modal-->
+<!--  [modalId]="logOccurrenceModalId"-->
+<!--  (handleClose)="(undefined)"-->
+<!--/>-->

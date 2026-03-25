@@ -1,0 +1,75 @@
+@use "../../../style/color";
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 0.25rem;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  resize: vertical;
+  min-height: 5rem;
+}
+
+.confidence-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.confidence-value {
+  font-size: 0.875rem;
+  min-width: 2.5rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.location-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--color-background-subtle, rgba(0, 0, 0, 0.05));
+  font-size: 0.8125rem;
+}
+
+.location-chip__label {
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.location-chip__value {
+  font-variant-numeric: tabular-nums;
+}
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.25rem;
+}
+
+.status {
+  font-size: 0.875rem;
+  margin: 0;
+
+  &--success {
+    color: color.$success;
+  }
+
+  &--error {
+    color: color.$error;
+  }
+
+  &--info {
+    opacity: 0.65;
+  }
+}

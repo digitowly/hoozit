@@ -70,22 +70,6 @@
         margin: 0;
       }
 
-      .login-button {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        background: var(--color-background);
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.5rem;
-        text-decoration: none;
-        font-weight: 500;
-        margin-top: 1rem;
-        transition: background 0.2s;
-
-        &:hover {
-          opacity: 0.9;
-        }
-      }
     }
   }
 

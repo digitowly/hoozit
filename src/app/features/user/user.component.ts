@@ -2,12 +2,12 @@ import { Component, computed, inject } from '@angular/core';
 import { ToggleButtonComponent } from '../../components/toggle-button/toggle-button.component';
 import { UiThemeService } from '../../services/ui-theme/ui-theme.service';
 import { UserDataService } from '../../services/user/user-data/user-data.service';
-import { environment } from '../../../environments/environment';
 import { ContentContainerComponent } from '../../components/content-container/content-container.component';
 import { PermissionsService } from '../../services/permissions/permissions.service';
 import { Permission } from '../../services/permissions/permissions.model';
 
 import { IconComponent } from '../../components/icon/icon.component';
+import { LoginButtonComponent } from '../../components/login-button/login-button.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
@@ -20,6 +20,7 @@ import { RouterLink } from '@angular/router';
     ContentContainerComponent,
     IconComponent,
     RouterLink,
+    LoginButtonComponent,
   ],
 })
 export class UserComponent {
@@ -44,9 +45,6 @@ export class UserComponent {
     { initialValue: false },
   );
 
-  get googleLoginUrl(): string {
-    return `${environment.rangoUrl}/user/login/google`;
-  }
 
   async logoutUser() {
     await this.userDataService.logout();
