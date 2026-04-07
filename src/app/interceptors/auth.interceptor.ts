@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-const refreshUrl = `${environment.rangoUrl}/auth/refresh/cookie`;
+const refreshUrl = `${environment.rangoUrl}/auth/refresh/web`;
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const http = inject(HttpClient);
