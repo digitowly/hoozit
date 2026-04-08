@@ -46,6 +46,7 @@ export class AppMapComponent {
 
     effect(() => {
       this.mapService.init(initialLocation, 13);
+      this.mapService.registerLongPress(() => this.openLogOccurrenceModal());
     });
 
     effect(() => {

@@ -13,6 +13,35 @@ $btn-size: 56px;
   z-index: 1;
 }
 
+.map-fab {
+  position: absolute;
+  z-index: 99;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: shadow.$lg;
+  background: var(--color-background-overlay);
+  transition: background 0.15s ease;
+
+  &:active {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  &--add {
+    bottom: calc(#{layout.$safe-area-inset-md} + 5.5rem);
+    left: layout.$safe-area-inset-md;
+    width: $btn-size;
+    height: $btn-size;
+    border-radius: 1.5rem;
+
+    @media (min-width: breakpoint.$md) {
+      bottom: layout.$safe-area-inset-sm;
+    }
+  }
+}
+
 .map-fab-group {
   position: absolute;
   bottom: calc(#{layout.$safe-area-inset-md} + 5.5rem);
@@ -46,9 +75,4 @@ $btn-size: 56px;
     }
   }
 
-  &__divider {
-    height: 1px;
-    margin: 0 12px;
-    background: rgba(128, 128, 128, 0.25);
-  }
 }

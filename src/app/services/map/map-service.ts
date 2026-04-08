@@ -27,4 +27,6 @@ export abstract class MapService {
   abstract removeMarkers(): void;
 
   abstract repaintUserMarker(coordinate: Coordinate): void;
+
+  abstract registerLongPress(callback: (coordinate: Coordinate) => void): void;
 }

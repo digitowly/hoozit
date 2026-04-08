@@ -72,6 +72,31 @@ export class LeafletService extends MapService {
     });
   }
 
+  override registerLongPress(callback: (coordinate: Coordinate) => void): void {
+    if (!this.map) return;
+
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const cancel = () => {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    };
+
+    const start = (e: L.LeafletEvent) => {
+      cancel();
+      const { latlng } = e as L.LeafletMouseEvent;
+      timer = setTimeout(() => {
+        callback({ latitude: latlng.lat, longitude: latlng.lng });
+      }, 500);
+    };
+
+    this.map.on('mousedown', start);
+    this.map.on('touchstart', start);
+    this.map.on('mouseup mousemove touchend touchmove', cancel);
+  }
+
   override repaintUserMarker(coordinate: Coordinate) {
     if (!this.map) return;
     // Remove existing marker if it exists
