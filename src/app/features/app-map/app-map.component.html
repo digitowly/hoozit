@@ -1,10 +1,9 @@
 <div id="map"></div>
 @if (!isAnyModalOpen()) {
+  <button class="map-fab map-fab--add" (click)="openLogOccurrenceModal()">
+    <app-icon name="plus" size="size-medium" color="color-neutral-light" />
+  </button>
   <div class="map-fab-group">
-    <!--    <button class="map-fab-group__btn" (click)="openLogOccurrenceModal()">-->
-    <!--      <app-icon name="plus" size="size-medium" color="color-neutral-light" />-->
-    <!--    </button>-->
-    <div class="map-fab-group__divider"></div>
     <button class="map-fab-group__btn" (click)="centerToUserLocation()">
       <app-icon
         name="map-arrow"
@@ -19,7 +18,7 @@
   [marker]="selectedMarker()"
   (handleClose)="selectedMarker.set(null)"
 />
-<!--<log-occurrence-modal-->
-<!--  [modalId]="logOccurrenceModalId"-->
-<!--  (handleClose)="(undefined)"-->
-<!--/>-->
+<log-occurrence-modal
+  [modalId]="logOccurrenceModalId"
+  (handleClose)="undefined"
+/>

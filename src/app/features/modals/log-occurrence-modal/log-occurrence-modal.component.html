@@ -26,6 +26,30 @@
       ></textarea>
     </field-container>
 
+    <field-container label="When" name="when">
+      <div class="when-row">
+        <input
+          type="date"
+          class="when-input"
+          [value]="observationDate()"
+          (input)="setDate($event)"
+        />
+        <input
+          type="time"
+          class="when-input"
+          [value]="timeStart()"
+          (input)="setTimeStart($event)"
+        />
+        <span class="when-sep">–</span>
+        <input
+          type="time"
+          class="when-input"
+          [value]="timeEnd()"
+          (input)="setTimeEnd($event)"
+        />
+      </div>
+    </field-container>
+
     <field-container label="Certainty" name="confidence">
       <div class="confidence-row">
         <input
@@ -64,7 +88,7 @@
             <p class="status status--error">Something went wrong. Please try again.</p>
           }
           @case ('loading') {
-            <p class="status">Submitting…</p>
+            <p class="status status--info">Submitting…</p>
           }
         }
       } @else {
