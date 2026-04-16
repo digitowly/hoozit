@@ -1,7 +1,7 @@
 <div id="map"></div>
 @if (!isAnyModalOpen()) {
   <button class="map-fab map-fab--add" (click)="openLogOccurrenceModal()">
-    <app-icon name="plus" size="size-medium" color="color-neutral-light" />
+    <app-icon name="add-pin" size="size-medium" color="color-neutral-light" />
   </button>
   <div class="map-fab-group">
     <button class="map-fab-group__btn" (click)="centerToUserLocation()">
@@ -20,5 +20,5 @@
 />
 <log-occurrence-modal
   [modalId]="logOccurrenceModalId"
-  (handleClose)="undefined"
+  (handleClose)="(undefined)"
 />
