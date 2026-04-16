@@ -3,10 +3,11 @@ import { environment } from '../../../environments/environment';
 import { IconComponent } from '../icon/icon.component';
 import { IconName } from '../../services/icon-registry/icon-registry.model';
 
-export type LoginProvider = 'google';
+export type LoginProvider = 'google' | 'apple';
 
 const PROVIDER_CONFIG: Record<LoginProvider, { icon: IconName; label: string }> = {
   google: { icon: 'google', label: 'Login with Google' },
+  apple: { icon: 'apple', label: 'Login with Apple' },
 };
 
 @Component({

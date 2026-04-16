@@ -10,4 +10,5 @@ export type IconName =
   | 'arrow-link'
   | 'plus'
   | 'logout'
-  | 'google';
+  | 'google'
+  | 'apple';
