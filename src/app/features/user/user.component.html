@@ -9,76 +9,66 @@
         <div class="spinner"></div>
       </div>
     } @else if (!user()) {
-      <div class="login-card">
-        <div class="login-content">
-          <app-icon name="user" size="size-large" />
-          <h2 i18n>Welcome back</h2>
-          <p i18n>
-            Please sign in to access your account settings and personal data.
-          </p>
-          <login-button provider="google" />
-          <login-button provider="apple" />
-        </div>
+      <div class="login-section">
+        <app-icon name="user" size="size-large" />
+        <h2 i18n>Welcome back</h2>
+        <p i18n>
+          Please sign in to access your account settings and personal data.
+        </p>
+        <login-button provider="google" />
+        <login-button provider="apple" />
       </div>
     } @else {
       <div class="profile-layout">
-        <section class="profile-main-card">
-          <div class="profile-header">
-            <div class="avatar-container">
-              @if (user()?.image) {
-                <img
-                  [src]="user()?.image"
-                  [alt]="user()?.nickname"
-                  class="avatar"
-                />
-              } @else {
-                <div class="avatar-placeholder">
-                  {{ user()?.nickname?.charAt(0)?.toUpperCase() }}
-                </div>
-              }
-            </div>
-            <div class="user-info">
-              <h2 class="nickname">{{ user()?.nickname }}</h2>
-              <p class="email">{{ user()?.email }}</p>
-              <span class="detail-value badge">{{ user()?.role }}</span>
-              <span class="detail-value badge">{{ user()?.account_tier }}</span>
+        <section class="profile-header">
+          <div class="avatar-container">
+            @if (user()?.image) {
+              <img
+                [src]="user()?.image"
+                [alt]="user()?.nickname"
+                class="avatar"
+              />
+            } @else {
+              <div class="avatar-placeholder">
+                {{ user()?.nickname?.charAt(0)?.toUpperCase() }}
+              </div>
+            }
+          </div>
+          <div class="user-info">
+            <h2 class="nickname">{{ user()?.nickname }}</h2>
+            <p class="email">{{ user()?.email }}</p>
+            <div class="badges">
+              <span class="badge">{{ user()?.role }}</span>
+              <span class="badge">{{ user()?.account_tier }}</span>
             </div>
           </div>
         </section>
 
-        <section class="actions-section">
-          <div class="actions-grid">
-            @if (hasSpeciesResourcePermission()) {
+        @if (hasSpeciesResourcePermission()) {
+          <section class="actions-section">
+            <div class="actions-grid">
               <a routerLink="/species-resources" class="action-card">
                 <app-icon name="arrow-link" size="size-medium" />
                 <div class="action-text">
                   <span i18n class="action-label">Submit Resource</span>
-                  <span i18n class="action-description"
-                    >Add new species data to our database.</span
-                  >
+                  <span i18n class="action-description">Add new species data to our database.</span>
                 </div>
               </a>
-            }
-          </div>
-        </section>
+            </div>
+          </section>
+        }
 
         <section class="settings-section">
           <h3 i18n class="section-title">Settings</h3>
-          <div class="settings-grid">
-            <div class="settings-card">
-              <div class="setting-item">
-                <div class="setting-text">
-                  <span i18n class="setting-label">Dark Mode</span>
-                  <span i18n class="setting-description"
-                    >Toggle between light and dark theme.</span
-                  >
-                </div>
-                <toggle-button
-                  [isChecked]="isThemeToggleChecked()"
-                  (onChange)="toggleTheme()"
-                />
-              </div>
+          <div class="setting-item">
+            <div class="setting-text">
+              <span i18n class="setting-label">Dark Mode</span>
+              <span i18n class="setting-description">Toggle between light and dark theme.</span>
             </div>
+            <toggle-button
+              [isChecked]="isThemeToggleChecked()"
+              (onChange)="toggleTheme()"
+            />
           </div>
         </section>
 
