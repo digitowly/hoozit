@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { UserDataResponse } from './user-data.model';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 const mockUserResponse: UserDataResponse = {
   email: 'mockuser@mail.com',
@@ -35,12 +35,10 @@ describe('UserDataService', () => {
   });
 
   it('should load user data on initialization', async () => {
-    (fetch as any).mockResolvedValue({
-      ok: true,
-      json: async () => mockUserResponse,
-    } as Response);
+    const httpTesting = TestBed.inject(HttpTestingController);
 
     TestBed.tick();
+    httpTesting.expectOne((req) => req.url.includes('/user')).flush(mockUserResponse);
     await new Promise((resolve) => setTimeout(resolve));
     TestBed.tick();
 
@@ -49,9 +47,12 @@ describe('UserDataService', () => {
   });
 
   it('should return null on error', async () => {
-    (fetch as any).mockRejectedValue(new Error('Network error'));
+    const httpTesting = TestBed.inject(HttpTestingController);
 
     TestBed.tick();
+    httpTesting
+      .expectOne((req) => req.url.includes('/user'))
+      .flush('Error', { status: 500, statusText: 'Server Error' });
     await new Promise((resolve) => setTimeout(resolve));
     TestBed.tick();
 
