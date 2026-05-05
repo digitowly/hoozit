@@ -1,0 +1,36 @@
+<div class="login">
+  <app-icon name="user" size="size-large" data-test-id="login-icon" />
+  <h2 i18n data-test-id="login-title">Welcome back</h2>
+  <p i18n data-test-id="login-description">
+    Please sign in to access your account settings and personal data.
+  </p>
+  <login-button provider="google" data-test-id="social-login-google" />
+  <login-button provider="apple" data-test-id="social-login-apple" />
+  <hr />
+  <p>Email and Password</p>
+  <input
+    type="email"
+    placeholder="Email"
+    [formField]="loginForm.email"
+    data-test-id="email-input"
+  />
+  <input
+    type="password"
+    placeholder="Password"
+    [formField]="loginForm.password"
+    data-test-id="password-input"
+  />
+
+  @if (errorMessage()) {
+    <p class="error-message" data-test-id="error-message">
+      {{ errorMessage() }}
+    </p>
+  }
+
+  <button
+    (click)="loginWithEmailAndPassword()"
+    data-test-id="login-submit-button"
+  >
+    Login
+  </button>
+</div>

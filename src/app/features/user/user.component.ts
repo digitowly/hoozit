@@ -5,11 +5,10 @@ import { UserDataService } from '../../services/user/user-data/user-data.service
 import { ContentContainerComponent } from '../../components/content-container/content-container.component';
 import { PermissionsService } from '../../services/permissions/permissions.service';
 import { Permission } from '../../services/permissions/permissions.model';
-
 import { IconComponent } from '../../components/icon/icon.component';
-import { LoginButtonComponent } from '../../components/login-button/login-button.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'user',
@@ -20,7 +19,7 @@ import { RouterLink } from '@angular/router';
     ContentContainerComponent,
     IconComponent,
     RouterLink,
-    LoginButtonComponent,
+    LoginComponent,
   ],
 })
 export class UserComponent {
@@ -44,7 +43,6 @@ export class UserComponent {
     this.permissionsService.hasUserPermissions([Permission.RESOURCE_SUBMIT]),
     { initialValue: false },
   );
-
 
   async logoutUser() {
     await this.userDataService.logout();

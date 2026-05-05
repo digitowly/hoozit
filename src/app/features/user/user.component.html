@@ -9,15 +9,7 @@
         <div class="spinner"></div>
       </div>
     } @else if (!user()) {
-      <div class="login-section">
-        <app-icon name="user" size="size-large" />
-        <h2 i18n>Welcome back</h2>
-        <p i18n>
-          Please sign in to access your account settings and personal data.
-        </p>
-        <login-button provider="google" />
-        <login-button provider="apple" />
-      </div>
+      <login />
     } @else {
       <div class="profile-layout">
         <section class="profile-header">
@@ -51,7 +43,9 @@
                 <app-icon name="arrow-link" size="size-medium" />
                 <div class="action-text">
                   <span i18n class="action-label">Submit Resource</span>
-                  <span i18n class="action-description">Add new species data to our database.</span>
+                  <span i18n class="action-description">
+                    Add new species data to our database.
+                  </span>
                 </div>
               </a>
             </div>
@@ -63,7 +57,9 @@
           <div class="setting-item">
             <div class="setting-text">
               <span i18n class="setting-label">Dark Mode</span>
-              <span i18n class="setting-description">Toggle between light and dark theme.</span>
+              <span i18n class="setting-description">
+                Toggle between light and dark theme.
+              </span>
             </div>
             <toggle-button
               [isChecked]="isThemeToggleChecked()"
