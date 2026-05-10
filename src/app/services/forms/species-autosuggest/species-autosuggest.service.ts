@@ -7,19 +7,35 @@ import { AutoSuggestEntry } from '../../../components/autosuggest/autosuggest.mo
 export class SpeciesAutosuggestService {
   private readonly speciesSearchService = inject(AnimalSearchService);
 
-  readonly speciesEntries = computed(
-    () =>
+  readonly speciesEntries = computed(() => {
+    if (this.speciesSearchService.isNotAvailable()) {
+      const query = this.speciesSearchService.debouncedQuery();
+      return query ? [{ label: query, value: query }] : [];
+    }
+
+    return (
       this.speciesSearchService.resource
         .value()
-        ?.data?.map(this.mapToAutoSuggestEntry) || [],
-  );
+        ?.data?.map(this.mapToAutoSuggestEntry) || []
+    );
+  });
 
   readonly selectedEntry = computed(() => {
-    return this.speciesEntries().find(
-      (e) =>
-        e.label.toLowerCase() ===
-        this.speciesSearchService.debouncedQuery().toLowerCase(),
+    const query = this.speciesSearchService.debouncedQuery();
+    const match = this.speciesEntries().find(
+      (e) => e.label.toLowerCase() === query.toLowerCase(),
     );
+
+    if (match) return match;
+
+    if (query.length >= 3) {
+      return {
+        label: query,
+        value: query,
+      };
+    }
+
+    return null;
   });
 
   onChange(input: string) {

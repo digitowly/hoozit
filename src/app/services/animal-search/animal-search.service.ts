@@ -1,7 +1,7 @@
 import { Injectable, resource, signal } from '@angular/core';
 import { AnimalSearchResponse } from './animal-search.model';
 import { environment } from '../../../environments/environment';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Injectable({
@@ -9,6 +9,8 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 })
 export class AnimalSearchService {
   private readonly apiUrl = `${environment.verdexUrl}/animals/search`;
+
+  readonly isNotAvailable = signal(false);
 
   private readonly searchQuery$ = new Subject<string>();
 
@@ -33,9 +35,16 @@ export class AnimalSearchService {
     if (!name) return null;
 
     const url = `${this.apiUrl}?q=${name}&lang=de`;
-    const response = await fetch(url, {
-      headers: { 'Content-Type': 'application/json' },
-    });
-    return await response.json();
+
+    try {
+      const response = await fetch(url, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      this.isNotAvailable.set(false);
+      return await response.json();
+    } catch {
+      this.isNotAvailable.set(true);
+      return null;
+    }
   }
 }
