@@ -4,7 +4,7 @@
       <autosuggest
         id="species"
         placeholder="Search for species"
-        [disabled]="submissionState() === 'loading'"
+        [disabled]="submissionState() === SubmissionState.LOADING"
         [entries]="speciesEntries()"
         (onQueryChange)="onAutoSuggestChange($event)"
         (onSelect)="onAutoSuggestSelect($event)"
@@ -21,16 +21,24 @@
     </field-container>
 
     <div formFooter>
-      <button class="btn-primary" (click)="onSubmit()" [disabled]="!isSubmittable()">Submit</button>
+      <button
+        class="btn-primary"
+        (click)="onSubmit()"
+        [disabled]="!isSubmittable()"
+      >
+        Submit
+      </button>
 
       @switch (submissionState()) {
-        @case ("success") {
+        @case (SubmissionState.SUCCESS) {
           <p class="status status--success">Resource submitted successfully.</p>
         }
-        @case ("error") {
-          <p class="status status--error">Please select a species and enter a URL.</p>
+        @case (SubmissionState.ERROR) {
+          <p class="status status--error">
+            Please select a species and enter a URL.
+          </p>
         }
-        @case ("loading") {
+        @case (SubmissionState.LOADING) {
           <p class="status">Submitting…</p>
         }
       }

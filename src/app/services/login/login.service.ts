@@ -12,19 +12,27 @@ export class LoginService {
 
   readonly isLoginSuccessful = signal(false);
 
-  loginWithEmailAndPassword(email: string, password: string): void {
+  async loginWithEmailAndPassword(
+    email: string,
+    password: string,
+  ): Promise<void> {
     this.errorMessage.set('');
-    this.httpClient.post(this.baseUrl, { email, password }).subscribe({
-      next: (response) => {
-        this.isLoginSuccessful.set(true);
-        console.log('Login successful', response);
-      },
-      error: (error) => {
-        this.isLoginSuccessful.set(false);
-        console.error('Login failed', error);
-        this.errorMessage.set(error.error?.message || error.message);
-      },
+
+    const res = await fetch(`${this.baseUrl}`, {
+      method: 'POST',
+      credentials: 'include',
+      redirect: 'manual',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
     });
+
+    if (res.type === 'opaqueredirect' || res.ok) {
+      window.location.href = '/user';
+    } else {
+      this.isLoginSuccessful.set(false);
+      const body = await res.json().catch(() => ({}));
+      this.errorMessage.set(body?.message || 'Login failed');
+    }
   }
 
   reset(): void {

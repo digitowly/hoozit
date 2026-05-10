@@ -11,6 +11,7 @@ import { SpeciesAutosuggestService } from '../../services/forms/species-autosugg
 import { ContentContainerComponent } from '../../components/content-container/content-container.component';
 import { FieldContainerComponent } from '../../components/forms/field-container/field-container.component';
 import { FormContainerComponent } from '../../components/forms/form-container/form-container.component';
+import { SubmissionState } from './species-resource.model';
 
 @Component({
   selector: 'occurrence-resource',
@@ -39,11 +40,10 @@ export class SpeciesResourceComponent {
 
   readonly formModel = signal({ url: '', type: 'image' });
   readonly speciesResourceForm = form(this.formModel, {});
-
-  readonly submissionState = signal<'initial' | 'loading' | 'success' | 'error'>('initial');
+  readonly submissionState = signal<SubmissionState>(SubmissionState.INITIAL);
 
   readonly isSubmittable = computed(() => {
-    if (this.submissionState() === 'loading') return false;
+    if (this.submissionState() === SubmissionState.LOADING) return false;
     return (
       this.selectedBinomialName() !== '' &&
       this.speciesResourceForm.url().value().length > 0
@@ -52,6 +52,12 @@ export class SpeciesResourceComponent {
 
   onAutoSuggestChange(input: string) {
     this.speciesAutosuggestService.onChange(input);
+    const entry = this.speciesAutosuggestService.selectedEntry();
+    if (entry) {
+      this.selectedBinomialName.set(entry.value ?? '');
+    } else {
+      this.selectedBinomialName.set('');
+    }
   }
 
   onAutoSuggestSelect(entry: AutoSuggestEntry) {
@@ -60,7 +66,7 @@ export class SpeciesResourceComponent {
 
   async onSubmit() {
     if (!this.isSubmittable()) {
-      this.submissionState.set('error');
+      this.submissionState.set(SubmissionState.ERROR);
       return;
     }
     const params: CreateSpeciesResourceParams = {
@@ -70,17 +76,19 @@ export class SpeciesResourceComponent {
       type: 'image',
     };
 
-    this.submissionState.set('loading');
+    this.submissionState.set(SubmissionState.LOADING);
     try {
       await firstValueFrom(
         this.speciesResourceService.createOccurrenceResource(params),
       );
-      this.submissionState.set('success');
+      this.submissionState.set(SubmissionState.SUCCESS);
     } catch (e) {
       console.error(e);
-      this.submissionState.set('error');
+      this.submissionState.set(SubmissionState.ERROR);
     } finally {
       this.speciesResourceForm.url().value.set('');
     }
   }
+
+  protected readonly SubmissionState = SubmissionState;
 }
