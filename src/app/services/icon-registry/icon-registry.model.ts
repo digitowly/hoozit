@@ -11,5 +11,6 @@ export type IconName =
   | 'plus'
   | 'add-pin'
   | 'logout'
+  | 'mail'
   | 'google'
   | 'apple';
