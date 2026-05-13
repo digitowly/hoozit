@@ -8,18 +8,21 @@
 </div>
 
 ```bash
+# install dependencies
+pnpm install
+
 # serve for development with hot reload
-ng serve
+pnpm start
 ```
 
 ```bash
 # build for production
-ng build
+pnpm build
 ```
 
 ```bash
 # run tests
-ng test --coverage
+pnpm test
 ```
 ## Credit
 
