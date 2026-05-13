@@ -1,14 +1,10 @@
 @use "../../../style/breakpoint";
-@use "../../../style/shadow";
 
 .form-wrapper {
   max-width: 520px;
 
   @media (min-width: breakpoint.$sm) {
-    background: var(--color-background-overlay);
-    border-radius: 1.25rem;
     padding: 2rem;
-    box-shadow: shadow.$sm;
   }
 }
 

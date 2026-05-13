@@ -1,4 +1,4 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 
 import { SpeciesResourceComponent } from './species-resource.component';
 import { SpeciesResourceService } from './service/species-resource.service';
+import { SubmissionState } from './species-resource.model';
 
 const TAWNY_OWL = { label: 'Tawny owl', value: 'Strix aluco', icon: '' };
 const IMAGE_URL = 'https://example.com/owl.jpg';
@@ -13,13 +14,18 @@ const IMAGE_URL = 'https://example.com/owl.jpg';
 describe('SpeciesResourceComponent', () => {
   let component: SpeciesResourceComponent;
   let fixture: ComponentFixture<SpeciesResourceComponent>;
-  let mockSpeciesResourceService: { createOccurrenceResource: ReturnType<typeof vi.fn> };
+  let mockSpeciesResourceService: {
+    createOccurrenceResource: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ data: [] }),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ data: [] }),
+      }),
+    );
 
     mockSpeciesResourceService = {
       createOccurrenceResource: vi.fn().mockReturnValue(of(null)),
@@ -30,7 +36,10 @@ describe('SpeciesResourceComponent', () => {
       providers: [
         provideZonelessChangeDetection(),
         provideHttpClientTesting(),
-        { provide: SpeciesResourceService, useValue: mockSpeciesResourceService },
+        {
+          provide: SpeciesResourceService,
+          useValue: mockSpeciesResourceService,
+        },
       ],
     }).compileComponents();
 
@@ -77,7 +86,7 @@ describe('SpeciesResourceComponent', () => {
     it('is false while submission is loading', () => {
       component.onAutoSuggestSelect(TAWNY_OWL);
       component.speciesResourceForm.url().value.set(IMAGE_URL);
-      component.submissionState.set('loading');
+      component.submissionState.set(SubmissionState.LOADING);
       expect(component.isSubmittable()).toBe(false);
     });
   });
@@ -86,7 +95,9 @@ describe('SpeciesResourceComponent', () => {
     it('sets error state when the form is not submittable', async () => {
       await component.onSubmit();
       expect(component.submissionState()).toBe('error');
-      expect(mockSpeciesResourceService.createOccurrenceResource).not.toHaveBeenCalled();
+      expect(
+        mockSpeciesResourceService.createOccurrenceResource,
+      ).not.toHaveBeenCalled();
     });
 
     it('calls createOccurrenceResource with the selected binomial name and URL', async () => {
@@ -95,7 +106,9 @@ describe('SpeciesResourceComponent', () => {
 
       await component.onSubmit();
 
-      expect(mockSpeciesResourceService.createOccurrenceResource).toHaveBeenCalledWith(
+      expect(
+        mockSpeciesResourceService.createOccurrenceResource,
+      ).toHaveBeenCalledWith(
         expect.objectContaining({
           binomial_name: 'Strix aluco',
           url: IMAGE_URL,
@@ -123,7 +136,9 @@ describe('SpeciesResourceComponent', () => {
 
     it('sets error state when the service throws', async () => {
       mockSpeciesResourceService.createOccurrenceResource.mockReturnValue(
-        new (await import('rxjs')).Observable((s) => s.error(new Error('server error'))),
+        new (await import('rxjs')).Observable((s) =>
+          s.error(new Error('server error')),
+        ),
       );
       component.onAutoSuggestSelect(TAWNY_OWL);
       component.speciesResourceForm.url().value.set(IMAGE_URL);

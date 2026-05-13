@@ -1,4 +1,14 @@
-<a [href]="href()" class="login-button">
+@if (config().isLink) {
+  <a class="login-button" [href]="href()">
+    <ng-container *ngTemplateOutlet="loginButtonTemplate" />
+  </a>
+} @else {
+  <button class="login-button" (click)="onClick()">
+    <ng-container *ngTemplateOutlet="loginButtonTemplate" />
+  </button>
+}
+
+<ng-template #loginButtonTemplate>
   <app-icon [name]="config().icon" size="size-medium" />
   <span>{{ config().label }}</span>
-</a>
+</ng-template>
