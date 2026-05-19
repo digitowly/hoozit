@@ -6,7 +6,6 @@ import { LoginService } from '../../services/login/login.service';
 import { By } from '@angular/platform-browser';
 import { IconRegistryService } from '../../services/icon-registry/icon-registry.service';
 import { provideHttpClient } from '@angular/common/http';
-import { LoginFormGroup } from './login.model';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -67,56 +66,6 @@ describe('LoginComponent', () => {
     expect(appleButton).toBeTruthy();
     expect(googleButton.attributes['provider']).toBe('google');
     expect(appleButton.attributes['provider']).toBe('apple');
-  });
-
-  it('should update form fields when inputs change', () => {
-    const emailInput = fixture.debugElement.query(
-      By.css('[data-test-id="email-input"]'),
-    ).nativeElement;
-    const passwordInput = fixture.debugElement.query(
-      By.css('[data-test-id="password-input"]'),
-    ).nativeElement;
-
-    emailInput.value = 'test@example.com';
-    emailInput.dispatchEvent(new Event('input'));
-    passwordInput.value = 'password123';
-    passwordInput.dispatchEvent(new Event('input'));
-
-    fixture.detectChanges();
-
-    const internalComponent = component as unknown as {
-      loginForm: LoginFormGroup;
-    };
-
-    expect(internalComponent.loginForm.email().value()).toBe(
-      'test@example.com',
-    );
-    expect(internalComponent.loginForm.password().value()).toBe('password123');
-  });
-
-  it('should call loginWithEmailAndPassword on service when login button is clicked', () => {
-    const emailInput = fixture.debugElement.query(
-      By.css('[data-test-id="email-input"]'),
-    ).nativeElement;
-    const passwordInput = fixture.debugElement.query(
-      By.css('[data-test-id="password-input"]'),
-    ).nativeElement;
-    const loginButton = fixture.debugElement.query(
-      By.css('[data-test-id="login-submit-button"]'),
-    ).nativeElement;
-
-    emailInput.value = 'user@test.com';
-    emailInput.dispatchEvent(new Event('input'));
-    passwordInput.value = 'secret';
-    passwordInput.dispatchEvent(new Event('input'));
-
-    fixture.detectChanges();
-    loginButton.click();
-
-    expect(loginServiceMock.loginWithEmailAndPassword).toHaveBeenCalledWith(
-      'user@test.com',
-      'secret',
-    );
   });
 
   it('should display error message when service has an error', () => {

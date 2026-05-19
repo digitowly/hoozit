@@ -13,7 +13,7 @@ describe('SpeciesAutosuggestService', () => {
       resource: {
         value: signal(null),
       },
-      isOffline: signal(false),
+      isNotAvailable: signal(false),
       debouncedQuery: signal(''),
       searchAnimals: vi.fn(),
     };
@@ -76,18 +76,18 @@ describe('SpeciesAutosuggestService', () => {
     mockAnimalSearchService.resource.value.set({ data: [] });
     mockAnimalSearchService.debouncedQuery.set('Un');
 
-    expect(service.selectedEntry()).toBeUndefined();
+    expect(service.selectedEntry()).toBeNull();
   });
 
   it('should return current input as entry when server is unreachable', () => {
-    mockAnimalSearchService.isOffline.set(true);
+    mockAnimalSearchService.isNotAvailable.set(true);
     mockAnimalSearchService.debouncedQuery.set('lion');
 
     expect(service.speciesEntries()).toEqual([{ label: 'lion', value: 'lion' }]);
   });
 
   it('should return empty entries when server is unreachable and query is empty', () => {
-    mockAnimalSearchService.isOffline.set(true);
+    mockAnimalSearchService.isNotAvailable.set(true);
 
     expect(service.speciesEntries()).toEqual([]);
   });

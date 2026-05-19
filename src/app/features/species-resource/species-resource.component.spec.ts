@@ -94,7 +94,7 @@ describe('SpeciesResourceComponent', () => {
   describe('onSubmit', () => {
     it('sets error state when the form is not submittable', async () => {
       await component.onSubmit();
-      expect(component.submissionState()).toBe('error');
+      expect(component.submissionState()).toBe(SubmissionState.ERROR);
       expect(
         mockSpeciesResourceService.createOccurrenceResource,
       ).not.toHaveBeenCalled();
@@ -122,7 +122,7 @@ describe('SpeciesResourceComponent', () => {
 
       await component.onSubmit();
 
-      expect(component.submissionState()).toBe('success');
+      expect(component.submissionState()).toBe(SubmissionState.SUCCESS);
     });
 
     it('clears the URL field after a successful submission', async () => {
@@ -145,7 +145,7 @@ describe('SpeciesResourceComponent', () => {
 
       await component.onSubmit();
 
-      expect(component.submissionState()).toBe('error');
+      expect(component.submissionState()).toBe(SubmissionState.ERROR);
     });
   });
 });

@@ -101,8 +101,8 @@ describe('AnimalSearchService', () => {
 
     await vi.waitFor(() => expect(service.resource.isLoading()).toBe(false));
 
-    expect(service.resource.error()).toBeTruthy();
-    expect(() => service.resource.value()).toThrow();
+    expect(service.isNotAvailable()).toBe(true);
+    expect(service.resource.value()).toBeNull();
   });
 
   it('should return null from fetchAnimals if name is empty', async () => {

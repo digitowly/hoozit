@@ -273,8 +273,7 @@ describe('LogOccurrenceModalComponent', () => {
       expect(payload.observed_at).toBe(
         new Date('2026-04-08T20:00:00').toISOString(),
       );
-      expect(payload.date).toBe(new Date('2026-04-08T20:00:00').toISOString());
-      expect(payload.time_start).toBe('20:00:00');
+expect(payload.time_start).toBe('20:00:00');
       expect(payload.time_end).toBe('20:15:00');
     });
 

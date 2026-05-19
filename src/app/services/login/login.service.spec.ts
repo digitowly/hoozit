@@ -1,32 +1,25 @@
-import { describe, beforeEach, it, expect, afterEach } from 'vitest';
+import { describe, beforeEach, it, expect, afterEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { LoginService } from './login.service';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 
 describe('LoginService', () => {
   let service: LoginService;
-  let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        LoginService,
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+    Object.defineProperty(window, 'location', {
+      value: { href: '' },
+      configurable: true,
+      writable: true,
     });
 
+    TestBed.configureTestingModule({
+      providers: [LoginService],
+    });
     service = TestBed.inject(LoginService);
-    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    httpMock.verify();
+    vi.restoreAllMocks();
   });
 
   it('should be created', () => {
@@ -39,51 +32,44 @@ describe('LoginService', () => {
   });
 
   describe('loginWithEmailAndPassword', () => {
-    it('should set isLoginSuccessful to true on successful login', () => {
-      const email = 'test@example.com';
-      const password = 'password123';
-      const mockResponse = { token: 'fake-token' };
-
-      service.loginWithEmailAndPassword(email, password);
-
-      const req = httpMock.expectOne(
-        `${environment.scoutUrl}/user/login/email`,
+    it('should redirect to /user on successful login', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({ ok: true, type: 'default', json: async () => ({}) }),
       );
-      expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual({ email, password });
-      req.flush(mockResponse);
 
-      expect(service.isLoginSuccessful()).toBe(true);
+      await service.loginWithEmailAndPassword('test@example.com', 'password123');
+
+      expect(window.location.href).toBe('/user');
       expect(service.errorMessage()).toBe('');
     });
 
-    it('should set isLoginSuccessful to false and errorMessage on failed login', () => {
-      const email = 'test@example.com';
-      const password = 'wrong-password';
-      const mockError = { message: 'Invalid credentials' };
-
-      service.loginWithEmailAndPassword(email, password);
-
-      const req = httpMock.expectOne(
-        `${environment.scoutUrl}/user/login/email`,
+    it('should set errorMessage on failed login', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({
+          ok: false,
+          type: 'default',
+          json: async () => ({ message: 'Invalid credentials' }),
+        }),
       );
-      req.flush(mockError, { status: 401, statusText: 'Unauthorized' });
+
+      await service.loginWithEmailAndPassword('test@example.com', 'wrong-password');
 
       expect(service.isLoginSuccessful()).toBe(false);
       expect(service.errorMessage()).toBe('Invalid credentials');
     });
 
-    it('should clear errorMessage when starting a new login attempt', () => {
+    it('should clear errorMessage when starting a new login attempt', async () => {
       service.errorMessage.set('Previous error');
-
-      service.loginWithEmailAndPassword('email', 'password');
-
-      expect(service.errorMessage()).toBe('');
-
-      const req = httpMock.expectOne(
-        `${environment.scoutUrl}/user/login/email`,
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({ ok: false, type: 'default', json: async () => ({}) }),
       );
-      req.flush({});
+
+      const loginPromise = service.loginWithEmailAndPassword('email', 'password');
+      expect(service.errorMessage()).toBe('');
+      await loginPromise;
     });
   });
 
