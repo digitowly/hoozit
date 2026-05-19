@@ -1,13 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { UserOccurrenceRequest } from './occurrence.model';
 
 @Injectable({ providedIn: 'root' })
 export class OccurrenceService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.rangoUrl}/user/occurrence`;
+  private readonly apiUrl = `${environment.scoutUrl}/user/occurrence`;
 
   readonly submissionState = signal<
     'initial' | 'loading' | 'success' | 'error'

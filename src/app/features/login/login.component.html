@@ -10,27 +10,27 @@
   <login-button provider="google" data-test-id="social-login-google" />
   <login-button provider="apple" data-test-id="social-login-apple" />
 
-  <hr />
+  <!--  <hr />-->
 
-  <p>Email and Password</p>
-  <input
-    type="email"
-    placeholder="Email"
-    [formField]="loginForm.email"
-    data-test-id="email-input"
-  />
-  <input
-    type="password"
-    placeholder="Password"
-    [formField]="loginForm.password"
-    data-test-id="password-input"
-  />
+  <!--  <p>Email and Password</p>-->
+  <!--  <input-->
+  <!--    type="email"-->
+  <!--    placeholder="Email"-->
+  <!--    [formField]="loginForm.email"-->
+  <!--    data-test-id="email-input"-->
+  <!--  />-->
+  <!--  <input-->
+  <!--    type="password"-->
+  <!--    placeholder="Password"-->
+  <!--    [formField]="loginForm.password"-->
+  <!--    data-test-id="password-input"-->
+  <!--  />-->
 
-  <login-button
-    provider="email"
-    data-test-id="email-login-button"
-    (click)="loginWithEmailAndPassword()"
-  />
+  <!--  <login-button-->
+  <!--    provider="email"-->
+  <!--    data-test-id="email-login-button"-->
+  <!--    (click)="loginWithEmailAndPassword()"-->
+  <!--  />-->
 
   @if (errorMessage()) {
     <p class="error-message" data-test-id="error-message">

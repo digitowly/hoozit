@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-const refreshUrl = `${environment.rangoUrl}/auth/refresh/web`;
+const refreshUrl = `${environment.scoutUrl}/auth/refresh/web`;
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const http = inject(HttpClient);
@@ -16,12 +16,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return throwError(() => error);
       }
 
-      return http
-        .post(refreshUrl, {}, { withCredentials: true })
-        .pipe(
-          switchMap(() => next(req)),
-          catchError(() => throwError(() => error)),
-        );
+      return http.post(refreshUrl, {}, { withCredentials: true }).pipe(
+        switchMap(() => next(req)),
+        catchError(() => throwError(() => error)),
+      );
     }),
   );
 };

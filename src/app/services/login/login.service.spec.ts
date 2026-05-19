@@ -47,7 +47,7 @@ describe('LoginService', () => {
       service.loginWithEmailAndPassword(email, password);
 
       const req = httpMock.expectOne(
-        `${environment.rangoUrl}/user/login/email`,
+        `${environment.scoutUrl}/user/login/email`,
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual({ email, password });
@@ -65,7 +65,7 @@ describe('LoginService', () => {
       service.loginWithEmailAndPassword(email, password);
 
       const req = httpMock.expectOne(
-        `${environment.rangoUrl}/user/login/email`,
+        `${environment.scoutUrl}/user/login/email`,
       );
       req.flush(mockError, { status: 401, statusText: 'Unauthorized' });
 
@@ -81,7 +81,7 @@ describe('LoginService', () => {
       expect(service.errorMessage()).toBe('');
 
       const req = httpMock.expectOne(
-        `${environment.rangoUrl}/user/login/email`,
+        `${environment.scoutUrl}/user/login/email`,
       );
       req.flush({});
     });

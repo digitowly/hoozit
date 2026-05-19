@@ -54,6 +54,7 @@ export class SpeciesResourceComponent {
     this.speciesAutosuggestService.onChange(input);
     const entry = this.speciesAutosuggestService.selectedEntry();
     if (entry) {
+      // console.info({ entry });
       this.selectedBinomialName.set(entry.value ?? '');
     } else {
       this.selectedBinomialName.set('');
@@ -61,6 +62,7 @@ export class SpeciesResourceComponent {
   }
 
   onAutoSuggestSelect(entry: AutoSuggestEntry) {
+    console.info('SELECT', { entry });
     this.selectedBinomialName.set(entry.value ?? '');
   }
 
@@ -73,7 +75,7 @@ export class SpeciesResourceComponent {
       binomial_name: this.selectedBinomialName(),
       url: this.speciesResourceForm.url().value(),
       description: 'test',
-      type: 'image',
+      resource_type: 'image',
     };
 
     this.submissionState.set(SubmissionState.LOADING);
