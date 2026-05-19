@@ -14,11 +14,11 @@ import { AutosuggestComponent } from '../../../components/autosuggest/autosugges
 import { AutoSuggestEntry } from '../../../components/autosuggest/autosuggest.model';
 import { LoginButtonComponent } from '../../../components/login-button/login-button.component';
 import { SpeciesAutosuggestService } from '../../../services/forms/species-autosuggest/species-autosuggest.service';
-import { OccurrenceService } from '../../../services/rango/occurrence/occurrence.service';
 import { UserLocationService } from '../../../services/user/user-location/user-location.service';
 import { UserDataService } from '../../../services/user/user-data/user-data.service';
 import { ModalService } from '../../../services/modal/modal.service';
-import { UserOccurrenceRequest } from '../../../services/rango/occurrence/occurrence.model';
+import { OccurrenceService } from '../../../services/occurrence/occurrence.service';
+import { UserOccurrenceRequest } from '../../../services/occurrence/occurrence.model';
 
 @Component({
   selector: 'log-occurrence-modal',
@@ -122,24 +122,29 @@ export class LogOccurrenceModalComponent {
 
     const coord = this.userLocation.coordinate();
 
-    const dateTimeStart = this.buildIsoDate(
+    const observed_at = this.buildIsoDate(
       this.observationDate(),
       this.timeStart(),
     );
 
-    const dateTimeEnd = this.buildIsoDate(
-      this.observationDate(),
-      this.timeEnd(),
-    );
+    const timeStartNaive = `${this.timeStart()}:00`;
+    const timeEndNaive = `${this.timeEnd()}:00`;
 
     const payload: UserOccurrenceRequest = {
       name: this.occurrenceForm.name().value(),
       description: this.occurrenceForm.description().value(),
+      behavior: undefined,
+      detection_method: 'visual',
+      evidence_type: 'track',
+      is_captive: false,
+      life_stage: 'adult',
+      observed_at: observed_at,
+      quantity_estimate: undefined,
+      sex: 'male',
       confidence: this.confidence(),
       coordinates: { latitude: coord.latitude, longitude: coord.longitude },
-      date: dateTimeStart,
-      time_start: dateTimeStart,
-      time_end: dateTimeEnd,
+      time_start: timeStartNaive,
+      time_end: timeEndNaive,
     };
 
     try {

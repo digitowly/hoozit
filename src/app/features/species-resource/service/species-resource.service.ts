@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
 export interface CreateSpeciesResourceParams {
-  type: 'image' | 'text';
+  resource_type: 'image' | 'text';
   binomial_name: string;
   url: string;
   description: string;
@@ -18,7 +18,7 @@ export class SpeciesResourceService {
     withCredentials: true,
   };
 
-  private readonly apiUrl = `${environment.rangoUrl}/user/species-resource`;
+  private readonly apiUrl = `${environment.scoutUrl}/user/species-resource`;
 
   createOccurrenceResource(params: CreateSpeciesResourceParams) {
     return this.httpClient.post(this.apiUrl, params, this.httpOptions);

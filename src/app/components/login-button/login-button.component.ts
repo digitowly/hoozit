@@ -26,7 +26,7 @@ export class LoginButtonComponent {
 
   readonly config = computed(() => PROVIDER_CONFIG[this.provider()]);
   readonly href = computed(
-    () => `${environment.rangoUrl}/user/login/${this.provider()}`,
+    () => `${environment.scoutUrl}/auth/${this.provider()}`,
   );
 
   click = output<void>();

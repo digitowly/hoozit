@@ -8,7 +8,7 @@ import { Permission, PermissionsResponse } from './permissions.model';
 export class PermissionsService {
   private readonly httpClient = inject(HttpClient);
 
-  private readonly apiUrl = `${environment.rangoUrl}/user/permissions`;
+  private readonly apiUrl = `${environment.scoutUrl}/user/permissions`;
 
   private readonly httpOptions = {
     headers: { 'Content-Type': 'application/json' },

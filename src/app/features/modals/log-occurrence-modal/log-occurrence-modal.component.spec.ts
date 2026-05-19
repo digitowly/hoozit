@@ -5,12 +5,12 @@ import { provideZonelessChangeDetection, signal } from '@angular/core';
 import { of, Observable } from 'rxjs';
 
 import { LogOccurrenceModalComponent } from './log-occurrence-modal.component';
-import { OccurrenceService } from '../../../services/rango/occurrence/occurrence.service';
+import { OccurrenceService } from '../../../services/occurrence/occurrence.service';
 import { UserLocationService } from '../../../services/user/user-location/user-location.service';
 import { UserDataService } from '../../../services/user/user-data/user-data.service';
 import { SpeciesAutosuggestService } from '../../../services/forms/species-autosuggest/species-autosuggest.service';
 import { ModalService } from '../../../services/modal/modal.service';
-import { UserOccurrenceRequest } from '../../../services/rango/occurrence/occurrence.model';
+import { UserOccurrenceRequest } from '../../../services/occurrence/occurrence.model';
 
 const MODAL_ID = 'test-modal';
 const TAWNY_OWL = { label: 'Tawny owl', value: 'Strix aluco', icon: '' };
@@ -20,7 +20,9 @@ describe('LogOccurrenceModalComponent', () => {
   let component: LogOccurrenceModalComponent;
   let fixture: ComponentFixture<LogOccurrenceModalComponent>;
 
-  let submissionState: ReturnType<typeof signal<'initial' | 'loading' | 'success' | 'error'>>;
+  let submissionState: ReturnType<
+    typeof signal<'initial' | 'loading' | 'success' | 'error'>
+  >;
   let userValue: ReturnType<typeof signal<object | null>>;
   let mockOccurrenceService: {
     submissionState: typeof submissionState;
@@ -38,12 +40,17 @@ describe('LogOccurrenceModalComponent', () => {
   };
 
   beforeEach(async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ data: [] }),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ data: [] }),
+      }),
+    );
 
-    submissionState = signal<'initial' | 'loading' | 'success' | 'error'>('initial');
+    submissionState = signal<'initial' | 'loading' | 'success' | 'error'>(
+      'initial',
+    );
     userValue = signal<object | null>(null);
 
     mockOccurrenceService = {
@@ -77,7 +84,10 @@ describe('LogOccurrenceModalComponent', () => {
           provide: UserDataService,
           useValue: { userResource: { value: userValue } },
         },
-        { provide: SpeciesAutosuggestService, useValue: mockSpeciesAutosuggestService },
+        {
+          provide: SpeciesAutosuggestService,
+          useValue: mockSpeciesAutosuggestService,
+        },
         { provide: ModalService, useValue: mockModalService },
       ],
     }).compileComponents();
@@ -203,7 +213,9 @@ describe('LogOccurrenceModalComponent', () => {
   describe('onAutoSuggestChange', () => {
     it('delegates to speciesAutosuggestService.onChange', () => {
       component.onAutoSuggestChange('owl');
-      expect(mockSpeciesAutosuggestService.onChange).toHaveBeenCalledWith('owl');
+      expect(mockSpeciesAutosuggestService.onChange).toHaveBeenCalledWith(
+        'owl',
+      );
     });
 
     it('updates the form name field', () => {
@@ -238,12 +250,15 @@ describe('LogOccurrenceModalComponent', () => {
           name: 'Tawny owl',
           description: 'Saw it at night.',
           confidence: 0.9,
-          coordinates: { latitude: MOCK_COORD.latitude, longitude: MOCK_COORD.longitude },
+          coordinates: {
+            latitude: MOCK_COORD.latitude,
+            longitude: MOCK_COORD.longitude,
+          },
         }),
       );
     });
 
-    it('sends date, time_start and time_end as ISO strings derived from form values', async () => {
+    it('sends date and observed_at as ISO strings, but time_start and time_end as naive time strings', async () => {
       userValue.set({ nickname: 'user' });
       component.occurrenceForm.name().value.set('Tawny owl');
       component.occurrenceForm.description().value.set('Saw it at night.');
@@ -253,10 +268,14 @@ describe('LogOccurrenceModalComponent', () => {
 
       await component.onSubmit();
 
-      const payload = mockOccurrenceService.submit.mock.calls[0][0] as UserOccurrenceRequest;
+      const payload = mockOccurrenceService.submit.mock
+        .calls[0][0] as UserOccurrenceRequest;
+      expect(payload.observed_at).toBe(
+        new Date('2026-04-08T20:00:00').toISOString(),
+      );
       expect(payload.date).toBe(new Date('2026-04-08T20:00:00').toISOString());
-      expect(payload.time_start).toBe(new Date('2026-04-08T20:00:00').toISOString());
-      expect(payload.time_end).toBe(new Date('2026-04-08T20:15:00').toISOString());
+      expect(payload.time_start).toBe('20:00:00');
+      expect(payload.time_end).toBe('20:15:00');
     });
 
     it('schedules close after 1500 ms on success', async () => {

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
   verdexUrl: 'https://hoozit.app/api/verdex',
-  rangoUrl: 'https://hoozit.app/api/rango',
+  scoutUrl: 'https://hoozit.app/api/rango',
   gbifUrl: 'https://api.gbif.org/v1',
 };

@@ -7,12 +7,15 @@ import { environment } from '../../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class UserDataService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.rangoUrl}/user`;
+  private readonly apiUrl = `${environment.scoutUrl}/users/me`;
 
   readonly userResource = resource({ loader: () => this.fetchUser() });
 
   async logout() {
-    await fetch(`${this.apiUrl}/logout`, { credentials: 'include' });
+    await fetch(`${environment.scoutUrl}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
     this.userResource.reload();
   }
 
