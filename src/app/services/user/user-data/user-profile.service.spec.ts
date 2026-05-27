@@ -1,12 +1,15 @@
 import { describe, beforeEach, it, expect, vi } from 'vitest';
-import { UserDataService } from './user-data.service';
+import { UserProfileService } from './user-profile.service';
 import { TestBed } from '@angular/core/testing';
-import { UserDataResponse } from './user-data.model';
+import { UserResponse } from './user-data.model';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 
-const mockUserResponse: UserDataResponse = {
+const mockUserResponse: UserResponse = {
   email: 'mockuser@mail.com',
   nickname: 'mock',
   image: '',
@@ -15,7 +18,7 @@ const mockUserResponse: UserDataResponse = {
 };
 
 describe('UserDataService', () => {
-  let service: UserDataService;
+  let service: UserProfileService;
 
   beforeEach(() => {
     vi.stubGlobal('fetch', vi.fn());
@@ -27,7 +30,7 @@ describe('UserDataService', () => {
         provideZonelessChangeDetection(),
       ],
     });
-    service = TestBed.inject(UserDataService);
+    service = TestBed.inject(UserProfileService);
   });
 
   it('should be created', () => {
@@ -38,12 +41,14 @@ describe('UserDataService', () => {
     const httpTesting = TestBed.inject(HttpTestingController);
 
     TestBed.tick();
-    httpTesting.expectOne((req) => req.url.includes('/user')).flush(mockUserResponse);
+    httpTesting
+      .expectOne((req) => req.url.includes('/user'))
+      .flush(mockUserResponse);
     await new Promise((resolve) => setTimeout(resolve));
     TestBed.tick();
 
-    expect(service.userResource.value()).toEqual(mockUserResponse);
-    expect(service.userResource.isLoading()).toBe(false);
+    expect(service.profileResource.value()).toEqual(mockUserResponse);
+    expect(service.profileResource.isLoading()).toBe(false);
   });
 
   it('should return null on error', async () => {
@@ -56,7 +61,7 @@ describe('UserDataService', () => {
     await new Promise((resolve) => setTimeout(resolve));
     TestBed.tick();
 
-    expect(service.userResource.value()).toBe(null);
+    expect(service.profileResource.value()).toBe(null);
   });
 
   it('should logout the user', async () => {

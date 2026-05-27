@@ -1,0 +1,47 @@
+<div class="occurrence-list">
+  @for (occurrence of occurrences(); track occurrence.id) {
+    <div class="occurrence-item">
+      <div class="occurrence-item-header">
+        <p class="occurrence-item-title">{{ occurrence.submitted_name }}</p>
+        <a
+          class="button-link"
+          tooltip="View occurrence"
+          [routerLink]="['/user/occurrence', occurrence.id]"
+        >
+          View
+          <app-icon name="chevron" size="size-small" />
+        </a>
+      </div>
+
+      <p class="occurrence-item-observed-at">{{ occurrence.observed_at }}</p>
+
+      <p class="occurrence-item-description">{{ occurrence.description }}</p>
+
+      <div class="attributes">
+        <div
+          class="attribute occurrence-item-visibility"
+          [tooltip]="occurrence.is_visible ? 'Public' : 'Private'"
+        >
+          <app-icon
+            [name]="occurrence.is_visible ? 'eye-open' : 'eye-closed'"
+            size="size-small"
+          />
+        </div>
+        <div
+          class="attribute occurrence-item-status"
+          [tooltip]="occurrence.status"
+        >
+          {{occurrence.status}}
+        </div>
+        <span
+          class="attribute occurrence-item-confidence"
+          [tooltip]="'Confidence '+occurrence.confidence + '%'"
+        >
+          {{ occurrence.confidence }}
+        </span>
+      </div>
+
+
+    </div>
+  }
+</div>

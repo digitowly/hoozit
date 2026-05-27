@@ -5,96 +5,100 @@
   (handleClose)="close()"
 >
   @if (isOpen()) {
-  <div class="form">
-    <field-container label="Species" name="species">
-      <autosuggest
-        id="species"
-        placeholder="Search or enter species name"
-        [disabled]="submissionState() === 'loading'"
-        [entries]="speciesEntries()"
-        (onQueryChange)="onAutoSuggestChange($event)"
-        (onSelect)="onAutoSuggestSelect($event)"
-      />
-    </field-container>
+    <div class="form">
+      <field-container label="Species" name="species">
+        <autosuggest
+          id="species"
+          placeholder="Search or enter species name"
+          [disabled]="submissionState() === SubmissionState.LOADING"
+          [entries]="speciesEntries()"
+          (onQueryChange)="onAutoSuggestChange($event)"
+          (onSelect)="onAutoSuggestSelect($event)"
+        />
+      </field-container>
 
-    <field-container label="Description" name="description">
-      <textarea
-        id="description"
-        placeholder="Describe your observation…"
-        rows="3"
-        [formField]="occurrenceForm.description"
-      ></textarea>
-    </field-container>
+      <field-container label="Description" name="description">
+        <textarea
+          id="description"
+          placeholder="Describe your observation…"
+          rows="3"
+          [formField]="occurrenceForm.description"
+        ></textarea>
+      </field-container>
 
-    <field-container label="When" name="when">
-      <div class="when-row">
-        <input
-          type="date"
-          class="when-input"
-          [value]="observationDate()"
-          (input)="setDate($event)"
-        />
-        <input
-          type="time"
-          class="when-input"
-          [value]="timeStart()"
-          (input)="setTimeStart($event)"
-        />
-        <span class="when-sep">–</span>
-        <input
-          type="time"
-          class="when-input"
-          [value]="timeEnd()"
-          (input)="setTimeEnd($event)"
-        />
+      <field-container label="When" name="when">
+        <div class="when-row">
+          <input
+            type="date"
+            class="when-input"
+            [value]="observationDate()"
+            (input)="setDate($event)"
+          />
+          <input
+            type="time"
+            class="when-input"
+            [value]="timeStart()"
+            (input)="setTimeStart($event)"
+          />
+          <span class="when-sep">–</span>
+          <input
+            type="time"
+            class="when-input"
+            [value]="timeEnd()"
+            (input)="setTimeEnd($event)"
+          />
+        </div>
+      </field-container>
+
+      <field-container label="Certainty" name="confidence">
+        <div class="confidence-row">
+          <input
+            id="confidence"
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            [value]="confidence()"
+            (input)="setConfidence($event)"
+          />
+          <span class="confidence-value">{{ confidenceLabel() }}</span>
+        </div>
+      </field-container>
+
+      <div class="location-chip">
+        <span class="location-chip__label">Location</span>
+        <span class="location-chip__value">{{ locationLabel() }}</span>
       </div>
-    </field-container>
 
-    <field-container label="Certainty" name="confidence">
-      <div class="confidence-row">
-        <input
-          id="confidence"
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          [value]="confidence()"
-          (input)="setConfidence($event)"
-        />
-        <span class="confidence-value">{{ confidenceLabel() }}</span>
-      </div>
-    </field-container>
+      <div class="form-footer">
+        @if (isLoggedIn()) {
+          <button
+            class="btn-primary"
+            (click)="onSubmit()"
+            [disabled]="!isSubmittable()"
+          >
+            Submit
+          </button>
 
-    <div class="location-chip">
-      <span class="location-chip__label">Location</span>
-      <span class="location-chip__value">{{ locationLabel() }}</span>
-    </div>
-
-    <div class="form-footer">
-      @if (isLoggedIn()) {
-        <button
-          class="btn-primary"
-          (click)="onSubmit()"
-          [disabled]="!isSubmittable()"
-        >
-          Submit
-        </button>
-
-        @switch (submissionState()) {
-          @case ('success') {
-            <p class="status status--success">Sighting logged successfully.</p>
+          @switch (submissionState()) {
+            @case (SubmissionState.SUCCESS) {
+              <p class="status status--success">
+                Sighting logged successfully.
+              </p>
+            }
+            @case (SubmissionState.ERROR) {
+              <p class="status status--error">
+                Something went wrong. Please try again.
+              </p>
+            }
+            @case (SubmissionState.LOADING) {
+              <p class="status status--info">Submitting…</p>
+            }
           }
-          @case ('error') {
-            <p class="status status--error">Something went wrong. Please try again.</p>
-          }
-          @case ('loading') {
-            <p class="status status--info">Submitting…</p>
-          }
+        } @else {
+          <login-button provider="google" />
         }
-      } @else {
-        <login-button provider="google" />
-      }
+      </div>
     </div>
-  </div>
   }
 </app-modal>

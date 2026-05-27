@@ -7,7 +7,7 @@ import { of, Observable } from 'rxjs';
 import { LogOccurrenceModalComponent } from './log-occurrence-modal.component';
 import { OccurrenceService } from '../../../services/occurrence/occurrence.service';
 import { UserLocationService } from '../../../services/user/user-location/user-location.service';
-import { UserDataService } from '../../../services/user/user-data/user-data.service';
+import { UserProfileService } from '../../../services/user/user-data/user-profile.service';
 import { SpeciesAutosuggestService } from '../../../services/forms/species-autosuggest/species-autosuggest.service';
 import { ModalService } from '../../../services/modal/modal.service';
 import { UserOccurrenceRequest } from '../../../services/occurrence/occurrence.model';
@@ -81,7 +81,7 @@ describe('LogOccurrenceModalComponent', () => {
           useValue: { coordinate: signal(MOCK_COORD) },
         },
         {
-          provide: UserDataService,
+          provide: UserProfileService,
           useValue: { userResource: { value: userValue } },
         },
         {
@@ -273,7 +273,7 @@ describe('LogOccurrenceModalComponent', () => {
       expect(payload.observed_at).toBe(
         new Date('2026-04-08T20:00:00').toISOString(),
       );
-expect(payload.time_start).toBe('20:00:00');
+      expect(payload.time_start).toBe('20:00:00');
       expect(payload.time_end).toBe('20:15:00');
     });
 

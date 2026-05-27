@@ -7,11 +7,10 @@ import { UserOccurrenceRequest } from './occurrence.model';
 @Injectable({ providedIn: 'root' })
 export class OccurrenceService {
   private readonly http = inject(HttpClient);
+
   private readonly apiUrl = `${environment.scoutUrl}/user/occurrence`;
 
-  readonly submissionState = signal<
-    'initial' | 'loading' | 'success' | 'error'
-  >('initial');
+  readonly submissionState = signal<SubmissionState>(SubmissionState.INITIAL);
 
   private readonly httpOptions = {
     headers: { 'Content-Type': 'application/json' },
@@ -19,16 +18,23 @@ export class OccurrenceService {
   };
 
   submit(payload: UserOccurrenceRequest): Observable<void> {
-    this.submissionState.set('loading');
+    this.submissionState.set(SubmissionState.LOADING);
     return this.http.post<void>(this.apiUrl, payload, this.httpOptions).pipe(
       tap({
-        next: () => this.submissionState.set('success'),
-        error: () => this.submissionState.set('error'),
+        next: () => this.submissionState.set(SubmissionState.SUCCESS),
+        error: () => this.submissionState.set(SubmissionState.ERROR),
       }),
     );
   }
 
   reset() {
-    this.submissionState.set('initial');
+    this.submissionState.set(SubmissionState.INITIAL);
   }
+}
+
+export enum SubmissionState {
+  INITIAL = 'INITIAL',
+  LOADING = 'LOADING',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
 }

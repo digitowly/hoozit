@@ -38,7 +38,7 @@
   .profile-layout {
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
+    gap: 3.5rem;
   }
 
   .profile-header {
@@ -94,7 +94,7 @@
       .badges {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.35rem;
+        gap: 0.5rem;
         margin-top: 0.5rem;
       }
 
@@ -103,11 +103,28 @@
         align-items: center;
         padding: 0.15rem 0.55rem;
         border-radius: 0.5rem;
-        background: var(--color-background);
+        background: var(--color-background-overlay);
         font-size: 0.775rem;
         font-weight: 600;
       }
     }
+  }
+
+  .occurrence-logs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .button-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: shadow.$sm;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    width: fit-content;
+    text-decoration: none;
   }
 
   .actions-grid {
@@ -125,7 +142,9 @@
       text-decoration: none;
       color: inherit;
       box-shadow: shadow.$sm;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 
       &:hover {
         transform: translateY(-1px);
@@ -211,5 +230,7 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }

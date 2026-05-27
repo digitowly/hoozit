@@ -117,6 +117,7 @@ $link-size-lg: 74px;
   justify-content: center;
   height: calc(($link-size + 5px) / 2 );
   scale: 1.15;
+  padding-bottom: 0.75rem;
 
   @media (min-width: breakpoint.$xs) {
     height: calc($link-size / 2 );
@@ -126,9 +127,9 @@ $link-size-lg: 74px;
 
 .highlighter {
   transition: all 0.25s ease-in;
-  width: $link-size-lg + 35px;
-  height:$link-size-lg + 15px;
-  top: -15px;
+  width: $link-size-lg + 32px;
+  height:$link-size-lg + 16px;
+  top: calc($link-size / 4  * -2.15);
   border-radius: 2rem;
   position: absolute;
   transform: scale(0);
@@ -137,13 +138,11 @@ $link-size-lg: 74px;
 
 
   @media (min-width: breakpoint.$xs) {
-    width: $link-size;
-    height:$link-size;
-    top: calc($link-size/ 4  * -1);
+    width: $link-size-lg + 16px;
+    height:$link-size-lg + 8px;
+    top: calc($link-size / 4  * -1.95);
     border-radius: 35%;
     opacity: 0.5;
-
-    scale: 1;
   }
 }
 

@@ -1,41 +1,54 @@
-<content-container>
+<content-container [hideBackButton]="true">
   <div class="user-profile-view">
-    @if (user()) {
+    @if (profile()) {
       <div class="page-header">
         <h1 i18n class="page-title">Profile</h1>
       </div>
     }
 
-    @if (isUserLoading()) {
+    @if (isProfileLoading()) {
       <div class="loading-state">
         <div class="spinner"></div>
       </div>
-    } @else if (!user()) {
+    } @else if (!profile()) {
       <login />
     } @else {
       <div class="profile-layout">
         <section class="profile-header">
           <div class="avatar-container">
-            @if (user()?.image) {
+            @if (profile()?.user?.image) {
               <img
-                [src]="user()?.image"
-                [alt]="user()?.nickname"
+                [src]="profile()?.user?.image"
+                [alt]="profile()?.user?.nickname"
                 class="avatar"
               />
             } @else {
               <div class="avatar-placeholder">
-                {{ user()?.nickname?.charAt(0)?.toUpperCase() }}
+                {{ profile()?.user?.nickname?.charAt(0)?.toUpperCase() }}
               </div>
             }
           </div>
           <div class="user-info">
-            <h2 class="nickname">{{ user()?.nickname }}</h2>
-            <p class="email">{{ user()?.email }}</p>
+            <h2 class="nickname">{{ profile()?.user?.nickname }}</h2>
+            <p class="email">{{ profile()?.user?.email }}</p>
             <div class="badges">
-              <span class="badge">{{ user()?.role }}</span>
-              <span class="badge">{{ user()?.account_tier }}</span>
+              <span class="badge">{{ profile()?.user?.role }}</span>
+              <span class="badge">{{ profile()?.user?.account_tier }}</span>
             </div>
           </div>
+        </section>
+
+        <section>
+          <a routerLink="/user/occurrences" class="button-link occurrence-logs">
+            <app-icon name="binoculars" />
+            <span>
+              <span>
+                {{ profile()?.occurrences_count }}
+              </span>
+              <span>Logged Occurrences</span>
+            </span>
+            <app-icon name="chevron" />
+          </a>
         </section>
 
         @if (hasSpeciesResourcePermission()) {

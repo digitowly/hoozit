@@ -1,13 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { IconComponent } from '../../components/icon/icon.component';
 import { LoginButtonComponent } from '../../components/login-button/login-button.component';
-import { form } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 import { loginModel } from './login.model';
 import { LoginService } from '../../services/login/login.service';
+import { FormContainerComponent } from '../../components/forms/form-container/form-container.component';
 
 @Component({
   selector: 'login',
-  imports: [IconComponent, LoginButtonComponent],
+  imports: [
+    IconComponent,
+    LoginButtonComponent,
+    FormField,
+    FormContainerComponent,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

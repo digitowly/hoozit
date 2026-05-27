@@ -1,0 +1,16 @@
+@if (!occurrence()) {
+  <p>Loading...</p>
+} @else {
+  <content-container [title]="occurrence()?.submitted_name ?? ''">
+    <p>{{ occurrence()?.submitted_name }}</p>
+    <p>{{ occurrence()?.description }}</p>
+    <p>{{ occurrence()?.confidence }}</p>
+    <p>{{ occurrence()?.observed_at }}</p>
+    <p>{{ occurrence()?.status }}</p>
+    <p>{{ occurrence()?.is_visible }}</p>
+    <p>{{ occurrence()?.kingdom }}</p>
+    <p>{{ occurrence()?.detection_method }}</p>
+    <p>{{ occurrence()?.evidence_type }}</p>
+    <p>{{ occurrence()?.coordinates }}</p>
+  </content-container>
+}

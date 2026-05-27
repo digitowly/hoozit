@@ -1,28 +1,28 @@
 import { inject, Injectable, resource } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { UserDataResponse } from './user-data.model';
+import { ProfileResponse } from './user-data.model';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class UserDataService {
+export class UserProfileService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.scoutUrl}/users/me`;
+  private readonly apiUrl = `${environment.scoutUrl}/users/me/profile`;
 
-  readonly userResource = resource({ loader: () => this.fetchUser() });
+  readonly profileResource = resource({ loader: () => this.fetchProfile() });
 
   async logout() {
     await fetch(`${environment.scoutUrl}/auth/logout`, {
       method: 'POST',
       credentials: 'include',
     });
-    this.userResource.reload();
+    this.profileResource.reload();
   }
 
-  private async fetchUser(): Promise<UserDataResponse | null> {
+  private async fetchProfile(): Promise<ProfileResponse | null> {
     try {
       return await firstValueFrom(
-        this.http.get<UserDataResponse>(this.apiUrl, { withCredentials: true }),
+        this.http.get<ProfileResponse>(this.apiUrl, { withCredentials: true }),
       );
     } catch {
       return null;

@@ -3,7 +3,7 @@
     <ng-container *ngTemplateOutlet="loginButtonTemplate" />
   </a>
 } @else {
-  <button class="login-button" (click)="onClick()">
+  <button class="login-button" (click)="onClick($event)">
     <ng-container *ngTemplateOutlet="loginButtonTemplate" />
   </button>
 }

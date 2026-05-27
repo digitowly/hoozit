@@ -1,36 +1,50 @@
-import { Routes } from '@angular/router';
-import { authSpeciesResourceGuard } from './guards/auth-species-resource-guard/auth-species-resource.guard';
+import { Routes } from "@angular/router";
+import { authSpeciesResourceGuard } from "./guards/auth-species-resource-guard/auth-species-resource.guard";
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: "", redirectTo: "home", pathMatch: "full" },
   {
-    path: 'home',
+    path: "home",
     loadComponent: () =>
-      import('../app/features/home/home.component').then(
+      import("../app/features/home/home.component").then(
         ({ HomeComponent }) => HomeComponent,
       ),
     data: { reuse: true },
   },
   {
-    path: 'map',
+    path: "map",
     loadComponent: () =>
-      import('../app/features/map-view/map-view.component').then(
+      import("../app/features/map-view/map-view.component").then(
         ({ MapViewComponent }) => MapViewComponent,
       ),
     data: { reuse: true },
   },
   {
-    path: 'user',
+    path: "user",
     loadComponent: () =>
-      import('../app/features/user/user.component').then(
-        ({ UserComponent }) => UserComponent,
+      import("./features/profile/profile.component").then(
+        ({ ProfileComponent }) => ProfileComponent,
       ),
     data: { reuse: true },
   },
   {
-    path: 'species-resources',
+    path: "user/occurrence/:id",
     loadComponent: () =>
-      import('./features/species-resource/species-resource.component').then(
+      import("../app/features/occurrence/occurrence-view/occurrence-view.component").then(
+        ({ OccurrenceViewComponent }) => OccurrenceViewComponent,
+      ),
+  },
+  {
+    path: "user/occurrences",
+    loadComponent: () =>
+      import("../app/features/occurrence/occurrences-view/occurrences-view.component").then(
+        ({ OccurrencesViewComponent }) => OccurrencesViewComponent,
+      ),
+  },
+  {
+    path: "species-resources",
+    loadComponent: () =>
+      import("./features/species-resource/species-resource.component").then(
         ({ SpeciesResourceComponent }) => SpeciesResourceComponent,
       ),
     canActivate: [authSpeciesResourceGuard],

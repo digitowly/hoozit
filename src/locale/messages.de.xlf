@@ -6,7 +6,7 @@
         <source>Profile</source>
         <target>Profil</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="sourcefile">src/app/features/user/profile.component.html</context>
           <context context-type="linenumber">4,5</context>
         </context-group>
       </trans-unit>
@@ -14,7 +14,7 @@
         <source>Welcome back</source>
         <target>Willkommen zurück</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="sourcefile">src/app/features/user/profile.component.html</context>
           <context context-type="linenumber">15,16</context>
         </context-group>
       </trans-unit>
@@ -22,7 +22,7 @@
         <source> Please sign in to access your account settings and personal data. </source>
         <target> Bitte melde dich an, um auf deine Kontoeinstellungen und persönlichen Daten zuzugreifen. </target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="sourcefile">src/app/features/user/profile.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
@@ -30,7 +30,7 @@
         <source>Login with Google</source>
         <target>Mit Google anmelden</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="sourcefile">src/app/features/user/profile.component.html</context>
           <context context-type="linenumber">21,22</context>
         </context-group>
       </trans-unit>
@@ -38,7 +38,7 @@
         <source>Submit Resource</source>
         <target>Ressource einreichen</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="sourcefile">src/app/features/user/profile.component.html</context>
           <context context-type="linenumber">57,58</context>
         </context-group>
       </trans-unit>
@@ -46,7 +46,7 @@
         <source>Add new species data to our database.</source>
         <target>Neue Speziesdaten zu unserer Datenbank hinzufügen.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="sourcefile">src/app/features/user/profile.component.html</context>
           <context context-type="linenumber">59,60</context>
         </context-group>
       </trans-unit>
@@ -54,7 +54,7 @@
         <source>Settings</source>
         <target>Einstellungen</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="sourcefile">src/app/features/user/profile.component.html</context>
           <context context-type="linenumber">68,69</context>
         </context-group>
       </trans-unit>
@@ -62,7 +62,7 @@
         <source>Dark Mode</source>
         <target>Dunkler Modus</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="sourcefile">src/app/features/user/profile.component.html</context>
           <context context-type="linenumber">73,74</context>
         </context-group>
       </trans-unit>
@@ -70,7 +70,7 @@
         <source>Toggle between light and dark theme.</source>
         <target>Zwischen hellem und dunklem Thema umschalten.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="sourcefile">src/app/features/user/profile.component.html</context>
           <context context-type="linenumber">75,76</context>
         </context-group>
       </trans-unit>
@@ -78,7 +78,7 @@
         <source>Sign out</source>
         <target>Abmelden</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/user/user.component.html</context>
+          <context context-type="sourcefile">src/app/features/user/profile.component.html</context>
           <context context-type="linenumber">90,91</context>
         </context-group>
       </trans-unit>

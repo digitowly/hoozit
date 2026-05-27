@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { ToggleButtonComponent } from '../../components/toggle-button/toggle-button.component';
 import { UiThemeService } from '../../services/ui-theme/ui-theme.service';
-import { UserDataService } from '../../services/user/user-data/user-data.service';
+import { UserProfileService } from '../../services/user/user-data/user-profile.service';
 import { ContentContainerComponent } from '../../components/content-container/content-container.component';
 import { PermissionsService } from '../../services/permissions/permissions.service';
 import { Permission } from '../../services/permissions/permissions.model';
@@ -12,8 +12,8 @@ import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'user',
-  templateUrl: './user.component.html',
-  styleUrl: './user.component.scss',
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss',
   imports: [
     ToggleButtonComponent,
     ContentContainerComponent,
@@ -22,17 +22,19 @@ import { LoginComponent } from '../login/login.component';
     LoginComponent,
   ],
 })
-export class UserComponent {
-  private readonly userDataService = inject(UserDataService);
+export class ProfileComponent {
+  private readonly userProfileService = inject(UserProfileService);
 
   private readonly permissionsService = inject(PermissionsService);
 
   private readonly themeService = inject(UiThemeService);
 
-  readonly user = computed(() => this.userDataService.userResource.value());
+  readonly profile = computed(() =>
+    this.userProfileService.profileResource.value(),
+  );
 
-  readonly isUserLoading = computed(() =>
-    this.userDataService.userResource.isLoading(),
+  readonly isProfileLoading = computed(() =>
+    this.userProfileService.profileResource.isLoading(),
   );
 
   readonly isThemeToggleChecked = computed(
@@ -45,7 +47,7 @@ export class UserComponent {
   );
 
   async logoutUser() {
-    await this.userDataService.logout();
+    await this.userProfileService.logout();
   }
 
   toggleTheme() {

@@ -1,6 +1,30 @@
 @use "../../style/breakpoint";
 @use "../../style/layout";
 
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  opacity: 0.6;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+    background: none;
+  }
+}
+
+.page-title {
+  padding-bottom: 2rem;
+}
+
 .content {
   padding: 1.5rem 1.5rem calc(#{layout.$nav-height} + #{layout.$safe-area-inset-md} + 1.5rem);
   line-height: 1.5;

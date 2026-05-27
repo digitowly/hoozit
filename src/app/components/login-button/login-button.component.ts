@@ -3,6 +3,8 @@ import { environment } from '../../../environments/environment';
 import { IconComponent } from '../icon/icon.component';
 import { IconName } from '../../services/icon-registry/icon-registry.model';
 import { NgTemplateOutlet } from '@angular/common';
+import { DomEvent } from 'leaflet';
+import preventDefault = DomEvent.preventDefault;
 
 export type LoginProvider = 'google' | 'apple' | 'email';
 
@@ -31,7 +33,8 @@ export class LoginButtonComponent {
 
   click = output<void>();
 
-  onClick() {
+  onClick(e: Event) {
+    preventDefault(e);
     this.click.emit();
   }
 }

@@ -5,23 +5,24 @@ import {
   input,
   output,
   signal,
-} from '@angular/core';
-import { form, FormField } from '@angular/forms/signals';
-import { firstValueFrom } from 'rxjs';
-import { ModalComponent } from '../../../components/modal/modal.component';
-import { FieldContainerComponent } from '../../../components/forms/field-container/field-container.component';
-import { AutosuggestComponent } from '../../../components/autosuggest/autosuggest.component';
-import { AutoSuggestEntry } from '../../../components/autosuggest/autosuggest.model';
-import { LoginButtonComponent } from '../../../components/login-button/login-button.component';
-import { SpeciesAutosuggestService } from '../../../services/forms/species-autosuggest/species-autosuggest.service';
-import { UserLocationService } from '../../../services/user/user-location/user-location.service';
-import { UserDataService } from '../../../services/user/user-data/user-data.service';
-import { ModalService } from '../../../services/modal/modal.service';
-import { OccurrenceService } from '../../../services/occurrence/occurrence.service';
-import { UserOccurrenceRequest } from '../../../services/occurrence/occurrence.model';
+} from "@angular/core";
+import { form, FormField } from "@angular/forms/signals";
+import { firstValueFrom } from "rxjs";
+import { ModalComponent } from "../../../components/modal/modal.component";
+import { FieldContainerComponent } from "../../../components/forms/field-container/field-container.component";
+import { AutosuggestComponent } from "../../../components/autosuggest/autosuggest.component";
+import { AutoSuggestEntry } from "../../../components/autosuggest/autosuggest.model";
+import { LoginButtonComponent } from "../../../components/login-button/login-button.component";
+import { SpeciesAutosuggestService } from "../../../services/forms/species-autosuggest/species-autosuggest.service";
+import { UserLocationService } from "../../../services/user/user-location/user-location.service";
+import { UserProfileService } from "../../../services/user/user-data/user-profile.service";
+import { ModalService } from "../../../services/modal/modal.service";
+import { OccurrenceService } from "../../../services/occurrence/occurrence.service";
+import { UserOccurrenceRequest } from "../../../services/occurrence/occurrence.model";
+import { SubmissionState } from "../../species-resource/species-resource.model";
 
 @Component({
-  selector: 'log-occurrence-modal',
+  selector: "log-occurrence-modal",
   imports: [
     ModalComponent,
     FieldContainerComponent,
@@ -29,8 +30,8 @@ import { UserOccurrenceRequest } from '../../../services/occurrence/occurrence.m
     FormField,
     LoginButtonComponent,
   ],
-  templateUrl: './log-occurrence-modal.component.html',
-  styleUrl: './log-occurrence-modal.component.scss',
+  templateUrl: "./log-occurrence-modal.component.html",
+  styleUrl: "./log-occurrence-modal.component.scss",
 })
 export class LogOccurrenceModalComponent {
   readonly modalId = input.required<string>();
@@ -41,7 +42,7 @@ export class LogOccurrenceModalComponent {
 
   private readonly userLocation = inject(UserLocationService);
 
-  private readonly userDataService = inject(UserDataService);
+  private readonly userDataService = inject(UserProfileService);
 
   private readonly speciesAutosuggestService = inject(
     SpeciesAutosuggestService,
@@ -53,7 +54,7 @@ export class LogOccurrenceModalComponent {
     this.speciesAutosuggestService.speciesEntries(),
   );
 
-  readonly formModel = signal({ name: '', description: '' });
+  readonly formModel = signal({ name: "", description: "" });
 
   readonly occurrenceForm = form(this.formModel, {});
 
@@ -68,7 +69,7 @@ export class LogOccurrenceModalComponent {
   readonly isOpen = computed(() => this.modalService.isOpen(this.modalId()));
 
   readonly isLoggedIn = computed(
-    () => !!this.userDataService.userResource.value(),
+    () => !!this.userDataService.profileResource.value(),
   );
   readonly submissionState = this.occurrenceService.submissionState;
 
@@ -78,17 +79,17 @@ export class LogOccurrenceModalComponent {
   });
 
   readonly confidenceLabel = computed(
-    () => Math.round(this.confidence() * 100) + '%',
+    () => Math.round(this.confidence() * 100) + "%",
   );
 
   readonly isSubmittable = computed(() => {
     const state = this.submissionState();
     return (
       this.isLoggedIn() &&
-      state !== 'loading' &&
-      state !== 'success' &&
-      this.occurrenceForm.name().value() !== '' &&
-      this.occurrenceForm.description().value() !== ''
+      state !== SubmissionState.LOADING &&
+      state !== SubmissionState.SUCCESS &&
+      this.occurrenceForm.name().value() !== "" &&
+      this.occurrenceForm.description().value() !== ""
     );
   });
 
@@ -134,13 +135,13 @@ export class LogOccurrenceModalComponent {
       name: this.occurrenceForm.name().value(),
       description: this.occurrenceForm.description().value(),
       behavior: undefined,
-      detection_method: 'visual',
-      evidence_type: 'track',
+      detection_method: "visual",
+      evidence_type: "track",
       is_captive: false,
-      life_stage: 'adult',
+      life_stage: "adult",
       observed_at: observed_at,
-      quantity_estimate: undefined,
-      sex: 'male',
+      quantity_estimate: "single",
+      sex: "unknown",
       confidence: this.confidence(),
       coordinates: { latitude: coord.latitude, longitude: coord.longitude },
       time_start: timeStartNaive,
@@ -159,8 +160,8 @@ export class LogOccurrenceModalComponent {
     this.modalService.close(this.modalId());
     this.handleClose.emit();
     this.occurrenceService.reset();
-    this.occurrenceForm.name().value.set('');
-    this.occurrenceForm.description().value.set('');
+    this.occurrenceForm.name().value.set("");
+    this.occurrenceForm.description().value.set("");
     this.confidence.set(0.5);
     this.observationDate.set(this.todayStr());
     this.timeStart.set(this.nowTimeStr());
@@ -177,11 +178,13 @@ export class LogOccurrenceModalComponent {
 
   private nowTimeStr(): string {
     const date = new Date();
-    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
   }
 
   private nowPlusStr(minutes: number): string {
     const date = new Date(Date.now() + minutes * 60_000);
-    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
   }
+
+  protected readonly SubmissionState = SubmissionState;
 }

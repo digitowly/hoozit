@@ -1,0 +1,62 @@
+### Log occurrence (localhost)
+POST http://localhost:8000/user/occurrence
+Cookie: session={{cookie.session}}
+Content-Type: application/json
+
+{
+  "name": "Tawny owl",
+  "description": "Saw this at night. It was beautiful.",
+  "confidence": 0.9,
+  "coordinates": {
+    "latitude": 53.5511,
+    "longitude": 9.9937
+  },
+  "date": "2026-04-08T20:00:00Z",
+  "time_start": "2026-04-08T20:00:00Z",
+  "time_end": "2026-04-08T20:15:00Z"
+}
+
+###
+
+### Log occurrence — full fields (localhost)
+POST http://localhost:8000/user/occurrence
+Cookie: session={{cookie.session}}
+Content-Type: application/json
+
+{
+  "name": "Tawny owl",
+  "description": "Pair observed calling from the treeline. One perched visibly.",
+  "confidence": 0.95,
+  "quantity_estimate": "small_group",
+  "sex": "male",
+  "life_stage": "adult",
+  "behavior": "calling",
+  "is_captive": false,
+  "coordinates": {
+    "latitude": 53.5511,
+    "longitude": 9.9937
+  },
+  "date": "2026-04-08T20:00:00Z",
+  "time_start": "2026-04-08T20:00:00Z",
+  "time_end": "2026-04-08T20:15:00Z"
+}
+
+###
+
+### Log occurrence (production)
+POST https://hoozit.app/api/rango/user/occurrence
+Cookie: session={{cookie.session}}
+Content-Type: application/json
+
+{
+  "name": "Tawny owl",
+  "description": "Saw this at night. It was beautiful.",
+  "confidence": 0.9,
+  "coordinates": {
+    "latitude": 53.5511,
+    "longitude": 9.9937
+  },
+  "date": "2026-04-08T20:00:00Z",
+  "time_start": "2026-04-08T20:00:00Z",
+  "time_end": "2026-04-08T20:15:00Z"
+}
