@@ -1,4 +1,10 @@
-.layout {
+.app-layout {
+  height: 100vh;
+  display: flex;
+}
+
+.main-layout {
   width: 100%;
-  min-height: 100dvh;
+  position: relative;
+  overflow-y: scroll;
 }

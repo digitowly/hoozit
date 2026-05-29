@@ -1,4 +1,9 @@
-<navigation />
-<main class="layout">
-  <router-outlet />
-</main>
+<div class="app-layout">
+  <navigation />
+  <div class="main-layout">
+    <app-banner [message]="globalBannerMessage" [variant]="globalBannerVariant" />
+    <main>
+      <router-outlet />
+    </main>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+@if (message()) {
+  <aside class="banner" [class.banner-warning]="variant() === 'warning'" role="status" aria-live="polite">
+    <p class="banner-text">{{ message() }}</p>
+  </aside>
+}

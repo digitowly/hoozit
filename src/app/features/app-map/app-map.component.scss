@@ -28,23 +28,11 @@ $btn-size: 56px;
   &:active {
     background: rgba(0, 0, 0, 0.08);
   }
-
-  &--add {
-    bottom: calc(#{layout.$safe-area-inset-md} + 5.5rem);
-    left: layout.$safe-area-inset-md;
-    width: $btn-size;
-    height: $btn-size;
-    border-radius: 1.5rem;
-
-    @media (min-width: breakpoint.$md) {
-      bottom: layout.$safe-area-inset-sm;
-    }
-  }
 }
 
 .map-fab-group {
   position: absolute;
-  bottom: calc(#{layout.$safe-area-inset-md} + 5.5rem);
+  bottom: 6rem;
   right: layout.$safe-area-inset-md;
   z-index: 99;
 
@@ -55,8 +43,8 @@ $btn-size: 56px;
   box-shadow: shadow.$lg;
   background: var(--color-background-overlay);
 
-  @media (min-width: breakpoint.$md) {
-    bottom: layout.$safe-area-inset-sm;
+  @media (min-width: breakpoint.$xs) {
+    bottom: 1rem;
   }
 
   &__btn {
@@ -74,5 +62,4 @@ $btn-size: 56px;
       background: rgba(0, 0, 0, 0.08);
     }
   }
-
 }
