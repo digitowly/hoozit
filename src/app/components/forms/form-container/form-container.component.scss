@@ -1,11 +1,16 @@
 @use "../../../style/breakpoint";
 
-.form-wrapper {
-  max-width: 520px;
+:host {
+  width: 100%;
+  max-width: 720px;
+}
 
-  @media (min-width: breakpoint.$sm) {
-    padding: 2rem;
-  }
+.form-wrapper {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .form-title {

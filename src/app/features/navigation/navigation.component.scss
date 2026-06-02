@@ -8,7 +8,7 @@ $link-size-lg: 68px;
 
 .navigation {
   position: fixed;
-  bottom: layout.$safe-area-inset-md;
+  bottom: layout.$safe-area-inset-sm;
   left: 50%;
   transform: translateX(-50%);
   height: 72px;

@@ -10,6 +10,7 @@ import { UserLocationService } from '../../../services/user/user-location/user-l
 import { UserProfileService } from '../../../services/user/user-data/user-profile.service';
 import { SpeciesAutosuggestService } from '../../../services/forms/species-autosuggest/species-autosuggest.service';
 import { ModalService } from '../../../services/modal/modal.service';
+import { UserOccurrencesService } from '../../../services/occurrence/user-occurrences/user-occurrences.service';
 import { UserOccurrenceRequest } from '../../../services/occurrence/occurrence.model';
 
 const MODAL_ID = 'test-modal';
@@ -37,6 +38,17 @@ describe('LogOccurrenceModalComponent', () => {
   let mockSpeciesAutosuggestService: {
     speciesEntries: ReturnType<typeof signal<never[]>>;
     onChange: ReturnType<typeof vi.fn>;
+  };
+  let mockUserProfileService: {
+    profileResource: {
+      value: typeof userValue;
+      reload: ReturnType<typeof vi.fn>;
+    };
+  };
+  let mockUserOccurrencesService: {
+    resource: {
+      reload: ReturnType<typeof vi.fn>;
+    };
   };
 
   beforeEach(async () => {
@@ -70,6 +82,19 @@ describe('LogOccurrenceModalComponent', () => {
       onChange: vi.fn(),
     };
 
+    mockUserProfileService = {
+      profileResource: {
+        value: userValue,
+        reload: vi.fn(),
+      },
+    };
+
+    mockUserOccurrencesService = {
+      resource: {
+        reload: vi.fn(),
+      },
+    };
+
     await TestBed.configureTestingModule({
       imports: [LogOccurrenceModalComponent],
       providers: [
@@ -82,8 +107,9 @@ describe('LogOccurrenceModalComponent', () => {
         },
         {
           provide: UserProfileService,
-          useValue: { userResource: { value: userValue } },
+          useValue: mockUserProfileService,
         },
+        { provide: UserOccurrencesService, useValue: mockUserOccurrencesService },
         {
           provide: SpeciesAutosuggestService,
           useValue: mockSpeciesAutosuggestService,
@@ -186,6 +212,31 @@ describe('LogOccurrenceModalComponent', () => {
     });
   });
 
+  describe('setDetectionType', () => {
+    it('updates detectionType from a select event', () => {
+      const event = { target: { value: 'camera_trap' } } as unknown as Event;
+      component.setDetectionType(event);
+      expect(component.detectionType()).toBe('camera_trap');
+    });
+
+    it('sets evidence type to none when non-visual is selected', () => {
+      component.evidenceType.set('track');
+      const event = { target: { value: 'camera_trap' } } as unknown as Event;
+
+      component.setDetectionType(event);
+
+      expect(component.evidenceType()).toBe('none');
+    });
+  });
+
+  describe('setEvidenceType', () => {
+    it('updates evidenceType from a select event', () => {
+      const event = { target: { value: 'feather' } } as unknown as Event;
+      component.setEvidenceType(event);
+      expect(component.evidenceType()).toBe('feather');
+    });
+  });
+
   describe('setDate', () => {
     it('updates observationDate from an input event', () => {
       const event = { target: { value: '2026-04-08' } } as unknown as Event;
@@ -249,11 +300,63 @@ describe('LogOccurrenceModalComponent', () => {
         expect.objectContaining<Partial<UserOccurrenceRequest>>({
           name: 'Tawny owl',
           description: 'Saw it at night.',
+          detection_method: 'visual',
+          evidence_type: 'track',
           confidence: 0.9,
           coordinates: {
             latitude: MOCK_COORD.latitude,
             longitude: MOCK_COORD.longitude,
           },
+        }),
+      );
+    });
+
+    it('submits selected detection type value', async () => {
+      userValue.set({ nickname: 'user' });
+      component.occurrenceForm.name().value.set('Tawny owl');
+      component.occurrenceForm.description().value.set('Saw it at night.');
+      component.detectionType.set('edna');
+      component.evidenceType.set('burrow');
+
+      await component.onSubmit();
+
+      expect(mockOccurrenceService.submit).toHaveBeenCalledWith(
+        expect.objectContaining<Partial<UserOccurrenceRequest>>({
+          detection_method: 'edna',
+          evidence_type: 'none',
+        }),
+      );
+    });
+
+    it('submits selected evidence type value', async () => {
+      userValue.set({ nickname: 'user' });
+      component.occurrenceForm.name().value.set('Tawny owl');
+      component.occurrenceForm.description().value.set('Saw it at night.');
+      component.detectionType.set('visual');
+      component.evidenceType.set('burrow');
+
+      await component.onSubmit();
+
+      expect(mockOccurrenceService.submit).toHaveBeenCalledWith(
+        expect.objectContaining<Partial<UserOccurrenceRequest>>({
+          evidence_type: 'burrow',
+        }),
+      );
+    });
+
+    it('submits none evidence type when visual detection is selected', async () => {
+      userValue.set({ nickname: 'user' });
+      component.occurrenceForm.name().value.set('Tawny owl');
+      component.occurrenceForm.description().value.set('Saw it at night.');
+      component.detectionType.set('visual');
+      component.evidenceType.set('none');
+
+      await component.onSubmit();
+
+      expect(mockOccurrenceService.submit).toHaveBeenCalledWith(
+        expect.objectContaining<Partial<UserOccurrenceRequest>>({
+          detection_method: 'visual',
+          evidence_type: 'none',
         }),
       );
     });
@@ -294,6 +397,17 @@ describe('LogOccurrenceModalComponent', () => {
       }
     });
 
+    it('reloads profile and occurrences after successful submit', async () => {
+      userValue.set({ nickname: 'user' });
+      component.occurrenceForm.name().value.set('Tawny owl');
+      component.occurrenceForm.description().value.set('Saw it at night.');
+
+      await component.onSubmit();
+
+      expect(mockUserProfileService.profileResource.reload).toHaveBeenCalledOnce();
+      expect(mockUserOccurrencesService.resource.reload).toHaveBeenCalledOnce();
+    });
+
     it('does not propagate errors when the service observable errors', async () => {
       mockOccurrenceService.submit.mockReturnValue(
         new Observable((s) => s.error(new Error('network error'))),
@@ -303,6 +417,8 @@ describe('LogOccurrenceModalComponent', () => {
       component.occurrenceForm.description().value.set('Saw it at night.');
 
       await expect(component.onSubmit()).resolves.toBeUndefined();
+      expect(mockUserProfileService.profileResource.reload).not.toHaveBeenCalled();
+      expect(mockUserOccurrencesService.resource.reload).not.toHaveBeenCalled();
     });
   });
 

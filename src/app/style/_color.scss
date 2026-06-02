@@ -1,29 +1,29 @@
 // ---------- Brand ----------
-$primary-light: #4baba7;   // teal highlight
-$primary-base:  #127c7e;   // main teal
-$primary-dark: #031e24;   // deep contrast
+$primary-light: #4baba7; // teal highlight
+$primary-base: #127c7e; // main teal
+$primary-dark: #031e24; // deep contrast
 
 // ---------- Accent ----------
-$accent-light:  #ffd8a8;   // warm accent highlight
-$accent-base:   #ff8c32;   // orange accent (owl beak/energy)
-$accent-dark:   #b55a1c;   // muted earth tone
+$accent-light: #ffd8a8; // warm accent highlight
+$accent-base: #ff8c32; // orange accent (owl beak/energy)
+$accent-dark: #b55a1c; // muted earth tone
 
 // ---------- Nature ----------
-$nature-light:  #a6e6a1;   // vibrant green (leaves)
-$nature-base:   #3cbf6d;   // balanced green (growth)
-$nature-dark:   #2a8f4e;   // forest tone
+$nature-light: #a6e6a1; // vibrant green (leaves)
+$nature-base: #3cbf6d; // balanced green (growth)
+$nature-dark: #2a8f4e; // forest tone
 
 // ---------- Neutral ----------
-$neutral-light: #f5f7f8;
-$neutral-base: #daebca;
+$neutral-light: #f7fcf9;
+$neutral-base: #f5f7f8;
 $neutral-dark: #102e2d;
 $neutral-night: #011514;
 
 // ---------- Semantic ----------
 $success: #3ecf8e;
-$info:    #3da9fc;  // informational blue
-$warning: #f7b731;  // caution or notice
-$error:   #eb5757;  // error or critical state
+$info: #3da9fc; // informational blue
+$warning: #f7b731; // caution or notice
+$error: #eb5757; // error or critical state
 
 // ---------- Utility ----------
 $shadow: rgba(0, 0, 0, 0.2);
@@ -43,8 +43,8 @@ html[data-theme="light"] {
 }
 
 html[data-theme="dark"] {
-  --color-text: #{$neutral-light};
+  --color-text: #{$neutral-base};
   --color-background: #{$neutral-night};
   --color-background-overlay: #{$neutral-dark};
-  --color-outline: #{$neutral-base};
+  --color-outline: #{$neutral-light};
 }

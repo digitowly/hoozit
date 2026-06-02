@@ -18,8 +18,10 @@ import { UserLocationService } from "../../../services/user/user-location/user-l
 import { UserProfileService } from "../../../services/user/user-data/user-profile.service";
 import { ModalService } from "../../../services/modal/modal.service";
 import { OccurrenceService } from "../../../services/occurrence/occurrence.service";
+import { UserOccurrencesService } from "../../../services/occurrence/user-occurrences/user-occurrences.service";
 import { UserOccurrenceRequest } from "../../../services/occurrence/occurrence.model";
 import { SubmissionState } from "../../species-resource/species-resource.model";
+import { LoginComponent } from "../../login/login.component";
 
 @Component({
   selector: "log-occurrence-modal",
@@ -28,12 +30,34 @@ import { SubmissionState } from "../../species-resource/species-resource.model";
     FieldContainerComponent,
     AutosuggestComponent,
     FormField,
-    LoginButtonComponent,
+    LoginComponent,
   ],
   templateUrl: "./log-occurrence-modal.component.html",
   styleUrl: "./log-occurrence-modal.component.scss",
 })
 export class LogOccurrenceModalComponent {
+  private static readonly EVIDENCE_NONE = "none" as const;
+
+  readonly detectionTypeOptions = [
+    { label: "Visual", value: "visual" },
+    { label: "Auditory", value: "auditory" },
+    { label: "Camera trap", value: "camera_trap" },
+    { label: "Acoustic sensor", value: "acoustic_sensor" },
+    { label: "eDNA", value: "edna" },
+  ] as const;
+
+  readonly evidenceTypeOptions = [
+    { label: "None", value: LogOccurrenceModalComponent.EVIDENCE_NONE },
+    { label: "Track", value: "track" },
+    { label: "Scat", value: "scat" },
+    { label: "Nest", value: "nest" },
+    { label: "Pellet", value: "pellet" },
+    { label: "Feather", value: "feather" },
+    { label: "Carcass", value: "carcass" },
+    { label: "Food remains", value: "food_remains" },
+    { label: "Burrow", value: "burrow" },
+  ] as const;
+
   readonly modalId = input.required<string>();
 
   readonly handleClose = output();
@@ -43,6 +67,8 @@ export class LogOccurrenceModalComponent {
   private readonly userLocation = inject(UserLocationService);
 
   private readonly userDataService = inject(UserProfileService);
+
+  private readonly userOccurrencesService = inject(UserOccurrencesService);
 
   private readonly speciesAutosuggestService = inject(
     SpeciesAutosuggestService,
@@ -59,6 +85,12 @@ export class LogOccurrenceModalComponent {
   readonly occurrenceForm = form(this.formModel, {});
 
   readonly confidence = signal(0.5);
+
+  readonly detectionType =
+    signal<(typeof this.detectionTypeOptions)[number]["value"]>("visual");
+
+  readonly evidenceType =
+    signal<(typeof this.evidenceTypeOptions)[number]["value"]>("track");
 
   readonly observationDate = signal(this.todayStr());
 
@@ -95,6 +127,23 @@ export class LogOccurrenceModalComponent {
 
   setConfidence(event: Event) {
     this.confidence.set(+(event.target as HTMLInputElement).value);
+  }
+
+  setDetectionType(event: Event) {
+    const detectionType = (event.target as HTMLSelectElement)
+      .value as (typeof this.detectionTypeOptions)[number]["value"];
+    this.detectionType.set(detectionType);
+
+    if (detectionType !== "visual") {
+      this.evidenceType.set(LogOccurrenceModalComponent.EVIDENCE_NONE);
+    }
+  }
+
+  setEvidenceType(event: Event) {
+    this.evidenceType.set(
+      (event.target as HTMLSelectElement)
+        .value as (typeof this.evidenceTypeOptions)[number]["value"],
+    );
   }
 
   setDate(event: Event) {
@@ -135,8 +184,11 @@ export class LogOccurrenceModalComponent {
       name: this.occurrenceForm.name().value(),
       description: this.occurrenceForm.description().value(),
       behavior: undefined,
-      detection_method: "visual",
-      evidence_type: "track",
+      detection_method: this.detectionType(),
+      evidence_type:
+        this.detectionType() === "visual"
+          ? this.evidenceType()
+          : LogOccurrenceModalComponent.EVIDENCE_NONE,
       is_captive: false,
       life_stage: "adult",
       observed_at: observed_at,
@@ -150,6 +202,8 @@ export class LogOccurrenceModalComponent {
 
     try {
       await firstValueFrom(this.occurrenceService.submit(payload));
+      this.userDataService.profileResource.reload();
+      this.userOccurrencesService.resource.reload();
       setTimeout(() => this.close(), 1500);
     } catch {
       // error state is set in OccurrenceService
@@ -163,6 +217,8 @@ export class LogOccurrenceModalComponent {
     this.occurrenceForm.name().value.set("");
     this.occurrenceForm.description().value.set("");
     this.confidence.set(0.5);
+    this.detectionType.set("visual");
+    this.evidenceType.set("track");
     this.observationDate.set(this.todayStr());
     this.timeStart.set(this.nowTimeStr());
     this.timeEnd.set(this.nowPlusStr(15));

@@ -5,17 +5,18 @@
   (handleClose)="close()"
 >
   @if (isOpen()) {
-    <div class="form">
-      <field-container label="Species" name="species">
-        <autosuggest
-          id="species"
-          placeholder="Search or enter species name"
-          [disabled]="submissionState() === SubmissionState.LOADING"
-          [entries]="speciesEntries()"
-          (onQueryChange)="onAutoSuggestChange($event)"
-          (onSelect)="onAutoSuggestSelect($event)"
-        />
-      </field-container>
+    @if (isLoggedIn()) {
+      <div class="form">
+        <field-container label="Species" name="species">
+          <autosuggest
+            id="species"
+            placeholder="Search or enter species name"
+            [disabled]="submissionState() === SubmissionState.LOADING"
+            [entries]="speciesEntries()"
+            (onQueryChange)="onAutoSuggestChange($event)"
+            (onSelect)="onAutoSuggestSelect($event)"
+          />
+        </field-container>
 
       <field-container label="Description" name="description">
         <textarea
@@ -34,19 +35,21 @@
             [value]="observationDate()"
             (input)="setDate($event)"
           />
-          <input
-            type="time"
-            class="when-input"
-            [value]="timeStart()"
-            (input)="setTimeStart($event)"
-          />
-          <span class="when-sep">–</span>
-          <input
-            type="time"
-            class="when-input"
-            [value]="timeEnd()"
-            (input)="setTimeEnd($event)"
-          />
+          <div class="when-time-row">
+            <input
+              type="time"
+              class="when-input"
+              [value]="timeStart()"
+              (input)="setTimeStart($event)"
+            />
+            <span class="when-sep">-</span>
+            <input
+              type="time"
+              class="when-input"
+              [value]="timeEnd()"
+              (input)="setTimeEnd($event)"
+            />
+          </div>
         </div>
       </field-container>
 
@@ -65,13 +68,42 @@
         </div>
       </field-container>
 
+      <div class="type-row">
+        <field-container label="Detection type" name="detection_type">
+          <select
+            id="detection_type"
+            [value]="detectionType()"
+            [disabled]="submissionState() === SubmissionState.LOADING"
+            (change)="setDetectionType($event)"
+          >
+            @for (option of detectionTypeOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </field-container>
+
+        @if (detectionType() === 'visual') {
+          <field-container label="Evidence type" name="evidence_type">
+            <select
+              id="evidence_type"
+              [value]="evidenceType()"
+              [disabled]="submissionState() === SubmissionState.LOADING"
+              (change)="setEvidenceType($event)"
+            >
+              @for (option of evidenceTypeOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </field-container>
+        }
+      </div>
+
       <div class="location-chip">
         <span class="location-chip__label">Location</span>
         <span class="location-chip__value">{{ locationLabel() }}</span>
       </div>
 
       <div class="form-footer">
-        @if (isLoggedIn()) {
           <button
             class="btn-primary"
             (click)="onSubmit()"
@@ -95,10 +127,10 @@
               <p class="status status--info">Submitting…</p>
             }
           }
-        } @else {
-          <login-button provider="google" />
-        }
       </div>
     </div>
+    } @else {
+      <login />
+  }
   }
 </app-modal>
