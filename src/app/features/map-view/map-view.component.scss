@@ -16,12 +16,12 @@
 .map-search-bar {
   z-index: 1000;
   position: absolute;
-  top: layout.$safe-area-inset-sm;
-  left: layout.$safe-area-inset-sm;
-  width: calc(100% - #{layout.$safe-area-inset-sm} * 2);
+  top: layout.$safe-area-inset-md;
+  left: layout.$safe-area-inset-md;
+  width: calc(100% - #{layout.$safe-area-inset-md} * 2);
 
   @media (min-width: breakpoint.$md) {
-    width:70%;
+    width: 70%;
     max-width: 500px;
   }
 }
@@ -29,10 +29,10 @@
 .map-search-selection-list {
   z-index: 999;
   position: absolute;
-  top: layout.$safe-area-inset-sm + 3.5rem;
-  left: layout.$safe-area-inset-sm;
+  top: layout.$safe-area-inset-md + 3.5rem;
+  left: layout.$safe-area-inset-md;
 
   @media (min-width: breakpoint.$md) {
-    top: layout.$safe-area-inset-sm + 4.5rem;
+    top: layout.$safe-area-inset-md + 4.5rem;
   }
 }

@@ -8,7 +8,7 @@ $link-size-lg: 68px;
 
 .navigation {
   position: fixed;
-  bottom: layout.$safe-area-inset-sm;
+  bottom: layout.$safe-area-inset-md;
   left: 50%;
   transform: translateX(-50%);
   height: 72px;
@@ -31,9 +31,6 @@ $link-size-lg: 68px;
   }
 
   @media (min-width: breakpoint.$md) {
-    /* border-radius: 1rem; */
-    /* top: layout.$safe-area-inset-sm; */
-    /* right: layout.$safe-area-inset-sm; */
     bottom: auto;
   }
 
@@ -139,7 +136,7 @@ $link-size-lg: 68px;
   transition: all 0.25s ease-in;
   width: $link-size-lg + 32px;
   height: $link-size-lg + 20px;
-  top: calc($link-size / 4 * -2.6);
+  top: calc($link-size / 4 * -2.65);
   border-radius: 35%;
   position: absolute;
   transform: scale(0);

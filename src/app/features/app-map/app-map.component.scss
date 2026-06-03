@@ -33,7 +33,7 @@ $btn-size: 56px;
 .map-fab-group {
   position: absolute;
   bottom: 6rem;
-  right: layout.$safe-area-inset-sm;
+  right: layout.$safe-area-inset-md;
   z-index: 99;
 
   display: flex;
