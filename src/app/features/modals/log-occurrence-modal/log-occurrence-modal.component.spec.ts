@@ -12,6 +12,7 @@ import { SpeciesAutosuggestService } from '../../../services/forms/species-autos
 import { ModalService } from '../../../services/modal/modal.service';
 import { UserOccurrencesService } from '../../../services/occurrence/user-occurrences/user-occurrences.service';
 import { UserOccurrenceRequest } from '../../../services/occurrence/occurrence.model';
+import { SubmissionState } from '../../../features/species-resource/species-resource.model';
 
 const MODAL_ID = 'test-modal';
 const TAWNY_OWL = { label: 'Tawny owl', value: 'Strix aluco', icon: '' };
@@ -22,7 +23,7 @@ describe('LogOccurrenceModalComponent', () => {
   let fixture: ComponentFixture<LogOccurrenceModalComponent>;
 
   let submissionState: ReturnType<
-    typeof signal<'initial' | 'loading' | 'success' | 'error'>
+    typeof signal<SubmissionState>
   >;
   let userValue: ReturnType<typeof signal<object | null>>;
   let mockOccurrenceService: {
@@ -60,9 +61,7 @@ describe('LogOccurrenceModalComponent', () => {
       }),
     );
 
-    submissionState = signal<'initial' | 'loading' | 'success' | 'error'>(
-      'initial',
-    );
+    submissionState = signal<SubmissionState>(SubmissionState.INITIAL);
     userValue = signal<object | null>(null);
 
     mockOccurrenceService = {
@@ -166,7 +165,7 @@ describe('LogOccurrenceModalComponent', () => {
       userValue.set({ nickname: 'user' });
       component.occurrenceForm.name().value.set('Tawny owl');
       component.occurrenceForm.description().value.set('Saw it at night.');
-      submissionState.set('loading');
+      submissionState.set(SubmissionState.LOADING);
       expect(component.isSubmittable()).toBe(false);
     });
 
@@ -174,7 +173,7 @@ describe('LogOccurrenceModalComponent', () => {
       userValue.set({ nickname: 'user' });
       component.occurrenceForm.name().value.set('Tawny owl');
       component.occurrenceForm.description().value.set('Saw it at night.');
-      submissionState.set('success');
+      submissionState.set(SubmissionState.SUCCESS);
       expect(component.isSubmittable()).toBe(false);
     });
 
@@ -182,7 +181,7 @@ describe('LogOccurrenceModalComponent', () => {
       userValue.set({ nickname: 'user' });
       component.occurrenceForm.name().value.set('Tawny owl');
       component.occurrenceForm.description().value.set('Saw it at night.');
-      submissionState.set('error');
+      submissionState.set(SubmissionState.ERROR);
       expect(component.isSubmittable()).toBe(true);
     });
   });
