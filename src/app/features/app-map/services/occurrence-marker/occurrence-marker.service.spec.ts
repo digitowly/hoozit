@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { firstValueFrom, of } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { Coordinate } from '../../../../model/coordinate';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
 import { MapMarker, MapService } from '../../../../services/map/map-service';
@@ -115,6 +115,29 @@ describe('OccurrenceMarkerService', () => {
 
     expect(search).toHaveBeenCalledTimes(1);
     expect(search).toHaveBeenCalledWith(location, ['123', '456'], 5);
+    expect(service.activeRadiusLevel()).toBe(5);
+  });
+
+  it('updates the active radius only after Scout responds', () => {
+    const response = new Subject<OccurrenceSearchResponse | null>();
+    search.mockReturnValue(response);
+
+    service
+      .createMarkers(
+        mockMapService,
+        { latitude: 42.7128, longitude: -64.006 },
+        vi.fn(),
+        { radiusLevel: 5 },
+      )
+      .subscribe();
+
+    expect(service.activeRadiusLevel()).toBe(
+      OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL,
+    );
+
+    response.next(mockOccurrenceResponse);
+    response.complete();
+
     expect(service.activeRadiusLevel()).toBe(5);
   });
 });

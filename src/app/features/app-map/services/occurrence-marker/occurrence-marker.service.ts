@@ -64,12 +64,11 @@ export class OccurrenceMarkerService {
       return of();
     }
 
-    this.rememberSelections(search.selections);
-    this.rememberSearchArea(search);
+    this.invalidateCacheForNewSearchArea(search);
     mapService.removeMarkers();
 
     if (search.selections.length === 0) {
-      return this.finishWithoutMarkers(mapService, search.location);
+      return this.finishWithoutMarkers(mapService, search);
     }
 
     const storedMarkers = this.cachedMarkers(search.cacheKey, options);
@@ -77,7 +76,7 @@ export class OccurrenceMarkerService {
       return this.renderCachedMarkers(
         storedMarkers,
         mapService,
-        search.location,
+        search,
         onCreate,
       );
     }
@@ -101,8 +100,6 @@ export class OccurrenceMarkerService {
     );
     const selections = this.selectionsService.selections();
 
-    this.activeRadiusLevel.set(radiusLevel);
-
     return {
       location,
       selections,
@@ -125,21 +122,25 @@ export class OccurrenceMarkerService {
     );
   }
 
-  private rememberSelections(selections: AnimalSearchResult[]) {
-    this.lastSelections = selections;
-  }
-
-  private rememberSearchArea(search: MarkerSearchContext) {
+  private invalidateCacheForNewSearchArea(search: MarkerSearchContext) {
     if (!search.locationChanged && !search.radiusLevelChanged) return;
-
-    this.lastSearchCoordinate = search.location;
-    this.lastRadiusLevel = search.radiusLevel;
     this.markersStore.clear();
   }
 
-  private finishWithoutMarkers(mapService: MapService, location: Coordinate) {
+  private activateSearchArea(search: MarkerSearchContext) {
+    this.lastSelections = search.selections;
+    this.lastSearchCoordinate = search.location;
+    this.lastRadiusLevel = search.radiusLevel;
+    this.activeRadiusLevel.set(search.radiusLevel);
+  }
+
+  private finishWithoutMarkers(
+    mapService: MapService,
+    search: MarkerSearchContext,
+  ) {
+    this.activateSearchArea(search);
     this.lastLoadFailed.set(false);
-    mapService.repaintUserMarker(location);
+    mapService.repaintUserMarker(search.location);
     return of();
   }
 
@@ -150,13 +151,14 @@ export class OccurrenceMarkerService {
   private renderCachedMarkers(
     markers: MapMarker[],
     mapService: MapService,
-    location: Coordinate,
+    search: MarkerSearchContext,
     onCreate: (marker: MapMarker) => void,
   ) {
+    this.activateSearchArea(search);
     this.lastLoadFailed.set(false);
     return from(markers).pipe(
       tap((marker) => onCreate(marker)),
-      finalize(() => mapService.repaintUserMarker(location)),
+      finalize(() => mapService.repaintUserMarker(search.location)),
     );
   }
 
@@ -174,7 +176,10 @@ export class OccurrenceMarkerService {
         search.radiusLevel,
       )
       .pipe(
-        tap((response) => (failed = response === null)),
+        tap((response) => {
+          failed = response === null;
+          if (response) this.activateSearchArea(search);
+        }),
         filter(
           (response): response is NonNullable<typeof response> =>
             response !== null,
