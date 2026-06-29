@@ -31,6 +31,7 @@ export class OccurrenceSearchService {
       taxon_keys: taxonKeys,
     };
 
+    this.error.set(null);
     this.isLoading.set(true);
     return this.http
       .post<OccurrenceSearchResponse>(this.apiUrl, body, {
