@@ -83,4 +83,24 @@ describe('OccurrenceSearchService', () => {
     expect(service.error()).toBe('Client error: Invalid request');
     expect(service.isLoading()).toBe(false);
   });
+
+  it('clears a previous error before starting a new search', () => {
+    service.search({ latitude: 0, longitude: 0 }, ['1']).subscribe();
+
+    httpMock
+      .expectOne('http://localhost:8080/occurrences/search')
+      .flush('Invalid request', {
+        status: 400,
+        statusText: 'Bad Request',
+      });
+
+    expect(service.error()).toBe('Client error: Invalid request');
+
+    service.search({ latitude: 1, longitude: 1 }, ['1']).subscribe();
+
+    expect(service.error()).toBeNull();
+    httpMock
+      .expectOne('http://localhost:8080/occurrences/search')
+      .flush({ total: 0, results: [] });
+  });
 });
