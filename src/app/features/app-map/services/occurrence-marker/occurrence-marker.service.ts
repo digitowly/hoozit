@@ -61,6 +61,7 @@ export class OccurrenceMarkerService {
     const search = this.createSearchContext(location, options);
 
     if (this.canKeepCurrentMarkers(search, options)) {
+      mapService.repaintUserMarker(search.location);
       return of();
     }
 
@@ -178,7 +179,10 @@ export class OccurrenceMarkerService {
       .pipe(
         tap((response) => {
           failed = response === null;
-          if (response) this.activateSearchArea(search);
+          if (response) {
+            this.activateSearchArea(search);
+            this.replaceMarkerCache(search.cacheKey);
+          }
         }),
         filter(
           (response): response is NonNullable<typeof response> =>
@@ -256,5 +260,9 @@ export class OccurrenceMarkerService {
 
   private storeMarker(key: string, marker: MapMarker) {
     this.markersStore.set(key, [...(this.markersStore.get(key) ?? []), marker]);
+  }
+
+  private replaceMarkerCache(key: string) {
+    this.markersStore.set(key, []);
   }
 }
