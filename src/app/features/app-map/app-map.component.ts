@@ -1,24 +1,48 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, debounceTime } from 'rxjs';
 import { UserLocationService } from '../../services/user/user-location/user-location.service';
 import { MapService, MapMarker } from '../../services/map/map-service';
 import { LeafletService } from '../../services/map/leaflet/leaflet.service';
 import { IconComponent } from '../../components/icon/icon.component';
 import { OccurrenceMarkerService } from './services/occurrence-marker/occurrence-marker.service';
+import { ScoutLensComponent } from './components/scout-lens/scout-lens.component';
+import { SearchResultSelectionService } from '../search/services/search-result-selection/search-result-selection.service';
 import { ModalService } from '../../services/modal/modal.service';
 import { OccurrencePreviewModalComponent } from '../modals/occurrence-preview-modal/occurrence-preview-modal.component';
 import { LogOccurrenceModalComponent } from '../modals/log-occurrence-modal/log-occurrence-modal.component';
+import {
+  PendingSearchSurface,
+  ScoutSearchStateService,
+} from './services/scout-search-state/scout-search-state.service';
 
 const MODAL_ID = 'map-marker';
 const LOG_OCCURRENCE_MODAL_ID = 'log-occurrence';
 
+const INITIAL_ZOOM = 13;
+const SETTLE_DEBOUNCE_MS = 600;
+
 @Component({
   selector: 'app-map',
-  imports: [IconComponent, OccurrencePreviewModalComponent, LogOccurrenceModalComponent],
+  imports: [
+    IconComponent,
+    ScoutLensComponent,
+    OccurrencePreviewModalComponent,
+    LogOccurrenceModalComponent,
+  ],
   providers: [
     {
       provide: MapService,
       useClass: LeafletService,
     },
+    ScoutSearchStateService,
   ],
   templateUrl: './app-map.component.html',
   styleUrl: './app-map.component.scss',
@@ -29,54 +53,34 @@ export class AppMapComponent {
   readonly selectedMarker = signal<MapMarker | null>(null);
 
   private readonly modalService = inject(ModalService);
+  private readonly selectionsService = inject(SearchResultSelectionService);
+  private readonly mapService = inject(MapService);
+  private readonly userLocation = inject(UserLocationService);
+  private readonly markerService = inject(OccurrenceMarkerService);
+  readonly scoutSearch = inject(ScoutSearchStateService);
 
   readonly isModalOpen = computed(() => this.modalService.isOpen(this.modalId));
-  readonly isLogOccurrenceModalOpen = computed(() => this.modalService.isOpen(this.logOccurrenceModalId));
-  readonly isAnyModalOpen = computed(() => this.isModalOpen() || this.isLogOccurrenceModalOpen());
+  readonly isLogOccurrenceModalOpen = computed(() =>
+    this.modalService.isOpen(this.logOccurrenceModalId),
+  );
+  readonly isAnyModalOpen = computed(
+    () => this.isModalOpen() || this.isLogOccurrenceModalOpen(),
+  );
 
   private hasInitialCenter = signal(false);
+  private readonly settle$ = new Subject<void>();
 
-  constructor(
-    private mapService: MapService,
-    private userLocation: UserLocationService,
-    private markerService: OccurrenceMarkerService,
-  ) {
+  constructor() {
     this.userLocation.getLocation();
-    const initialLocation = this.userLocation.coordinate();
 
-    effect(() => {
-      this.mapService.init(initialLocation, 13);
-      this.mapService.registerLongPress(() => this.openLogOccurrenceModal());
-    });
-
-    effect(() => {
-      if (!this.userLocation.isValid()) return;
-
-      this.markerService
-        .createMarkers(
-          this.mapService,
-          this.userLocation.coordinate(),
-          (marker) => {
-            this.mapService.createMarker(marker, (marker) => {
-              this.modalService.open(this.modalId, 'compact');
-              this.selectedMarker.set(marker);
-            });
-          },
-        )
-        .subscribe();
-    });
-
-    effect(() => {
-      if (userLocation.isValid() && !this.hasInitialCenter()) {
-        this.mapService.setCenter(this.userLocation.coordinate());
-        this.hasInitialCenter.set(true);
-      }
-    });
-
-    effect(() => {
-      if (!this.userLocation.isValid()) return;
-      this.mapService.repaintUserMarker(this.userLocation.coordinate());
-    });
+    this.loadAfterCameraSettles();
+    this.setupMap();
+    this.syncLensPhaseWithCamera();
+    this.loadInitialSearchWhenMapIsReady();
+    this.loadInitialSearchWhenAnchoredUserMoves();
+    this.reloadWhenSelectionsChange();
+    this.centerOnFirstLocationFix();
+    this.repaintUserMarkerOnMove();
   }
 
   centerToUserLocation() {
@@ -85,5 +89,122 @@ export class AppMapComponent {
 
   openLogOccurrenceModal() {
     this.modalService.open(this.logOccurrenceModalId);
+  }
+
+  retryLoadOccurrences() {
+    this.loadOccurrences(true, this.scoutSearch.retryCoordinate());
+  }
+
+  searchHere() {
+    this.loadOccurrences(
+      true,
+      this.scoutSearch.searchHereCoordinate(),
+      'ghost',
+    );
+  }
+
+  private loadAfterCameraSettles() {
+    this.settle$
+      .pipe(debounceTime(SETTLE_DEBOUNCE_MS), takeUntilDestroyed())
+      .subscribe(() => {
+        if (this.scoutSearch.canStartInitialSearch()) this.loadOccurrences();
+      });
+  }
+
+  private setupMap() {
+    const initialLocation = this.userLocation.coordinate();
+    effect(() => {
+      this.mapService.init(initialLocation, INITIAL_ZOOM);
+      this.mapService.registerLongPress(() => this.openLogOccurrenceModal());
+      this.mapService.onCameraSettle(() => this.settle$.next());
+    });
+  }
+
+  private syncLensPhaseWithCamera() {
+    effect(() => {
+      this.scoutSearch.updateLensPhase();
+    });
+  }
+
+  private loadInitialSearchWhenMapIsReady() {
+    effect(() => {
+      this.mapService.camera();
+      if (!this.scoutSearch.canStartInitialSearch()) return;
+      untracked(() => this.loadOccurrences());
+    });
+  }
+
+  private loadInitialSearchWhenAnchoredUserMoves() {
+    effect(() => {
+      if (!this.userLocation.isValid()) return;
+      this.userLocation.coordinate();
+      untracked(() => {
+        if (!this.scoutSearch.isAnchored()) return;
+        if (this.scoutSearch.canStartInitialSearch()) this.loadOccurrences();
+      });
+    });
+  }
+
+  private reloadWhenSelectionsChange() {
+    effect(() => {
+      this.selectionsService.selections();
+      untracked(() => {
+        if (!this.mapService.camera()) return;
+        if (
+          this.scoutSearch.needsInitialSearch() &&
+          !this.scoutSearch.canStartInitialSearch()
+        ) {
+          return;
+        }
+        this.loadOccurrences(true, this.scoutSearch.retryCoordinate());
+      });
+    });
+  }
+
+  private centerOnFirstLocationFix() {
+    effect(() => {
+      if (this.userLocation.isValid() && !this.hasInitialCenter()) {
+        this.mapService.setCenter(this.userLocation.coordinate());
+        this.hasInitialCenter.set(true);
+      }
+    });
+  }
+
+  private repaintUserMarkerOnMove() {
+    effect(() => {
+      if (!this.userLocation.isValid()) return;
+      this.mapService.repaintUserMarker(this.userLocation.coordinate());
+    });
+  }
+
+  private loadOccurrences(
+    force = false,
+    coordinate = this.scoutSearch.searchHereCoordinate(),
+    surface: PendingSearchSurface = 'active',
+  ) {
+    if (this.scoutSearch.isZoomedOut()) {
+      this.scoutSearch.clearPendingSearch();
+      return;
+    }
+
+    this.scoutSearch.beginSearch(coordinate, surface);
+    this.markerService
+      .createMarkers(
+        this.mapService,
+        coordinate,
+        (marker) => this.showMarker(marker),
+        { force, radiusLevel: this.scoutSearch.requestedRadiusLevel() },
+      )
+      .subscribe({
+        complete: () => this.scoutSearch.completeSearch(coordinate),
+        error: () => this.scoutSearch.clearPendingSearch(),
+      });
+  }
+
+  private showMarker(marker: MapMarker) {
+    this.mapService.createMarker(marker, (tapped) => {
+      this.modalService.open(this.modalId, 'compact');
+      this.selectedMarker.set(tapped);
+    });
   }
 }

@@ -9,6 +9,7 @@ export class UserLocationService {
   private isInitialized = signal<boolean>(false);
   hasError = signal<boolean>(true);
   isValid = computed(() => this.isInitialized() && !this.hasError());
+  hasResolved = computed(() => this.isInitialized());
 
   private watchId: number | null = null;
 
@@ -28,13 +29,13 @@ export class UserLocationService {
           longitude: position.coords.longitude,
         });
         this.hasError.set(false);
+        this.isInitialized.set(true);
       },
       (error) => {
         console.error('Error getting location:', error);
         this.hasError.set(true);
+        this.isInitialized.set(true);
       },
     );
-
-    this.isInitialized.set(true);
   }
 }

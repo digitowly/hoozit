@@ -1,12 +1,16 @@
 import { Injectable, signal } from '@angular/core';
 import { Coordinate } from '../../../model/coordinate';
-import { MapService, MapMarker } from '../map-service';
+import { MapService, MapMarker, MapCamera } from '../map-service';
 import * as L from 'leaflet';
+
+const MIN_ZOOM = 8;
 
 @Injectable({ providedIn: 'root' })
 export class LeafletService extends MapService {
   private map: L.Map | null = null;
+  private settleCallbacks: (() => void)[] = [];
   override selectedMarker = signal<MapMarker | null>(null);
+  override readonly camera = signal<MapCamera | null>(null);
 
   override init(coordinate: Coordinate, zoom: number = 13) {
     if (this.map) {
@@ -16,12 +20,54 @@ export class LeafletService extends MapService {
     this.map = L.map('map', {
       center: [coordinate.latitude, coordinate.longitude],
       zoom,
+      minZoom: MIN_ZOOM,
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.map);
+
+    this.map.on('move zoom resize', () => this.publishCamera());
+    this.map.on('moveend zoomend', () => {
+      this.publishCamera();
+      this.settleCallbacks.forEach((callback) => callback());
+    });
+    this.publishCamera();
+  }
+
+  override projectToContainer(coordinate: Coordinate) {
+    if (!this.map) return null;
+    const point = this.map.latLngToContainerPoint([
+      coordinate.latitude,
+      coordinate.longitude,
+    ]);
+    return { x: point.x, y: point.y };
+  }
+
+  override metersToPixels(meters: number): number {
+    if (!this.map) return 0;
+    const latitude = this.map.getCenter().lat;
+    const metersPerPixel =
+      (40075016.686 * Math.cos((latitude * Math.PI) / 180)) /
+      Math.pow(2, this.map.getZoom() + 8);
+    return meters / metersPerPixel;
+  }
+
+  override onCameraSettle(callback: () => void): void {
+    this.settleCallbacks.push(callback);
+  }
+
+  private publishCamera() {
+    if (!this.map) return;
+    const center = this.map.getCenter();
+    const size = this.map.getSize();
+    this.camera.set({
+      center: { latitude: center.lat, longitude: center.lng },
+      zoom: this.map.getZoom(),
+      width: size.x,
+      height: size.y,
+    });
   }
 
   override setCenter(coordinate: Coordinate) {
@@ -41,9 +87,13 @@ export class LeafletService extends MapService {
       return;
     }
 
-    L.marker([marker.coordinate.latitude, marker.coordinate.longitude])
-      .addTo(this.map)
-      .setIcon(
+    const leafletMarker = L.marker([
+      marker.coordinate.latitude,
+      marker.coordinate.longitude,
+    ]).addTo(this.map);
+
+    if (marker.icon) {
+      leafletMarker.setIcon(
         L.icon({
           className: 'marker-icon',
           iconUrl: marker.icon,
@@ -52,11 +102,13 @@ export class LeafletService extends MapService {
           popupAnchor: [1, -34],
           shadowSize: [41, 41],
         }),
-      )
-      .on('click', () => {
-        this.onMarkerClick(marker);
-        onTap(marker);
-      });
+      );
+    }
+
+    leafletMarker.on('click', () => {
+      this.onMarkerClick(marker);
+      onTap(marker);
+    });
   }
 
   override onMarkerClick(marker: MapMarker) {
@@ -99,7 +151,6 @@ export class LeafletService extends MapService {
 
   override repaintUserMarker(coordinate: Coordinate) {
     if (!this.map) return;
-    // Remove existing marker if it exists
     this.map.eachLayer((layer) => {
       if (
         layer instanceof L.Circle &&
@@ -109,7 +160,6 @@ export class LeafletService extends MapService {
       }
     });
 
-    // Add new marker at the new location
     L.circle([coordinate.latitude, coordinate.longitude], {
       className: 'user-location-marker',
       color: 'blue',

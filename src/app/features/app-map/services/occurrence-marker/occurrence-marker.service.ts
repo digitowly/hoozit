@@ -1,118 +1,255 @@
-import { inject, Injectable } from '@angular/core';
-import { GbifOccurrenceService } from '../../../../services/gbif/gbif-occurrence/gbif-occurrence.service';
+import { inject, Injectable, signal } from '@angular/core';
 import { SearchResultSelectionService } from '../../../search/services/search-result-selection/search-result-selection.service';
-import { filter, finalize, from, map, mergeMap, of, tap } from 'rxjs';
+import {
+  filter,
+  finalize,
+  from,
+  map,
+  mergeMap,
+  Observable,
+  of,
+  tap,
+} from 'rxjs';
 import { Coordinate } from '../../../../model/coordinate';
 import { MapMarker, MapService } from '../../../../services/map/map-service';
-import { GbifOccurrence } from '../../../../services/gbif/gbif-occurrence/gbif-occurrence.model';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
 import { GeoHelper } from '../../../../utils/geo/geo-helper';
+import { OccurrenceSearchService } from '../../../../services/occurrence/occurrence-search/occurrence-search.service';
+import {
+  OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL,
+  largerOccurrenceSearchRadiusLevel,
+  occurrenceSearchRadiusMetersForLevel,
+  OccurrenceSearchRadiusLevel,
+  OccurrenceSearchResult,
+} from '../../../../services/occurrence/occurrence-search/occurrence-search.model';
 
-type MapMarkerData = {
-  timestamp: number;
-  marker: MapMarker;
-};
+interface CreateMarkersOptions {
+  force?: boolean;
+  radiusLevel?: OccurrenceSearchRadiusLevel;
+}
+
+interface MarkerSearchContext {
+  location: Coordinate;
+  selections: AnimalSearchResult[];
+  radiusLevel: OccurrenceSearchRadiusLevel;
+  locationChanged: boolean;
+  radiusLevelChanged: boolean;
+  cacheKey: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class OccurrenceMarkerService {
-  private gbifService = inject(GbifOccurrenceService);
+  private occurrenceSearch = inject(OccurrenceSearchService);
   private selectionsService = inject(SearchResultSelectionService);
   private lastSearchCoordinate: Coordinate | null = null;
+  private lastRadiusLevel: OccurrenceSearchRadiusLevel | null = null;
   private lastSelections: AnimalSearchResult[] = [];
 
-  markersStore = new Map<number, MapMarkerData[]>();
+  private readonly markersStore = new Map<string, MapMarker[]>();
+
+  readonly activeRadiusLevel = signal<OccurrenceSearchRadiusLevel>(
+    OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL,
+  );
+  readonly lastLoadFailed = signal(false);
 
   createMarkers(
     mapService: MapService,
     location: Coordinate,
     onCreate: (marker: MapMarker) => void,
-  ) {
-    const currentCoordinate = location;
+    options?: CreateMarkersOptions,
+  ): Observable<MapMarker> {
+    const search = this.createSearchContext(location, options);
 
-    if (
-      !this.hasLocationChangedSignificantly(currentCoordinate) &&
-      this.selectionsService.hasIdenticalSelections(this.lastSelections)
-    ) {
+    if (this.canKeepCurrentMarkers(search, options)) {
       return of();
     }
 
-    this.lastSelections = this.selectionsService.selections();
-
-    if (this.hasLocationChangedSignificantly(currentCoordinate)) {
-      this.lastSearchCoordinate = currentCoordinate;
-    }
-
+    this.rememberSelections(search.selections);
+    this.rememberSearchArea(search);
     mapService.removeMarkers();
 
-    return of(this.selectionsService.selections()).pipe(
-      mergeMap((selections) => from(selections)),
+    if (search.selections.length === 0) {
+      return this.finishWithoutMarkers(mapService, search.location);
+    }
 
-      mergeMap((selection) => {
-        const storedMarkers = this.getStoredMarkers(selection.id);
+    const storedMarkers = this.cachedMarkers(search.cacheKey, options);
+    if (storedMarkers) {
+      return this.renderCachedMarkers(
+        storedMarkers,
+        mapService,
+        search.location,
+        onCreate,
+      );
+    }
 
-        const shouldReturnStoredMarkers =
-          storedMarkers.length > 0 &&
-          !this.hasLocationChangedSignificantly(currentCoordinate);
+    return this.fetchMarkers(search, mapService, onCreate);
+  }
 
-        if (shouldReturnStoredMarkers) {
-          return from(storedMarkers).pipe(tap((marker) => onCreate(marker)));
-        }
+  private createSearchContext(
+    location: Coordinate,
+    options?: CreateMarkersOptions,
+  ): MarkerSearchContext {
+    const requestedRadiusLevel =
+      options?.radiusLevel ?? OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL;
+    const locationChanged = this.hasLocationChangedSignificantly(
+      location,
+      this.lastRadiusLevel ?? requestedRadiusLevel,
+    );
+    const radiusLevel = this.resolveRadiusLevel(
+      requestedRadiusLevel,
+      locationChanged,
+    );
+    const selections = this.selectionsService.selections();
 
-        return this.gbifService.search(selection.gbif_key, location).pipe(
-          filter((response) => !!response),
-          mergeMap((response) => response.results),
-          map((occurrence) => this.createMapMarkerData(occurrence, selection)),
-          tap((marker) => this.storeMarker(selection.id, marker)),
-          tap((marker) => onCreate(marker)),
-        );
-      }),
+    this.activeRadiusLevel.set(radiusLevel);
 
+    return {
+      location,
+      selections,
+      radiusLevel,
+      locationChanged,
+      radiusLevelChanged: this.lastRadiusLevel !== radiusLevel,
+      cacheKey: this.markerCacheKey(selections, radiusLevel),
+    };
+  }
+
+  private canKeepCurrentMarkers(
+    search: MarkerSearchContext,
+    options?: CreateMarkersOptions,
+  ) {
+    return (
+      !options?.force &&
+      !search.locationChanged &&
+      !search.radiusLevelChanged &&
+      this.selectionsService.hasIdenticalSelections(this.lastSelections)
+    );
+  }
+
+  private rememberSelections(selections: AnimalSearchResult[]) {
+    this.lastSelections = selections;
+  }
+
+  private rememberSearchArea(search: MarkerSearchContext) {
+    if (!search.locationChanged && !search.radiusLevelChanged) return;
+
+    this.lastSearchCoordinate = search.location;
+    this.lastRadiusLevel = search.radiusLevel;
+    this.markersStore.clear();
+  }
+
+  private finishWithoutMarkers(mapService: MapService, location: Coordinate) {
+    this.lastLoadFailed.set(false);
+    mapService.repaintUserMarker(location);
+    return of();
+  }
+
+  private cachedMarkers(key: string, options?: CreateMarkersOptions) {
+    return !options?.force ? this.markersStore.get(key) : undefined;
+  }
+
+  private renderCachedMarkers(
+    markers: MapMarker[],
+    mapService: MapService,
+    location: Coordinate,
+    onCreate: (marker: MapMarker) => void,
+  ) {
+    this.lastLoadFailed.set(false);
+    return from(markers).pipe(
+      tap((marker) => onCreate(marker)),
       finalize(() => mapService.repaintUserMarker(location)),
     );
   }
 
+  private fetchMarkers(
+    search: MarkerSearchContext,
+    mapService: MapService,
+    onCreate: (marker: MapMarker) => void,
+  ) {
+    let failed = false;
+
+    return this.occurrenceSearch
+      .search(
+        search.location,
+        search.selections.map((selection) => selection.taxonKey),
+        search.radiusLevel,
+      )
+      .pipe(
+        tap((response) => (failed = response === null)),
+        filter(
+          (response): response is NonNullable<typeof response> =>
+            response !== null,
+        ),
+        mergeMap((response) => from(response.results)),
+        map((occurrence) =>
+          this.createMapMarkerData(occurrence, search.selections),
+        ),
+        tap((marker) => this.storeMarker(search.cacheKey, marker)),
+        tap((marker) => onCreate(marker)),
+        finalize(() => {
+          this.lastLoadFailed.set(failed);
+          mapService.repaintUserMarker(search.location);
+        }),
+      );
+  }
+
   private createMapMarkerData(
-    occurrence: GbifOccurrence,
-    selection: AnimalSearchResult,
+    occurrence: OccurrenceSearchResult,
+    selections: AnimalSearchResult[],
   ): MapMarker {
     return {
       coordinate: {
-        latitude: occurrence.decimalLatitude,
-        longitude: occurrence.decimalLongitude,
+        latitude: occurrence.location.latitude,
+        longitude: occurrence.location.longitude,
       },
-      icon: selection.thumbnail ?? '',
+      icon: selections.length === 1 ? (selections[0].thumbnail ?? '') : '',
       content: {
-        title: selection.name,
-        scientificName: selection.binomial_name,
-        loyalty: occurrence.locality,
-        date: occurrence.eventDate,
-        institutionCode: occurrence.institutionCode,
+        title: occurrence.name.display,
+        scientificName: occurrence.name.scientific,
+        source: occurrence.source,
+        author: occurrence.author?.nickname,
+        date: occurrence.observed_at,
       },
     };
   }
 
-  private hasLocationChangedSignificantly(currentCoordinate: Coordinate) {
+  private hasLocationChangedSignificantly(
+    currentCoordinate: Coordinate,
+    radiusLevel: OccurrenceSearchRadiusLevel,
+  ) {
+    const cacheThresholdKm =
+      occurrenceSearchRadiusMetersForLevel(radiusLevel) / 2 / 1_000;
     return (
       !this.lastSearchCoordinate ||
       GeoHelper.getDistance(currentCoordinate, this.lastSearchCoordinate) >=
-        this.gbifService.CACHE_THRESHOLD_KM
+        cacheThresholdKm
     );
   }
 
-  private getStoredMarkers(key: number): MapMarker[] {
-    const storedData = sessionStorage.getItem(key.toString());
-    if (storedData) {
-      const data: MapMarkerData[] = JSON.parse(storedData);
-      return data.map(({ marker }) => marker);
+  private resolveRadiusLevel(
+    requestedRadiusLevel: OccurrenceSearchRadiusLevel,
+    locationChanged: boolean,
+  ): OccurrenceSearchRadiusLevel {
+    if (!locationChanged && this.lastRadiusLevel !== null) {
+      return largerOccurrenceSearchRadiusLevel(
+        requestedRadiusLevel,
+        this.lastRadiusLevel,
+      );
     }
-
-    const data = this.markersStore.get(key) || [];
-    return data.map(({ marker }) => marker);
+    return requestedRadiusLevel;
   }
 
-  private storeMarker(key: number, marker: MapMarker) {
-    const data = this.markersStore.get(key) || [];
-    this.markersStore.set(key, [...data, { timestamp: Date.now(), marker }]);
-    sessionStorage.setItem(key.toString(), JSON.stringify(data));
+  private markerCacheKey(
+    selections: AnimalSearchResult[],
+    radiusLevel: OccurrenceSearchRadiusLevel,
+  ): string {
+    const taxonKeys = selections
+      .map((selection) => selection.taxonKey)
+      .sort()
+      .join(',');
+    return `${radiusLevel}:${taxonKeys}`;
+  }
+
+  private storeMarker(key: string, marker: MapMarker) {
+    this.markersStore.set(key, [...(this.markersStore.get(key) ?? []), marker]);
   }
 }

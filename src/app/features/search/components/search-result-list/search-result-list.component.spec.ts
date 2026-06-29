@@ -62,7 +62,7 @@ describe('SearchResultListComponent', () => {
       name: 'Fox',
       binomial_name: 'Vulpes vulpes',
       thumbnail: 'fox.jpg',
-      gbif_key: '1234',
+      taxonKey: '1234',
     };
 
     component.handleItemSelection(mockResult);
@@ -77,7 +77,7 @@ describe('SearchResultListComponent', () => {
       name: 'Wolf',
       binomial_name: 'Canis lupus',
       thumbnail: 'wolf.jpg',
-      gbif_key: '5678',
+      taxonKey: '5678',
     };
 
     component.onItemSelect.subscribe(() => {
@@ -114,7 +114,7 @@ describe('SearchResultListComponent', () => {
           name: `Animal ${i + 1}`,
           binomial_name: 'X y',
           thumbnail: 't.jpg',
-          gbif_key: String(i + 1),
+          taxonKey: String(i + 1),
         }),
       );
       fixture.componentRef.setInput('list', items);
@@ -133,7 +133,7 @@ describe('SearchResultListComponent', () => {
           name: `Animal ${i + 1}`,
           binomial_name: 'X y',
           thumbnail: 't.jpg',
-          gbif_key: String(i + 1),
+          taxonKey: String(i + 1),
         }),
       );
       fixture.componentRef.setInput('list', items);

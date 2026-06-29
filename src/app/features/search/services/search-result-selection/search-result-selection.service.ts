@@ -55,10 +55,23 @@ export class SearchResultSelectionService {
   }
 
   private getSelections(): SearchResultSelection[] | null {
-    return this.clientStorage.get(ClientStorageKey.SEARCH_SELECTIONS);
+    const selections = this.clientStorage.get<StoredSearchResultSelection[]>(
+      ClientStorageKey.SEARCH_SELECTIONS,
+    );
+    if (!selections) return null;
+
+    return selections.flatMap(({ gbif_key, taxonKey, ...selection }) => {
+      const key = taxonKey ?? gbif_key;
+      return key ? [{ ...selection, taxonKey: key }] : [];
+    });
   }
 
   private isSelected(selection: SearchResultSelection): boolean {
     return this.selections().some(({ id }) => id === selection.id);
   }
 }
+
+type StoredSearchResultSelection = Omit<SearchResultSelection, 'taxonKey'> & {
+  taxonKey?: string;
+  gbif_key?: string;
+};
