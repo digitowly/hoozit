@@ -5,7 +5,6 @@ import { MapCamera, MapService } from '../../../../services/map/map-service';
 import { ScoutLensService } from '../scout-lens/scout-lens.service';
 import { OccurrenceMarkerService } from '../occurrence-marker/occurrence-marker.service';
 import {
-  largerOccurrenceSearchRadiusLevel,
   OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL,
   occurrenceSearchRadiusLevelForZoom,
   occurrenceSearchRadiusMetersForLevel,
@@ -40,6 +39,9 @@ export class ScoutSearchStateService {
   readonly phase = this.scoutLens.phase;
   readonly isLoading = signal(false);
   readonly committedCoordinate = signal<Coordinate | null>(null);
+  private readonly committedRadiusLevel = signal<OccurrenceSearchRadiusLevel>(
+    OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL,
+  );
 
   private readonly pendingCoordinate = signal<Coordinate | null>(null);
   private readonly pendingSurface = signal<PendingSearchSurface | null>(null);
@@ -51,11 +53,10 @@ export class ScoutSearchStateService {
       : OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL;
   });
 
-  readonly searchRadiusLevel = computed(() =>
-    largerOccurrenceSearchRadiusLevel(
-      this.requestedRadiusLevel(),
-      this.markerService.activeRadiusLevel(),
-    ),
+  readonly activeLensRadiusLevel = computed(() =>
+    this.committedCoordinate()
+      ? this.committedRadiusLevel()
+      : this.requestedRadiusLevel(),
   );
 
   readonly activeLens = computed<ScoutLensCircle>(() => {
@@ -67,7 +68,7 @@ export class ScoutSearchStateService {
         this.committedCoordinate() ?? this.initialSearchTargetCoordinate(),
         camera,
       ),
-      radius: this.radiusPixels(this.searchRadiusLevel()),
+      radius: this.radiusPixels(this.activeLensRadiusLevel()),
       loading: this.isLoading() && !this.isGhostLoading(),
       failed: this.markerService.lastLoadFailed(),
     };
@@ -97,6 +98,10 @@ export class ScoutSearchStateService {
 
   readonly isGhostLoading = computed(
     () => this.isLoading() && this.pendingGhostCoordinate() !== null,
+  );
+
+  readonly isZooming = computed(
+    () => this.mapService.camera()?.isZooming ?? false,
   );
 
   updateLensPhase() {
@@ -150,6 +155,7 @@ export class ScoutSearchStateService {
   }
 
   completeSearch(coordinate: Coordinate) {
+    this.committedRadiusLevel.set(this.markerService.activeRadiusLevel());
     this.committedCoordinate.set(coordinate);
     this.clearPendingSearch();
   }

@@ -41,6 +41,7 @@ export class ScoutLensComponent {
   });
   readonly ghostLens = input<ScoutLensCircle | null>(null);
   readonly userIndicator = input<ScoutLensPoint | null>(null);
+  readonly zooming = input(false);
   readonly searchHere = output<void>();
   readonly retry = output<void>();
 

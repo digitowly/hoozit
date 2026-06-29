@@ -18,6 +18,7 @@ export interface MapCamera {
   zoom: number;
   width: number;
   height: number;
+  isZooming?: boolean;
 }
 
 export abstract class MapService {
