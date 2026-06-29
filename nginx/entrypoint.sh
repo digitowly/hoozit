@@ -19,7 +19,7 @@ EOF
 
   echo "Enabled Nginx basic auth for user '$AUTH_USERNAME'."
 else
-  rm -f "$HTPASSWD_PATH"
+  : > "$HTPASSWD_PATH"
   : > "$AUTH_CONF_PATH"
 
   echo "NGINX basic auth disabled: NGINX_BASIC_AUTH_PASSWORD is not set."
