@@ -7,7 +7,7 @@ import {
   untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject, Subscription, debounceTime } from 'rxjs';
 import { UserLocationService } from '../../services/user/user-location/user-location.service';
 import { MapService, MapMarker } from '../../services/map/map-service';
 import { LeafletService } from '../../services/map/leaflet/leaflet.service';
@@ -69,6 +69,8 @@ export class AppMapComponent {
 
   private hasInitialCenter = signal(false);
   private readonly settle$ = new Subject<void>();
+  private activeSearchId = 0;
+  private activeSearchSubscription: Subscription | null = null;
 
   constructor() {
     this.userLocation.getLocation();
@@ -182,23 +184,48 @@ export class AppMapComponent {
     coordinate = this.scoutSearch.searchHereCoordinate(),
     surface: PendingSearchSurface = 'active',
   ) {
+    this.cancelActiveSearch();
+
     if (this.scoutSearch.isZoomedOut()) {
       this.scoutSearch.clearPendingSearch();
       return;
     }
 
+    const searchId = ++this.activeSearchId;
     this.scoutSearch.beginSearch(coordinate, surface);
-    this.markerService
+    this.activeSearchSubscription = this.markerService
       .createMarkers(
         this.mapService,
         coordinate,
-        (marker) => this.showMarker(marker),
+        (marker) => {
+          if (this.isActiveSearch(searchId)) this.showMarker(marker);
+        },
         { force, radiusLevel: this.scoutSearch.requestedRadiusLevel() },
       )
       .subscribe({
-        complete: () => this.scoutSearch.completeSearch(coordinate),
-        error: () => this.scoutSearch.clearPendingSearch(),
+        complete: () => {
+          if (this.isActiveSearch(searchId)) {
+            this.scoutSearch.completeSearch(coordinate);
+          }
+        },
+        error: () => {
+          if (this.isActiveSearch(searchId)) {
+            this.scoutSearch.clearPendingSearch();
+          }
+        },
       });
+  }
+
+  private cancelActiveSearch() {
+    if (this.activeSearchSubscription && !this.activeSearchSubscription.closed) {
+      this.activeSearchSubscription.unsubscribe();
+      this.activeSearchId++;
+    }
+    this.activeSearchSubscription = null;
+  }
+
+  private isActiveSearch(searchId: number) {
+    return this.activeSearchId === searchId;
   }
 
   private showMarker(marker: MapMarker) {
