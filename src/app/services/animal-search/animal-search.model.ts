@@ -3,9 +3,13 @@ export interface AnimalSearchResult {
   name: string;
   binomial_name: string;
   thumbnail: string;
-  gbif_key: string;
+  taxonKey: string;
 }
 
 export interface AnimalSearchResponse {
   data: AnimalSearchResult[];
+}
+
+export interface AnimalSearchApiResponse {
+  data: Array<Omit<AnimalSearchResult, 'taxonKey'> & { gbif_key: string }>;
 }

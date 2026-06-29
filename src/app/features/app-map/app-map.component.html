@@ -1,4 +1,12 @@
 <div id="map"></div>
+<scout-lens
+  [phase]="scoutSearch.phase()"
+  [activeLens]="scoutSearch.activeLens()"
+  [ghostLens]="scoutSearch.ghostLens()"
+  [userIndicator]="scoutSearch.userIndicator()"
+  (searchHere)="searchHere()"
+  (retry)="retryLoadOccurrences()"
+/>
 @if (!isAnyModalOpen()) {
   <div class="map-fab-group">
     <button class="map-fab-group__btn" (click)="openLogOccurrenceModal()">

@@ -65,7 +65,7 @@ describe('OccurrenceSearchComponent', () => {
       name: 'Fox',
       binomial_name: 'Vulpes vulpes',
       thumbnail: 't.jpg',
-      gbif_key: '1',
+      taxonKey: '1',
     });
 
     expect(called).toBe(1);
@@ -78,14 +78,14 @@ describe('OccurrenceSearchComponent', () => {
         name: 'Fox',
         binomial_name: 'Vulpes vulpes',
         thumbnail: 't.jpg',
-        gbif_key: '1',
+        taxonKey: '1',
       },
       {
         id: 2,
         name: 'Owl',
         binomial_name: 'Strix aluco',
         thumbnail: 't2.jpg',
-        gbif_key: '2',
+        taxonKey: '2',
       },
     ];
 

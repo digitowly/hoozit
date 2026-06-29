@@ -14,7 +14,7 @@ describe('SearchResultSelectionService', () => {
 
   const mockSelection = {
     binomial_name: 'test',
-    gbif_key: '123',
+    taxonKey: '123',
     id: 12,
     name: 'test-name',
     thumbnail: '',
@@ -22,7 +22,7 @@ describe('SearchResultSelectionService', () => {
 
   const mockSelection2 = {
     binomial_name: 'test-2',
-    gbif_key: '456',
+    taxonKey: '456',
     id: 45,
     name: 'test-2-name',
     thumbnail: '',
@@ -77,5 +77,13 @@ describe('SearchResultSelectionService', () => {
     expect(result1).toBeTruthy();
     expect(result2).toBeFalsy();
     expect(result3).toBeFalsy();
+  });
+
+  it('migrates persisted selections to the generic taxon key', () => {
+    mockClientStorageService.get.mockReturnValueOnce([
+      { ...mockSelection, taxonKey: undefined, gbif_key: '123' },
+    ]);
+
+    expect((service as any).getSelections()).toEqual([mockSelection]);
   });
 });
