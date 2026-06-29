@@ -6,6 +6,7 @@
     [class.scout-lens--gliding]="gliding()"
     [class.scout-lens--loading]="activeLens().loading"
     [class.scout-lens--failed]="showFailure()"
+    [class.scout-lens--zooming]="zooming()"
     [style.left.px]="activeLens().x"
     [style.top.px]="activeLens().y"
     [style.width.px]="activeLens().radius * 2"
@@ -20,6 +21,7 @@
     <div
       class="scout-lens scout-lens--ghost"
       [class.scout-lens--loading]="ghost.loading"
+      [class.scout-lens--zooming]="zooming()"
       [style.left.px]="ghost.x"
       [style.top.px]="ghost.y"
       [style.width.px]="ghost.radius * 2"

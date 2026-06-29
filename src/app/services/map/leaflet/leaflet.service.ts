@@ -9,6 +9,7 @@ const MIN_ZOOM = 8;
 export class LeafletService extends MapService {
   private map: L.Map | null = null;
   private settleCallbacks: (() => void)[] = [];
+  private isZooming = false;
   override selectedMarker = signal<MapMarker | null>(null);
   override readonly camera = signal<MapCamera | null>(null);
 
@@ -28,8 +29,13 @@ export class LeafletService extends MapService {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.map);
 
+    this.map.on('zoomstart', () => {
+      this.isZooming = true;
+      this.publishCamera();
+    });
     this.map.on('move zoom resize', () => this.publishCamera());
     this.map.on('moveend zoomend', () => {
+      this.isZooming = false;
       this.publishCamera();
       this.settleCallbacks.forEach((callback) => callback());
     });
@@ -67,6 +73,7 @@ export class LeafletService extends MapService {
       zoom: this.map.getZoom(),
       width: size.x,
       height: size.y,
+      isZooming: this.isZooming,
     });
   }
 
