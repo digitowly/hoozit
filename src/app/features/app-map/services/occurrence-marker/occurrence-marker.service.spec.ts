@@ -118,6 +118,67 @@ describe('OccurrenceMarkerService', () => {
     expect(service.activeRadiusLevel()).toBe(5);
   });
 
+  it('repaints the user marker when reusing occurrence markers', async () => {
+    const location: Coordinate = { latitude: 42.7128, longitude: -64.006 };
+    const nextLocation: Coordinate = { latitude: 42.713, longitude: -64.006 };
+
+    await firstValueFrom(
+      service.createMarkers(mockMapService, location, vi.fn(), {
+        radiusLevel: 3,
+      }),
+    );
+    vi.mocked(mockMapService.repaintUserMarker).mockClear();
+    hasIdenticalSelections.mockReturnValue(true);
+
+    await firstValueFrom(
+      service.createMarkers(mockMapService, nextLocation, vi.fn(), {
+        radiusLevel: 3,
+      }),
+      { defaultValue: undefined },
+    );
+
+    expect(search).toHaveBeenCalledTimes(1);
+    expect(mockMapService.removeMarkers).toHaveBeenCalledTimes(1);
+    expect(mockMapService.repaintUserMarker).toHaveBeenCalledWith(nextLocation);
+  });
+
+  it('replaces cached markers when forcing a refetch for the same search', async () => {
+    const location: Coordinate = { latitude: 42.7128, longitude: -64.006 };
+    const renderedMarkers: MapMarker[] = [];
+
+    search
+      .mockReturnValueOnce(of(responseWithOccurrence('stale species')))
+      .mockReturnValueOnce(of(responseWithOccurrence('fresh species')));
+
+    await firstValueFrom(
+      service.createMarkers(mockMapService, location, vi.fn(), {
+        radiusLevel: 3,
+      }),
+    );
+    await firstValueFrom(
+      service.createMarkers(mockMapService, location, vi.fn(), {
+        force: true,
+        radiusLevel: 3,
+      }),
+    );
+
+    hasIdenticalSelections.mockReturnValue(false);
+
+    await firstValueFrom(
+      service.createMarkers(
+        mockMapService,
+        location,
+        (marker) => renderedMarkers.push(marker),
+        { radiusLevel: 3 },
+      ),
+    );
+
+    expect(search).toHaveBeenCalledTimes(2);
+    expect(renderedMarkers.map((marker) => marker.content.title)).toEqual([
+      'fresh species',
+    ]);
+  });
+
   it('updates the active radius only after Scout responds', () => {
     const response = new Subject<OccurrenceSearchResponse | null>();
     search.mockReturnValue(response);
@@ -181,3 +242,18 @@ const mockOccurrenceResponse: OccurrenceSearchResponse = {
     },
   ],
 };
+
+function responseWithOccurrence(displayName: string): OccurrenceSearchResponse {
+  return {
+    ...mockOccurrenceResponse,
+    results: [
+      {
+        ...mockOccurrenceResponse.results[0],
+        name: {
+          ...mockOccurrenceResponse.results[0].name,
+          display: displayName,
+        },
+      },
+    ],
+  };
+}
