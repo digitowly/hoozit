@@ -51,7 +51,20 @@ describe('UserDataService', () => {
     expect(service.profileResource.isLoading()).toBe(false);
   });
 
-  it('should return null on error', async () => {
+  it('should return null when profile loading is unauthorized', async () => {
+    const httpTesting = TestBed.inject(HttpTestingController);
+
+    TestBed.tick();
+    httpTesting
+      .expectOne((req) => req.url.includes('/user'))
+      .flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
+    await new Promise((resolve) => setTimeout(resolve));
+    TestBed.tick();
+
+    expect(service.profileResource.value()).toBe(null);
+  });
+
+  it('should preserve the error state when profile loading fails', async () => {
     const httpTesting = TestBed.inject(HttpTestingController);
 
     TestBed.tick();
@@ -61,12 +74,14 @@ describe('UserDataService', () => {
     await new Promise((resolve) => setTimeout(resolve));
     TestBed.tick();
 
-    expect(service.profileResource.value()).toBe(null);
+    expect(service.profileResource.error()).toBeTruthy();
   });
 
   it('should logout the user', async () => {
+    const reload = vi.spyOn(service.profileResource, 'reload');
     (fetch as any).mockResolvedValue({
       ok: true,
+      status: 200,
       json: async () => ({}),
     } as Response);
 
@@ -76,5 +91,32 @@ describe('UserDataService', () => {
       expect.stringContaining('/logout'),
       expect.any(Object),
     );
+    expect(reload).toHaveBeenCalledOnce();
+  });
+
+  it('should reload the user profile when logout returns unauthorized', async () => {
+    const reload = vi.spyOn(service.profileResource, 'reload');
+    (fetch as any).mockResolvedValue({
+      ok: false,
+      status: 401,
+      json: async () => ({}),
+    } as Response);
+
+    await service.logout();
+
+    expect(reload).toHaveBeenCalledOnce();
+  });
+
+  it('should not reload the user profile when logout fails', async () => {
+    const reload = vi.spyOn(service.profileResource, 'reload');
+    (fetch as any).mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: async () => ({}),
+    } as Response);
+
+    await expect(service.logout()).rejects.toThrow('Logout failed');
+
+    expect(reload).not.toHaveBeenCalled();
   });
 });
