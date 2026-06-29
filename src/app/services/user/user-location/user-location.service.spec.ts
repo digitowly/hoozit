@@ -51,6 +51,7 @@ describe('UserLocationService', () => {
       latitude: 12.34,
       longitude: 56.78,
     });
+    expect(service.hasResolved()).toBe(true);
     expect(service.isValid()).toBe(true);
   });
 
@@ -63,8 +64,7 @@ describe('UserLocationService', () => {
 
     service.getLocation();
 
-    // isValid is true if (initialized && !hasError)
-    // Here initialized=true, but hasError=true -> result false
+    expect(service.hasResolved()).toBe(true);
     expect(service.isValid()).toBe(false);
   });
 

@@ -11,16 +11,16 @@
         <em class="detail-value">{{ name }}</em>
       </div>
     }
-    @if (marker()?.content?.institutionCode; as code) {
+    @if (marker()?.content?.author; as author) {
       <div class="detail-item">
-        <span class="detail-label">Institution</span>
-        <span class="detail-value">{{ code }}</span>
+        <span class="detail-label">Reported by</span>
+        <span class="detail-value">{{ author }}</span>
       </div>
     }
-    @if (marker()?.content?.loyalty; as loyalty) {
+    @if (marker()?.content?.source; as source) {
       <div class="detail-item">
-        <span class="detail-label">Basis</span>
-        <span class="detail-value">{{ loyalty }}</span>
+        <span class="detail-label">Source</span>
+        <span class="detail-value">{{ source }}</span>
       </div>
     }
     @if (marker()?.content?.date; as date) {

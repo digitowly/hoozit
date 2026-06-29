@@ -1,5 +1,8 @@
 import { Injectable, resource, signal } from '@angular/core';
-import { AnimalSearchResponse } from './animal-search.model';
+import {
+  AnimalSearchApiResponse,
+  AnimalSearchResponse,
+} from './animal-search.model';
 import { environment } from '../../../environments/environment';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
@@ -41,7 +44,13 @@ export class AnimalSearchService {
         headers: { 'Content-Type': 'application/json' },
       });
       this.isNotAvailable.set(false);
-      return await response.json();
+      const payload = (await response.json()) as AnimalSearchApiResponse;
+      return {
+        data: payload.data.map(({ gbif_key, ...animal }) => ({
+          ...animal,
+          taxonKey: gbif_key,
+        })),
+      };
     } catch {
       this.isNotAvailable.set(true);
       return null;
