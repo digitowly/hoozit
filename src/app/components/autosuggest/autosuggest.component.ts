@@ -11,8 +11,8 @@ import {
 import { Listbox, Option } from '@angular/aria/listbox';
 import {
   Combobox,
-  ComboboxInput,
-  ComboboxPopupContainer,
+  ComboboxPopup,
+  ComboboxWidget,
 } from '@angular/aria/combobox';
 import { FormsModule } from '@angular/forms';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
@@ -26,8 +26,8 @@ import { IconComponent } from '../icon/icon.component';
     CdkConnectedOverlay,
     Option,
     Combobox,
-    ComboboxInput,
-    ComboboxPopupContainer,
+    ComboboxPopup,
+    ComboboxWidget,
     Listbox,
     IconComponent,
   ],
@@ -39,7 +39,7 @@ export class AutosuggestComponent {
 
   readonly options = viewChildren<Option<string>>(Option);
 
-  readonly combobox = viewChild<Combobox<string>>(Combobox);
+  readonly combobox = viewChild<Combobox>(Combobox);
 
   readonly placeholder = input('');
 
