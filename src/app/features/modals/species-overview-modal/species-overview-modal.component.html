@@ -5,11 +5,13 @@
   [heroImage]="heroImage"
   (handleClose)="handleClose.emit()"
 >
-  @for (paragraph of introduction()?.content?.paragraphs; track paragraph) {
-    <p>{{ paragraph }}</p>
-  }
+  @if (introduction(); as speciesIntroduction) {
+    @for (paragraph of speciesIntroduction.content.paragraphs; track paragraph) {
+      <p>{{ paragraph }}</p>
+    }
 
-  @for (source of introduction()?.content?.sources; track source.url) {
-    <source-link [url]="source.url" [label]="source.name" />
+    @for (source of speciesIntroduction.content.sources; track source.url) {
+      <source-link [url]="source.url" [label]="source.name" />
+    }
   }
 </app-modal>
