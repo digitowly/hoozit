@@ -205,20 +205,37 @@ export class OccurrenceMarkerService {
     occurrence: OccurrenceSearchResult,
     selections: AnimalSearchResult[],
   ): MapMarker {
+    const selection = this.findSelectionForOccurrence(occurrence, selections);
+
     return {
       coordinate: {
         latitude: occurrence.location.latitude,
         longitude: occurrence.location.longitude,
       },
-      icon: selections.length === 1 ? (selections[0].thumbnail ?? '') : '',
+      icon: selection?.thumbnail ?? '',
       content: {
-        title: occurrence.name.display,
+        title: selection?.name ?? occurrence.name.display,
         scientificName: occurrence.name.scientific,
         source: occurrence.source,
         author: occurrence.author?.nickname,
         date: occurrence.observed_at,
       },
     };
+  }
+
+  private findSelectionForOccurrence(
+    occurrence: OccurrenceSearchResult,
+    selections: AnimalSearchResult[],
+  ): AnimalSearchResult | null {
+    if (!occurrence.taxon_key) {
+      return null;
+    }
+
+    const taxonMatch = selections.find(
+      (selection) => selection.taxonKey === occurrence.taxon_key,
+    );
+
+    return taxonMatch ?? null;
   }
 
   private hasLocationChangedSignificantly(
