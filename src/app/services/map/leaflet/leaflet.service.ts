@@ -94,27 +94,34 @@ export class LeafletService extends MapService {
       return;
     }
 
-    const leafletMarker = L.marker([
-      marker.coordinate.latitude,
-      marker.coordinate.longitude,
-    ]).addTo(this.map);
-
-    if (marker.icon) {
-      leafletMarker.setIcon(
-        L.icon({
-          className: 'marker-icon',
-          iconUrl: marker.icon,
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          shadowSize: [41, 41],
-        }),
-      );
-    }
+    const leafletMarker = L.marker(
+      [marker.coordinate.latitude, marker.coordinate.longitude],
+      { icon: this.createMarkerIcon(marker.icon) },
+    ).addTo(this.map);
 
     leafletMarker.on('click', () => {
       this.onMarkerClick(marker);
       onTap(marker);
+    });
+  }
+
+  private createMarkerIcon(iconUrl: string): L.Icon | L.DivIcon {
+    if (!iconUrl) {
+      return L.divIcon({
+        className: 'default-marker-icon',
+        iconSize: [26, 26],
+        iconAnchor: [13, 26],
+        popupAnchor: [0, -26],
+      });
+    }
+
+    return L.icon({
+      className: 'marker-icon',
+      iconUrl,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41],
     });
   }
 

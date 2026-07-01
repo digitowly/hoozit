@@ -79,6 +79,32 @@ describe('OccurrenceMarkerService', () => {
     });
   });
 
+  it('uses the matching selected thumbnail for multi-species markers', async () => {
+    const markers: MapMarker[] = [];
+    search.mockReturnValue(
+      of(
+        responseWithOccurrence('Second Animal', {
+          taxon_key: '456',
+          name: {
+            display: 'Second Animal',
+            scientific: 'Second Name',
+          },
+        }),
+      ),
+    );
+
+    await firstValueFrom(
+      service.createMarkers(
+        mockMapService,
+        { latitude: 42.7128, longitude: -64.006 },
+        (marker) => markers.push(marker),
+        { radiusLevel: 5 },
+      ),
+    );
+
+    expect(markers[0].icon).toBe('second-thumbnail.jpg');
+  });
+
   it('marks the load as failed when Scout is unavailable', async () => {
     search.mockReturnValue(of(null));
 
@@ -209,14 +235,14 @@ const mockSelections: AnimalSearchResult[] = [
     binomial_name: 'Binomial Name',
     name: 'Test Animal',
     taxonKey: '123',
-    thumbnail: '',
+    thumbnail: 'first-thumbnail.jpg',
   },
   {
     id: 456,
     binomial_name: 'Second Name',
     name: 'Second Animal',
     taxonKey: '456',
-    thumbnail: '',
+    thumbnail: 'second-thumbnail.jpg',
   },
 ];
 
@@ -243,14 +269,19 @@ const mockOccurrenceResponse: OccurrenceSearchResponse = {
   ],
 };
 
-function responseWithOccurrence(displayName: string): OccurrenceSearchResponse {
+function responseWithOccurrence(
+  displayName: string,
+  overrides: Partial<OccurrenceSearchResponse['results'][number]> = {},
+): OccurrenceSearchResponse {
   return {
     ...mockOccurrenceResponse,
     results: [
       {
         ...mockOccurrenceResponse.results[0],
+        ...overrides,
         name: {
           ...mockOccurrenceResponse.results[0].name,
+          ...overrides.name,
           display: displayName,
         },
       },
