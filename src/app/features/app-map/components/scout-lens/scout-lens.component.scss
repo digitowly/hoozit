@@ -29,14 +29,6 @@ $user-color: rgb(28, 92, 255);
       height 0.45s ease;
   }
 
-  &--zooming {
-    transition:
-      left 90ms linear,
-      top 90ms linear,
-      width 90ms linear,
-      height 90ms linear;
-  }
-
   &--loading {
     animation: scout-lens-pulse 1.4s ease-in-out infinite;
   }

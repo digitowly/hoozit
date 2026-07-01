@@ -16,6 +16,7 @@ const mockUserResponse: UserResponse = {
   role: 'novice',
   account_tier: 'free',
 };
+const profileUrl = 'http://localhost:8080/users/me/profile';
 
 describe('UserDataService', () => {
   let service: UserProfileService;
@@ -42,7 +43,7 @@ describe('UserDataService', () => {
 
     TestBed.tick();
     httpTesting
-      .expectOne((req) => req.url.includes('/user'))
+      .expectOne({ method: 'GET', url: profileUrl })
       .flush(mockUserResponse);
     await new Promise((resolve) => setTimeout(resolve));
     TestBed.tick();
@@ -56,7 +57,7 @@ describe('UserDataService', () => {
 
     TestBed.tick();
     httpTesting
-      .expectOne((req) => req.url.includes('/user'))
+      .expectOne({ method: 'GET', url: profileUrl })
       .flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
     await new Promise((resolve) => setTimeout(resolve));
     TestBed.tick();
@@ -69,7 +70,7 @@ describe('UserDataService', () => {
 
     TestBed.tick();
     httpTesting
-      .expectOne((req) => req.url.includes('/user'))
+      .expectOne({ method: 'GET', url: profileUrl })
       .flush('Error', { status: 500, statusText: 'Server Error' });
     await new Promise((resolve) => setTimeout(resolve));
     TestBed.tick();
