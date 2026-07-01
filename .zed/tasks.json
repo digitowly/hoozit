@@ -2,8 +2,8 @@
 [
   {
     "label": "Angular Vitest: current test",
-    "command": "ng",
-    "args": ["test", "--filter", "$ZED_SYMBOL", "--watch=false"],
+    "command": "pnpm",
+    "args": ["exec", "ng", "test", "--filter", "$ZED_SYMBOL", "--watch=false"],
     "cwd": "$ZED_WORKTREE_ROOT",
     "tags": ["ts-test", "tsx-test", "js-test", "jsx-test"],
     "save": "all",
