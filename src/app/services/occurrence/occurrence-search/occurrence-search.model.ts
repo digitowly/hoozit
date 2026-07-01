@@ -62,6 +62,7 @@ export interface OccurrenceSearchResponse {
 
 export interface OccurrenceSearchResult {
   id: string;
+  taxon_key?: string;
   source: string;
   name: {
     display: string;
