@@ -1,15 +1,5 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { SearchResultSelectionService } from '../../../search/services/search-result-selection/search-result-selection.service';
-import {
-  filter,
-  finalize,
-  from,
-  map,
-  mergeMap,
-  Observable,
-  of,
-  tap,
-} from 'rxjs';
 import { Coordinate } from '../../../../model/coordinate';
 import { MapMarker, MapService } from '../../../../services/map/map-service';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
@@ -20,13 +10,17 @@ import {
   largerOccurrenceSearchRadiusLevel,
   occurrenceSearchRadiusMetersForLevel,
   OccurrenceSearchRadiusLevel,
+  OccurrenceSearchResponse,
   OccurrenceSearchResult,
 } from '../../../../services/occurrence/occurrence-search/occurrence-search.model';
 
 interface CreateMarkersOptions {
   force?: boolean;
   radiusLevel?: OccurrenceSearchRadiusLevel;
+  onComplete?: () => void;
 }
+
+export type MarkerLoadState = 'complete' | 'loading';
 
 interface MarkerSearchContext {
   location: Coordinate;
@@ -35,6 +29,15 @@ interface MarkerSearchContext {
   locationChanged: boolean;
   radiusLevelChanged: boolean;
   cacheKey: string;
+}
+
+interface ActiveMarkerFetch {
+  mapService: MapService;
+  search: MarkerSearchContext;
+  onCreate: (marker: MapMarker) => void;
+  onComplete?: () => void;
+  loadingStarted: boolean;
+  markersCleared: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -46,30 +49,60 @@ export class OccurrenceMarkerService {
   private lastSelections: AnimalSearchResult[] = [];
 
   private readonly markersStore = new Map<string, MapMarker[]>();
+  private readonly activeFetch = signal<ActiveMarkerFetch | null>(null);
 
   readonly activeRadiusLevel = signal<OccurrenceSearchRadiusLevel>(
     OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL,
   );
   readonly lastLoadFailed = signal(false);
 
+  constructor() {
+    effect(() => {
+      const activeFetch = this.activeFetch();
+      if (!activeFetch) return;
+
+      const isLoading = this.occurrenceSearch.resource.isLoading();
+      if (isLoading) {
+        if (!activeFetch.loadingStarted) {
+          untracked(() =>
+            this.activeFetch.update((current) =>
+              current === activeFetch
+                ? { ...activeFetch, loadingStarted: true }
+                : current,
+            ),
+          );
+        }
+        return;
+      }
+
+      if (!activeFetch.loadingStarted) return;
+
+      const response = this.occurrenceSearch.resource.value();
+      untracked(() => this.renderFetchedMarkers(activeFetch, response));
+    });
+  }
+
   createMarkers(
     mapService: MapService,
     location: Coordinate,
     onCreate: (marker: MapMarker) => void,
     options?: CreateMarkersOptions,
-  ): Observable<MapMarker> {
+  ): MarkerLoadState {
     const search = this.createSearchContext(location, options);
 
     if (this.canKeepCurrentMarkers(search, options)) {
       mapService.repaintUserMarker(search.location);
-      return of();
+      options?.onComplete?.();
+      return 'complete';
     }
 
     this.invalidateCacheForNewSearchArea(search);
     mapService.removeMarkers();
 
     if (search.selections.length === 0) {
-      return this.finishWithoutMarkers(mapService, search);
+      this.finishWithoutMarkers(mapService, search);
+      options?.onComplete?.();
+      return 'complete';
     }
 
     const storedMarkers = this.cachedMarkers(search.cacheKey, options);
@@ -79,10 +112,16 @@ export class OccurrenceMarkerService {
         mapService,
         search,
         onCreate,
+        options?.onComplete,
       );
     }
 
-    return this.fetchMarkers(search, mapService, onCreate);
+    this.fetchMarkers(search, mapService, onCreate, options?.onComplete);
+    return 'loading';
+  }
+
+  cancelActiveFetch() {
+    this.activeFetch.set(null);
   }
 
   private createSearchContext(
@@ -142,7 +181,6 @@ export class OccurrenceMarkerService {
     this.activateSearchArea(search);
     this.lastLoadFailed.set(false);
     mapService.repaintUserMarker(search.location);
-    return of();
   }
 
   private cachedMarkers(key: string, options?: CreateMarkersOptions) {
@@ -154,51 +192,72 @@ export class OccurrenceMarkerService {
     mapService: MapService,
     search: MarkerSearchContext,
     onCreate: (marker: MapMarker) => void,
+    onComplete?: () => void,
   ) {
     this.activateSearchArea(search);
     this.lastLoadFailed.set(false);
-    return from(markers).pipe(
-      tap((marker) => onCreate(marker)),
-      finalize(() => mapService.repaintUserMarker(search.location)),
-    );
+    markers.forEach((marker) => onCreate(marker));
+    mapService.repaintUserMarker(search.location);
+    onComplete?.();
+    return 'complete' as const;
   }
 
   private fetchMarkers(
     search: MarkerSearchContext,
     mapService: MapService,
     onCreate: (marker: MapMarker) => void,
+    onComplete?: () => void,
   ) {
-    let failed = false;
+    this.activeFetch.set({
+      mapService,
+      search,
+      onCreate,
+      onComplete,
+      loadingStarted: false,
+      markersCleared: true,
+    });
 
-    return this.occurrenceSearch
-      .search(
-        search.location,
-        search.selections.map((selection) => selection.taxonKey),
-        search.radiusLevel,
-      )
-      .pipe(
-        tap((response) => {
-          failed = response === null;
-          if (response) {
-            this.activateSearchArea(search);
-            this.replaceMarkerCache(search.cacheKey);
-          }
-        }),
-        filter(
-          (response): response is NonNullable<typeof response> =>
-            response !== null,
-        ),
-        mergeMap((response) => from(response.results)),
-        map((occurrence) =>
+    this.occurrenceSearch.search(
+      search.location,
+      search.selections.map((selection) => selection.taxonKey),
+      search.radiusLevel,
+    );
+  }
+
+  private renderFetchedMarkers(
+    activeFetch: ActiveMarkerFetch,
+    response: OccurrenceSearchResponse | null,
+  ) {
+    const { mapService, search, onCreate, onComplete } = activeFetch;
+    const failed = response === null;
+
+    if (response) {
+      this.activateSearchArea(search);
+      this.replaceMarkerCache(search.cacheKey);
+      if (!activeFetch.markersCleared) mapService.removeMarkers();
+      response.results
+        .map((occurrence) =>
           this.createMapMarkerData(occurrence, search.selections),
-        ),
-        tap((marker) => this.storeMarker(search.cacheKey, marker)),
-        tap((marker) => onCreate(marker)),
-        finalize(() => {
-          this.lastLoadFailed.set(failed);
-          mapService.repaintUserMarker(search.location);
-        }),
-      );
+        )
+        .forEach((marker) => {
+          this.storeMarker(search.cacheKey, marker);
+          onCreate(marker);
+        });
+    }
+
+    this.lastLoadFailed.set(failed);
+    mapService.repaintUserMarker(search.location);
+    this.activeFetch.set(
+      activeFetch.onComplete
+        ? {
+            ...activeFetch,
+            onComplete: undefined,
+            loadingStarted: false,
+            markersCleared: false,
+          }
+        : { ...activeFetch, loadingStarted: false, markersCleared: false },
+    );
+    onComplete?.();
   }
 
   private createMapMarkerData(

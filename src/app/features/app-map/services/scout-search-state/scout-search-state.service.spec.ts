@@ -59,12 +59,8 @@ describe('ScoutSearchStateService', () => {
   it('keeps the completed lens radius separate from the ghost lens radius', () => {
     service.completeSearch({ latitude: 56, longitude: 13 });
 
-    camera.set({
-      center: { latitude: 56, longitude: 13 },
-      zoom: 11,
-      width: 500,
-      height: 500,
-    });
+    service.increaseRadius();
+    service.increaseRadius();
 
     expect(service.activeLens().radius).toBe(100);
     expect(service.ghostLens()?.radius).toBe(500);
@@ -78,5 +74,61 @@ describe('ScoutSearchStateService', () => {
     service.completeSearch({ latitude: 56, longitude: 13 });
 
     expect(service.activeLens().radius).toBe(500);
+  });
+
+  it('keeps the requested radius independent of map zoom', () => {
+    expect(service.requestedRadiusLevel()).toBe(3);
+
+    camera.set({
+      center: { latitude: 56, longitude: 13 },
+      zoom: 11,
+      width: 500,
+      height: 500,
+    });
+
+    expect(service.requestedRadiusLevel()).toBe(3);
+
+    service.increaseRadius();
+
+    expect(service.requestedRadiusLevel()).toBe(4);
+
+    camera.set({
+      center: { latitude: 56, longitude: 13 },
+      zoom: 18,
+      width: 500,
+      height: 500,
+    });
+
+    expect(service.requestedRadiusLevel()).toBe(4);
+  });
+
+  it('shows a ghost lens when the requested radius changes from the completed search radius', () => {
+    service.completeSearch({ latitude: 56, longitude: 13 });
+
+    expect(service.ghostLens()).toBeNull();
+
+    service.increaseRadius();
+
+    expect(service.ghostLens()?.radius).toBe(200);
+  });
+
+  it('keeps radius controls within the supported search levels', () => {
+    service.decreaseRadius();
+    service.decreaseRadius();
+    service.decreaseRadius();
+
+    expect(service.requestedRadiusLevel()).toBe(1);
+    expect(service.canDecreaseRadius()).toBe(false);
+    expect(service.canIncreaseRadius()).toBe(true);
+
+    service.increaseRadius();
+    service.increaseRadius();
+    service.increaseRadius();
+    service.increaseRadius();
+    service.increaseRadius();
+
+    expect(service.requestedRadiusLevel()).toBe(5);
+    expect(service.canDecreaseRadius()).toBe(true);
+    expect(service.canIncreaseRadius()).toBe(false);
   });
 });

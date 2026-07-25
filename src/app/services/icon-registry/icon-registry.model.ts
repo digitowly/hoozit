@@ -9,6 +9,8 @@ export type IconName =
   | 'chevron'
   | 'arrow-link'
   | 'plus'
+  | 'zoom-in'
+  | 'zoom-out'
   | 'add-pin'
   | 'pencil'
   | 'trash'
