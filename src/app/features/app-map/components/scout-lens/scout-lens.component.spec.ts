@@ -73,4 +73,64 @@ describe('ScoutLensComponent', () => {
       fixture.nativeElement.querySelector('.scout-lens-badge'),
     ).toBeFalsy();
   });
+
+  it('renders lens size controls near the lens and emits size changes', () => {
+    fixture.componentRef.setInput('activeLens', {
+      x: 120,
+      y: 160,
+      radius: 80,
+      loading: false,
+      failed: false,
+    });
+    fixture.componentRef.setInput('canDecreaseRadius', true);
+    fixture.componentRef.setInput('canIncreaseRadius', false);
+    fixture.detectChanges();
+
+    const decrease = vi.fn();
+    const increase = vi.fn();
+    component.decreaseRadius.subscribe(decrease);
+    component.increaseRadius.subscribe(increase);
+
+    const controls: HTMLElement | null = fixture.nativeElement.querySelector(
+      '.scout-lens-controls',
+    );
+    const buttons = fixture.nativeElement.querySelectorAll(
+      '.scout-lens-controls__btn',
+    ) as NodeListOf<HTMLButtonElement>;
+
+    expect(controls?.style.left).toBe('120px');
+    expect(controls?.style.top).toBe('256px');
+    expect(buttons).toHaveLength(2);
+    expect(buttons[0].disabled).toBe(false);
+    expect(buttons[1].disabled).toBe(true);
+
+    buttons[0].click();
+    buttons[1].click();
+
+    expect(decrease).toHaveBeenCalledOnce();
+    expect(increase).not.toHaveBeenCalled();
+  });
+
+  it('hides lens overlays while zooming the map', () => {
+    fixture.componentRef.setInput('activeLens', {
+      x: 130,
+      y: 170,
+      radius: 90,
+      loading: false,
+    });
+    fixture.componentRef.setInput('ghostLens', {
+      x: 140,
+      y: 180,
+      radius: 100,
+      loading: false,
+    });
+    fixture.componentRef.setInput('zooming', true);
+    fixture.detectChanges();
+
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.querySelector('.scout-lens')).toBeFalsy();
+    expect(element.querySelector('.scout-lens-badge')).toBeFalsy();
+    expect(element.querySelector('.scout-lens-controls')).toBeFalsy();
+    expect(element.querySelector('.scout-user-indicator')).toBeFalsy();
+  });
 });

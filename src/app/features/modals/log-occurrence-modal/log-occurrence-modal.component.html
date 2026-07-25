@@ -13,97 +13,98 @@
             placeholder="Search or enter species name"
             [disabled]="submissionState() === SubmissionState.LOADING"
             [entries]="speciesEntries()"
+            [value]="occurrenceForm.name().value()"
             (onQueryChange)="onAutoSuggestChange($event)"
             (onSelect)="onAutoSuggestSelect($event)"
           />
         </field-container>
 
-      <field-container label="Description" name="description">
-        <textarea
-          id="description"
-          placeholder="Describe your observation…"
-          rows="3"
-          [formField]="occurrenceForm.description"
-        ></textarea>
-      </field-container>
-
-      <field-container label="When" name="when">
-        <div class="when-row">
-          <input
-            type="date"
-            class="when-input"
-            [value]="observationDate()"
-            (input)="setDate($event)"
-          />
-          <div class="when-time-row">
-            <input
-              type="time"
-              class="when-input"
-              [value]="timeStart()"
-              (input)="setTimeStart($event)"
-            />
-            <span class="when-sep">-</span>
-            <input
-              type="time"
-              class="when-input"
-              [value]="timeEnd()"
-              (input)="setTimeEnd($event)"
-            />
-          </div>
-        </div>
-      </field-container>
-
-      <field-container label="Certainty" name="confidence">
-        <div class="confidence-row">
-          <input
-            id="confidence"
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            [value]="confidence()"
-            (input)="setConfidence($event)"
-          />
-          <span class="confidence-value">{{ confidenceLabel() }}</span>
-        </div>
-      </field-container>
-
-      <div class="type-row">
-        <field-container label="Detection type" name="detection_type">
-          <select
-            id="detection_type"
-            [value]="detectionType()"
-            [disabled]="submissionState() === SubmissionState.LOADING"
-            (change)="setDetectionType($event)"
-          >
-            @for (option of detectionTypeOptions; track option.value) {
-              <option [value]="option.value">{{ option.label }}</option>
-            }
-          </select>
+        <field-container label="Description" name="description">
+          <textarea
+            id="description"
+            placeholder="Describe your observation…"
+            rows="3"
+            [formField]="occurrenceForm.description"
+          ></textarea>
         </field-container>
 
-        @if (detectionType() === 'visual') {
-          <field-container label="Evidence type" name="evidence_type">
+        <field-container label="When" name="when">
+          <div class="when-row">
+            <input
+              type="date"
+              class="when-input"
+              [value]="observationDate()"
+              (input)="setDate($event)"
+            />
+            <div class="when-time-row">
+              <input
+                type="time"
+                class="when-input"
+                [value]="timeStart()"
+                (input)="setTimeStart($event)"
+              />
+              <span class="when-sep">-</span>
+              <input
+                type="time"
+                class="when-input"
+                [value]="timeEnd()"
+                (input)="setTimeEnd($event)"
+              />
+            </div>
+          </div>
+        </field-container>
+
+        <field-container label="Certainty" name="confidence">
+          <div class="confidence-row">
+            <input
+              id="confidence"
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              [value]="confidence()"
+              (input)="setConfidence($event)"
+            />
+            <span class="confidence-value">{{ confidenceLabel() }}</span>
+          </div>
+        </field-container>
+
+        <div class="type-row">
+          <field-container label="Detection type" name="detection_type">
             <select
-              id="evidence_type"
-              [value]="evidenceType()"
+              id="detection_type"
+              [value]="detectionType()"
               [disabled]="submissionState() === SubmissionState.LOADING"
-              (change)="setEvidenceType($event)"
+              (change)="setDetectionType($event)"
             >
-              @for (option of evidenceTypeOptions; track option.value) {
+              @for (option of detectionTypeOptions; track option.value) {
                 <option [value]="option.value">{{ option.label }}</option>
               }
             </select>
           </field-container>
-        }
-      </div>
 
-      <div class="location-chip">
-        <span class="location-chip__label">Location</span>
-        <span class="location-chip__value">{{ locationLabel() }}</span>
-      </div>
+          @if (detectionType() === "visual") {
+            <field-container label="Evidence type" name="evidence_type">
+              <select
+                id="evidence_type"
+                [value]="evidenceType()"
+                [disabled]="submissionState() === SubmissionState.LOADING"
+                (change)="setEvidenceType($event)"
+              >
+                @for (option of evidenceTypeOptions; track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+            </field-container>
+          }
+        </div>
 
-      <div class="form-footer">
+        <div class="location-chip">
+          <span class="location-chip__label">Location</span>
+          <span class="location-chip__value">{{ locationLabel() }}</span>
+        </div>
+
+        <div class="form-footer">
           <button
             class="btn-primary"
             (click)="onSubmit()"
@@ -127,10 +128,10 @@
               <p class="status status--info">Submitting…</p>
             }
           }
+        </div>
       </div>
-    </div>
     } @else {
       <login />
-  }
+    }
   }
 </app-modal>

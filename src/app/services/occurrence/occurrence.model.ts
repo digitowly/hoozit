@@ -1,5 +1,6 @@
 export interface UserOccurrenceRequest {
   name: string;
+  taxon_key?: string;
   description: string;
   confidence: number;
   coordinates: { latitude: number; longitude: number };

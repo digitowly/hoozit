@@ -38,26 +38,36 @@ describe('SpeciesAutosuggestService', () => {
   it('should map resource data to speciesEntries', () => {
     mockAnimalSearchService.resource.value.set({
       data: [
-        { name: 'Cat', binomial_name: 'Felis catus', thumbnail: 'cat.jpg' },
+        {
+          name: 'Cat',
+          binomial_name: 'Felis catus',
+          thumbnail: 'cat.jpg',
+          taxonKey: '2435099',
+        },
       ],
     });
 
     expect(service.speciesEntries()).toEqual([
-      { label: 'Cat', value: 'Felis catus', icon: 'cat.jpg' },
+      { label: 'Cat', value: '2435099', icon: 'cat.jpg' },
     ]);
   });
 
   it('should find selectedEntry from speciesEntries', () => {
     mockAnimalSearchService.resource.value.set({
       data: [
-        { name: 'Cat', binomial_name: 'Felis catus', thumbnail: 'cat.jpg' },
+        {
+          name: 'Cat',
+          binomial_name: 'Felis catus',
+          thumbnail: 'cat.jpg',
+          taxonKey: '2435099',
+        },
       ],
     });
     mockAnimalSearchService.debouncedQuery.set('cat');
 
     expect(service.selectedEntry()).toEqual({
       label: 'Cat',
-      value: 'Felis catus',
+      value: '2435099',
       icon: 'cat.jpg',
     });
   });
@@ -83,7 +93,9 @@ describe('SpeciesAutosuggestService', () => {
     mockAnimalSearchService.isNotAvailable.set(true);
     mockAnimalSearchService.debouncedQuery.set('lion');
 
-    expect(service.speciesEntries()).toEqual([{ label: 'lion', value: 'lion' }]);
+    expect(service.speciesEntries()).toEqual([
+      { label: 'lion', value: 'lion' },
+    ]);
   });
 
   it('should return empty entries when server is unreachable and query is empty', () => {
@@ -95,14 +107,19 @@ describe('SpeciesAutosuggestService', () => {
   it('should prioritize exact (case-insensitive) match over fallback', () => {
     mockAnimalSearchService.resource.value.set({
       data: [
-        { name: 'Cat', binomial_name: 'Felis catus', thumbnail: 'cat.jpg' },
+        {
+          name: 'Cat',
+          binomial_name: 'Felis catus',
+          thumbnail: 'cat.jpg',
+          taxonKey: '2435099',
+        },
       ],
     });
     mockAnimalSearchService.debouncedQuery.set('Cat');
 
     expect(service.selectedEntry()).toEqual({
       label: 'Cat',
-      value: 'Felis catus',
+      value: '2435099',
       icon: 'cat.jpg',
     });
   });

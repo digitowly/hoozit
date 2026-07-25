@@ -6,15 +6,15 @@ import { ScoutLensService } from '../scout-lens/scout-lens.service';
 import { OccurrenceMarkerService } from '../occurrence-marker/occurrence-marker.service';
 import {
   OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL,
-  occurrenceSearchRadiusLevelForZoom,
   occurrenceSearchRadiusMetersForLevel,
   OccurrenceSearchRadiusLevel,
-  isOccurrenceSearchRadiusLevelLarger,
 } from '../../../../services/occurrence/occurrence-search/occurrence-search.model';
 import { GeoHelper } from '../../../../utils/geo/geo-helper';
 
 const LENS_RADIUS_MIN_PX = 16;
 const LENS_RADIUS_MAX_PX = 4000;
+const OCCURRENCE_SEARCH_MIN_RADIUS_LEVEL: OccurrenceSearchRadiusLevel = 1;
+const OCCURRENCE_SEARCH_MAX_RADIUS_LEVEL: OccurrenceSearchRadiusLevel = 5;
 
 export type PendingSearchSurface = 'active' | 'ghost';
 
@@ -42,16 +42,22 @@ export class ScoutSearchStateService {
   private readonly committedRadiusLevel = signal<OccurrenceSearchRadiusLevel>(
     OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL,
   );
+  private readonly requestedRadiusLevelValue =
+    signal<OccurrenceSearchRadiusLevel>(OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL);
 
   private readonly pendingCoordinate = signal<Coordinate | null>(null);
   private readonly pendingSurface = signal<PendingSearchSurface | null>(null);
 
-  readonly requestedRadiusLevel = computed(() => {
-    const camera = this.mapService.camera();
-    return camera
-      ? occurrenceSearchRadiusLevelForZoom(camera.zoom)
-      : OCCURRENCE_SEARCH_DEFAULT_RADIUS_LEVEL;
-  });
+  readonly requestedRadiusLevel = computed(() =>
+    this.requestedRadiusLevelValue(),
+  );
+
+  readonly canDecreaseRadius = computed(
+    () => this.requestedRadiusLevel() > OCCURRENCE_SEARCH_MIN_RADIUS_LEVEL,
+  );
+  readonly canIncreaseRadius = computed(
+    () => this.requestedRadiusLevel() < OCCURRENCE_SEARCH_MAX_RADIUS_LEVEL,
+  );
 
   readonly activeLensRadiusLevel = computed(() =>
     this.committedCoordinate()
@@ -138,6 +144,24 @@ export class ScoutSearchStateService {
     return this.committedCoordinate() ?? this.searchHereCoordinate();
   }
 
+  decreaseRadius() {
+    this.setRequestedRadiusLevel(
+      Math.max(
+        OCCURRENCE_SEARCH_MIN_RADIUS_LEVEL,
+        this.requestedRadiusLevel() - 1,
+      ) as OccurrenceSearchRadiusLevel,
+    );
+  }
+
+  increaseRadius() {
+    this.setRequestedRadiusLevel(
+      Math.min(
+        OCCURRENCE_SEARCH_MAX_RADIUS_LEVEL,
+        this.requestedRadiusLevel() + 1,
+      ) as OccurrenceSearchRadiusLevel,
+    );
+  }
+
   searchHereCoordinate() {
     if (!this.committedCoordinate())
       return this.initialSearchTargetCoordinate();
@@ -178,12 +202,14 @@ export class ScoutSearchStateService {
     const movedOutsideCommittedLens =
       GeoHelper.getDistance(this.searchHereCoordinate(), committedCoordinate) >
       committedRadiusKm;
-    const requestedLargerRadius = isOccurrenceSearchRadiusLevelLarger(
-      this.requestedRadiusLevel(),
-      this.markerService.activeRadiusLevel(),
-    );
+    const requestedDifferentRadius =
+      this.requestedRadiusLevel() !== this.markerService.activeRadiusLevel();
 
-    return movedOutsideCommittedLens || requestedLargerRadius;
+    return movedOutsideCommittedLens || requestedDifferentRadius;
+  }
+
+  private setRequestedRadiusLevel(level: OccurrenceSearchRadiusLevel) {
+    this.requestedRadiusLevelValue.set(level);
   }
 
   private initialSearchTargetCoordinate() {

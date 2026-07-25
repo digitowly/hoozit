@@ -15,16 +15,14 @@ import { UserOccurrenceRequest } from '../../../services/occurrence/occurrence.m
 import { SubmissionState } from '../../../features/species-resource/species-resource.model';
 
 const MODAL_ID = 'test-modal';
-const TAWNY_OWL = { label: 'Tawny owl', value: 'Strix aluco', icon: '' };
+const TAWNY_OWL = { label: 'Tawny owl', value: '2497513', icon: '' };
 const MOCK_COORD = { latitude: 53.5511, longitude: 9.9937 };
 
 describe('LogOccurrenceModalComponent', () => {
   let component: LogOccurrenceModalComponent;
   let fixture: ComponentFixture<LogOccurrenceModalComponent>;
 
-  let submissionState: ReturnType<
-    typeof signal<SubmissionState>
-  >;
+  let submissionState: ReturnType<typeof signal<SubmissionState>>;
   let userValue: ReturnType<typeof signal<object | null>>;
   let mockOccurrenceService: {
     submissionState: typeof submissionState;
@@ -108,7 +106,10 @@ describe('LogOccurrenceModalComponent', () => {
           provide: UserProfileService,
           useValue: mockUserProfileService,
         },
-        { provide: UserOccurrencesService, useValue: mockUserOccurrencesService },
+        {
+          provide: UserOccurrencesService,
+          useValue: mockUserOccurrencesService,
+        },
         {
           provide: SpeciesAutosuggestService,
           useValue: mockSpeciesAutosuggestService,
@@ -289,7 +290,7 @@ describe('LogOccurrenceModalComponent', () => {
 
     it('calls submit with the correct name, description, confidence, and coordinates', async () => {
       userValue.set({ nickname: 'user' });
-      component.occurrenceForm.name().value.set('Tawny owl');
+      component.onAutoSuggestSelect(TAWNY_OWL);
       component.occurrenceForm.description().value.set('Saw it at night.');
       component.confidence.set(0.9);
 
@@ -298,6 +299,7 @@ describe('LogOccurrenceModalComponent', () => {
       expect(mockOccurrenceService.submit).toHaveBeenCalledWith(
         expect.objectContaining<Partial<UserOccurrenceRequest>>({
           name: 'Tawny owl',
+          taxon_key: '2497513',
           description: 'Saw it at night.',
           detection_method: 'visual',
           evidence_type: 'track',
@@ -308,6 +310,19 @@ describe('LogOccurrenceModalComponent', () => {
           },
         }),
       );
+    });
+
+    it('omits taxon_key when no suggestion is selected', async () => {
+      userValue.set({ nickname: 'user' });
+      component.onAutoSuggestChange('Mystery owl');
+      component.occurrenceForm.description().value.set('Saw it at night.');
+
+      await component.onSubmit();
+
+      const payload = mockOccurrenceService.submit.mock
+        .calls[0][0] as UserOccurrenceRequest;
+      expect(payload.name).toBe('Mystery owl');
+      expect(payload).not.toHaveProperty('taxon_key');
     });
 
     it('submits selected detection type value', async () => {
@@ -400,11 +415,15 @@ describe('LogOccurrenceModalComponent', () => {
       userValue.set({ nickname: 'user' });
       component.occurrenceForm.name().value.set('Tawny owl');
       component.occurrenceForm.description().value.set('Saw it at night.');
+      const occurrenceLoggedSpy = vi.spyOn(component.occurrenceLogged, 'emit');
 
       await component.onSubmit();
 
-      expect(mockUserProfileService.profileResource.reload).toHaveBeenCalledOnce();
+      expect(
+        mockUserProfileService.profileResource.reload,
+      ).toHaveBeenCalledOnce();
       expect(mockUserOccurrencesService.resource.reload).toHaveBeenCalledOnce();
+      expect(occurrenceLoggedSpy).toHaveBeenCalledOnce();
     });
 
     it('does not propagate errors when the service observable errors', async () => {
@@ -416,7 +435,9 @@ describe('LogOccurrenceModalComponent', () => {
       component.occurrenceForm.description().value.set('Saw it at night.');
 
       await expect(component.onSubmit()).resolves.toBeUndefined();
-      expect(mockUserProfileService.profileResource.reload).not.toHaveBeenCalled();
+      expect(
+        mockUserProfileService.profileResource.reload,
+      ).not.toHaveBeenCalled();
       expect(mockUserOccurrencesService.resource.reload).not.toHaveBeenCalled();
     });
   });

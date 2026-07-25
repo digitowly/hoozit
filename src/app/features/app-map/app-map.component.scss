@@ -30,7 +30,7 @@ $btn-size: 56px;
   }
 }
 
-.map-fab-group {
+.map-controls {
   position: absolute;
   bottom: 6rem;
   right: layout.$safe-area-inset-md;
@@ -38,14 +38,19 @@ $btn-size: 56px;
 
   display: flex;
   flex-direction: column;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: shadow.$lg;
-  background: var(--color-background-overlay);
+  align-items: flex-end;
 
   @media (min-width: breakpoint.$xs) {
     bottom: 1rem;
   }
+}
+
+.map-control-section {
+  display: flex;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  box-shadow: shadow.$lg;
+  background: var(--color-background-overlay);
 
   &__btn {
     width: $btn-size;
@@ -61,5 +66,14 @@ $btn-size: 56px;
     &:active {
       background: rgba(0, 0, 0, 0.08);
     }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.35;
+    }
   }
+}
+
+.map-action-controls {
+  flex-direction: column;
 }

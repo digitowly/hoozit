@@ -48,7 +48,9 @@ describe('AutosuggestComponent', () => {
   });
 
   it('should reflect updated entries as suggestions', () => {
-    const filtered = [{ label: 'Apple', value: 'apple', icon: 'apple-icon.png' }];
+    const filtered = [
+      { label: 'Apple', value: 'apple', icon: 'apple-icon.png' },
+    ];
     fixture.componentRef.setInput('entries', filtered);
     expect(component.suggestions()).toEqual(filtered);
   });
@@ -58,6 +60,45 @@ describe('AutosuggestComponent', () => {
     component.handleValueChange('test');
     expect(emitSpy).toHaveBeenCalledWith('test');
     expect(component.query()).toBe('test');
+  });
+
+  it('should update the displayed query and emit onSelect when an entry label is selected', () => {
+    const emitSpy = vi.spyOn(component.onSelect, 'emit');
+
+    component.handleValueChange('Banana');
+
+    expect(component.query()).toBe('Banana');
+    expect(emitSpy).toHaveBeenCalledWith(mockEntries[1]);
+  });
+
+  it('should update the displayed query when a dropdown option is selected', () => {
+    const emitSpy = vi.spyOn(component.onSelect, 'emit');
+    const combobox = {
+      value: signal(''),
+      expanded: signal(true),
+    };
+    vi.spyOn(component, 'combobox').mockReturnValue(combobox as any);
+
+    component.handleSelectionChange(['Banana']);
+
+    expect(component.query()).toBe('Banana');
+    expect(combobox.value()).toBe('Banana');
+    expect(combobox.expanded()).toBe(false);
+    expect(emitSpy).toHaveBeenCalledWith(mockEntries[1]);
+  });
+
+  it('should expose the selected label to the listbox', () => {
+    component.handleValueChange('Banana');
+
+    expect(component.selectedLabels()).toEqual(['Banana']);
+  });
+
+  it('should sync the displayed query from the value input', async () => {
+    fixture.componentRef.setInput('value', 'Cherry');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.query()).toBe('Cherry');
   });
 
   it('should compute selectedIcon correctly', () => {
@@ -120,6 +161,7 @@ describe('AutosuggestComponent', () => {
     expect(component.options).toBeDefined();
     expect(component.combobox).toBeDefined();
     expect(component.placeholder()).toBe('');
+    expect(component.value()).toBeNull();
     expect(component.entries()).toEqual(mockEntries);
   });
 

@@ -5,21 +5,34 @@
   [ghostLens]="scoutSearch.ghostLens()"
   [userIndicator]="scoutSearch.userIndicator()"
   [zooming]="scoutSearch.isZooming()"
+  [canDecreaseRadius]="scoutSearch.canDecreaseRadius()"
+  [canIncreaseRadius]="scoutSearch.canIncreaseRadius()"
+  (decreaseRadius)="scoutSearch.decreaseRadius()"
+  (increaseRadius)="scoutSearch.increaseRadius()"
   (searchHere)="searchHere()"
   (retry)="retryLoadOccurrences()"
 />
 @if (!isAnyModalOpen()) {
-  <div class="map-fab-group">
-    <button class="map-fab-group__btn" (click)="openLogOccurrenceModal()">
-      <app-icon name="add-pin" size="size-medium" color="color-neutral-light" />
-    </button>
-    <button class="map-fab-group__btn" (click)="centerToUserLocation()">
-      <app-icon
-        name="map-arrow"
-        size="size-medium"
-        color="color-neutral-light"
-      />
-    </button>
+  <div class="map-controls">
+    <div class="map-control-section map-action-controls">
+      <button
+        class="map-control-section__btn"
+        (click)="openLogOccurrenceModal()"
+      >
+        <app-icon
+          name="add-pin"
+          size="size-medium"
+          color="color-neutral-light"
+        />
+      </button>
+      <button class="map-control-section__btn" (click)="centerToUserLocation()">
+        <app-icon
+          name="map-arrow"
+          size="size-medium"
+          color="color-neutral-light"
+        />
+      </button>
+    </div>
   </div>
 }
 <occurrence-preview-modal
@@ -30,4 +43,5 @@
 <log-occurrence-modal
   [modalId]="logOccurrenceModalId"
   (handleClose)="(undefined)"
+  (occurrenceLogged)="refreshOccurrencesAfterLog()"
 />

@@ -1,66 +1,97 @@
-@if (phase() === "zoomedOut") {
-  <p class="scout-lens-caption" i18n>Zoom in to scout</p>
-} @else {
-  <div
-    class="scout-lens"
-    [class.scout-lens--gliding]="gliding()"
-    [class.scout-lens--loading]="activeLens().loading"
-    [class.scout-lens--failed]="showFailure()"
-    [class.scout-lens--zooming]="zooming()"
-    [style.left.px]="activeLens().x"
-    [style.top.px]="activeLens().y"
-    [style.width.px]="activeLens().radius * 2"
-    [style.height.px]="activeLens().radius * 2"
-  >
-    @if (activeLens().loading) {
-      <div class="scout-lens__ping"></div>
-    }
-    <div class="scout-lens__dot"></div>
-  </div>
-  @if (ghostLens(); as ghost) {
+@if (!zooming()) {
+  @if (phase() === "zoomedOut") {
+    <p class="scout-lens-caption" i18n>Zoom in to scout</p>
+  } @else {
     <div
-      class="scout-lens scout-lens--ghost"
-      [class.scout-lens--loading]="ghost.loading"
-      [class.scout-lens--zooming]="zooming()"
-      [style.left.px]="ghost.x"
-      [style.top.px]="ghost.y"
-      [style.width.px]="ghost.radius * 2"
-      [style.height.px]="ghost.radius * 2"
+      class="scout-lens"
+      [class.scout-lens--gliding]="gliding()"
+      [class.scout-lens--loading]="activeLens().loading"
+      [class.scout-lens--failed]="showFailure()"
+      [style.left.px]="activeLens().x"
+      [style.top.px]="activeLens().y"
+      [style.width.px]="activeLens().radius * 2"
+      [style.height.px]="activeLens().radius * 2"
     >
-      @if (ghost.loading) {
+      @if (activeLens().loading) {
         <div class="scout-lens__ping"></div>
       }
       <div class="scout-lens__dot"></div>
     </div>
-    @if (!ghost.loading) {
-      <button
-        class="scout-lens-badge scout-lens-badge--search"
+    @if (ghostLens(); as ghost) {
+      <div
+        class="scout-lens scout-lens--ghost"
+        [class.scout-lens--loading]="ghost.loading"
         [style.left.px]="ghost.x"
-        [style.top.px]="ghost.y + 52"
-        (click)="searchHere.emit()"
+        [style.top.px]="ghost.y"
+        [style.width.px]="ghost.radius * 2"
+        [style.height.px]="ghost.radius * 2"
       >
-        <app-icon name="binoculars" size="size-small" />
-        <span i18n>Search here</span>
+        @if (ghost.loading) {
+          <div class="scout-lens__ping"></div>
+        }
+        <div class="scout-lens__dot"></div>
+      </div>
+      @if (!ghost.loading) {
+        <button
+          class="scout-lens-badge scout-lens-badge--search"
+          [style.left.px]="ghost.x"
+          [style.top.px]="ghost.y + 52"
+          (click)="searchHere.emit()"
+        >
+          <app-icon name="binoculars" size="size-small" />
+          <span i18n>Search here</span>
+        </button>
+      }
+    }
+    @if (showFailure()) {
+      <button
+        class="scout-lens-badge"
+        [class.scout-lens-badge--gliding]="gliding()"
+        [style.left.px]="activeLens().x"
+        [style.top.px]="activeLens().y + 52"
+        (click)="retry.emit()"
+      >
+        <app-icon name="reload" size="size-small" />
+        <span i18n>Sightings unavailable — tap to retry</span>
       </button>
     }
+    @if (controlAnchor(); as anchor) {
+      <div
+        class="scout-lens-controls"
+        [class.scout-lens-controls--gliding]="gliding()"
+        [style.left.px]="anchor.x"
+        [style.top.px]="anchor.y + 96"
+      >
+        <button
+          class="scout-lens-controls__btn"
+          [disabled]="!canDecreaseRadius()"
+          i18n-aria-label
+          aria-label="Decrease lens size"
+          i18n-title
+          title="Decrease lens size"
+          (click)="decreaseRadius.emit()"
+        >
+          <app-icon name="zoom-out" size="size-small" />
+        </button>
+        <button
+          class="scout-lens-controls__btn"
+          [disabled]="!canIncreaseRadius()"
+          i18n-aria-label
+          aria-label="Increase lens size"
+          i18n-title
+          title="Increase lens size"
+          (click)="increaseRadius.emit()"
+        >
+          <app-icon name="zoom-in" size="size-small" />
+        </button>
+      </div>
+    }
   }
-  @if (showFailure()) {
-    <button
-      class="scout-lens-badge"
-      [class.scout-lens-badge--gliding]="gliding()"
-      [style.left.px]="activeLens().x"
-      [style.top.px]="activeLens().y + 52"
-      (click)="retry.emit()"
-    >
-      <app-icon name="reload" size="size-small" />
-      <span i18n>Sightings unavailable — tap to retry</span>
-    </button>
+  @if (userIndicator(); as user) {
+    <div
+      class="scout-user-indicator"
+      [style.left.px]="user.x"
+      [style.top.px]="user.y"
+    ></div>
   }
-}
-@if (userIndicator(); as user) {
-  <div
-    class="scout-user-indicator"
-    [style.left.px]="user.x"
-    [style.top.px]="user.y"
-  ></div>
 }

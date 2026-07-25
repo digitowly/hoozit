@@ -2,6 +2,7 @@ import {
   afterRenderEffect,
   Component,
   computed,
+  effect,
   input,
   output,
   signal,
@@ -45,6 +46,8 @@ export class AutosuggestComponent {
 
   readonly disabled = input(false);
 
+  readonly value = input<string | null>(null);
+
   readonly onQueryChange = output<string>();
   readonly onSelect = output<AutoSuggestEntry>();
 
@@ -60,16 +63,38 @@ export class AutosuggestComponent {
     )?.icon;
   });
 
+  readonly selectedLabels = computed(() => {
+    const selected = this.findEntryByLabel(this.query());
+    return selected ? [selected.label] : [];
+  });
+
   handleValueChange(value: string) {
     this.query.set(value);
-    const selected = this.entries().find(
-      (e) => e.label.toLowerCase() === value.toLowerCase(),
-    );
+    const selected = this.findEntryByLabel(value);
     if (selected) {
       this.onSelect.emit(selected);
     } else {
       this.onQueryChange.emit(value);
     }
+  }
+
+  handleSelectionChange(values: string[]) {
+    const label = values.at(-1);
+    if (!label) return;
+
+    const selected = this.findEntryByLabel(label);
+    if (!selected) return;
+
+    this.query.set(selected.label);
+    this.combobox()?.value.set(selected.label);
+    this.combobox()?.expanded.set(false);
+    this.onSelect.emit(selected);
+  }
+
+  private findEntryByLabel(label: string) {
+    return this.entries().find(
+      (entry) => entry.label.toLowerCase() === label.toLowerCase(),
+    );
   }
 
   scrollToActiveOption() {
@@ -91,6 +116,13 @@ export class AutosuggestComponent {
   }
 
   constructor() {
+    effect(() => {
+      const value = this.value();
+      if (value !== null) {
+        this.query.set(value);
+      }
+    });
+
     // Scrolls to the active item when the active option changes.
     // The slight delay here is to ensure animations are done before scrolling.
     afterRenderEffect(() => {
