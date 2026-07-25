@@ -33,9 +33,12 @@
         ngListbox
         ngComboboxWidget
         [activeDescendant]="listbox.activeDescendant()"
+        selectionMode="explicit"
+        [value]="selectedLabels()"
+        (valueChange)="handleSelectionChange($event)"
       >
         @for (suggestion of suggestions(); track suggestion) {
-          <div ngOption [value]="suggestion" [label]="suggestion.label">
+          <div ngOption [value]="suggestion.label" [label]="suggestion.label">
             @if (suggestion.icon) {
               <img
                 class="option-image"

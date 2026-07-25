@@ -42,6 +42,10 @@ export class ScoutLensComponent {
   readonly ghostLens = input<ScoutLensCircle | null>(null);
   readonly userIndicator = input<ScoutLensPoint | null>(null);
   readonly zooming = input(false);
+  readonly canDecreaseRadius = input(false);
+  readonly canIncreaseRadius = input(false);
+  readonly decreaseRadius = output<void>();
+  readonly increaseRadius = output<void>();
   readonly searchHere = output<void>();
   readonly retry = output<void>();
 
@@ -52,6 +56,10 @@ export class ScoutLensComponent {
       this.activeLens().failed &&
       !this.activeLens().loading &&
       this.phase() !== 'zoomedOut',
+  );
+
+  readonly controlAnchor = computed(
+    () => this.ghostLens() ?? this.activeLens(),
   );
 
   constructor() {

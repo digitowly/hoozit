@@ -45,7 +45,7 @@ export class SpeciesAutosuggestService {
   private mapToAutoSuggestEntry(species: AnimalSearchResult): AutoSuggestEntry {
     return {
       label: species.name,
-      value: species.binomial_name,
+      value: species.taxonKey,
       icon: species.thumbnail,
     };
   }

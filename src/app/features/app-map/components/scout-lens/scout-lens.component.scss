@@ -108,6 +108,47 @@ $user-color: rgb(28, 92, 255);
   }
 }
 
+.scout-lens-controls {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  overflow: hidden;
+  transform: translate(-50%, 100%);
+  border-radius: 1rem;
+  box-shadow: shadow.$lg;
+  background: var(--color-background-overlay);
+  pointer-events: auto;
+
+  &--gliding {
+    transition:
+      left 0.45s cubic-bezier(0.3, 0.9, 0.35, 1),
+      top 0.45s cubic-bezier(0.3, 0.9, 0.35, 1);
+  }
+
+  &__btn {
+    width: 44px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:active {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.35;
+    }
+  }
+}
+
 .scout-user-indicator {
   position: absolute;
   z-index: 2;

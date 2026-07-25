@@ -13,16 +13,6 @@ export const OCCURRENCE_SEARCH_RADIUS_METERS_BY_LEVEL: Record<
   5: 5_000,
 };
 
-export function occurrenceSearchRadiusLevelForZoom(
-  zoom: number,
-): OccurrenceSearchRadiusLevel {
-  if (zoom >= 18) return 1;
-  if (zoom >= 16) return 2;
-  if (zoom >= 13) return 3;
-  if (zoom >= 12) return 4;
-  return 5;
-}
-
 export function occurrenceSearchRadiusMetersForLevel(
   level: OccurrenceSearchRadiusLevel,
 ): number {

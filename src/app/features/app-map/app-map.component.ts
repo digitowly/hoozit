@@ -7,7 +7,7 @@ import {
   untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subject, Subscription, debounceTime } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 import { UserLocationService } from '../../services/user/user-location/user-location.service';
 import { MapService, MapMarker } from '../../services/map/map-service';
 import { LeafletService } from '../../services/map/leaflet/leaflet.service';
@@ -70,7 +70,6 @@ export class AppMapComponent {
   private hasInitialCenter = signal(false);
   private readonly settle$ = new Subject<void>();
   private activeSearchId = 0;
-  private activeSearchSubscription: Subscription | null = null;
 
   constructor() {
     this.userLocation.getLocation();
@@ -103,6 +102,10 @@ export class AppMapComponent {
       this.scoutSearch.searchHereCoordinate(),
       'ghost',
     );
+  }
+
+  refreshOccurrencesAfterLog() {
+    this.loadOccurrences(true, this.scoutSearch.retryCoordinate());
   }
 
   private loadAfterCameraSettles() {
@@ -193,35 +196,27 @@ export class AppMapComponent {
 
     const searchId = ++this.activeSearchId;
     this.scoutSearch.beginSearch(coordinate, surface);
-    this.activeSearchSubscription = this.markerService
-      .createMarkers(
-        this.mapService,
-        coordinate,
-        (marker) => {
-          if (this.isActiveSearch(searchId)) this.showMarker(marker);
-        },
-        { force, radiusLevel: this.scoutSearch.requestedRadiusLevel() },
-      )
-      .subscribe({
-        complete: () => {
+    this.markerService.createMarkers(
+      this.mapService,
+      coordinate,
+      (marker) => {
+        if (this.isActiveSearch(searchId)) this.showMarker(marker);
+      },
+      {
+        force,
+        radiusLevel: this.scoutSearch.requestedRadiusLevel(),
+        onComplete: () => {
           if (this.isActiveSearch(searchId)) {
             this.scoutSearch.completeSearch(coordinate);
           }
         },
-        error: () => {
-          if (this.isActiveSearch(searchId)) {
-            this.scoutSearch.clearPendingSearch();
-          }
-        },
-      });
+      },
+    );
   }
 
   private cancelActiveSearch() {
-    if (this.activeSearchSubscription && !this.activeSearchSubscription.closed) {
-      this.activeSearchSubscription.unsubscribe();
-      this.activeSearchId++;
-    }
-    this.activeSearchSubscription = null;
+    this.markerService.cancelActiveFetch();
+    this.activeSearchId++;
   }
 
   private isActiveSearch(searchId: number) {
