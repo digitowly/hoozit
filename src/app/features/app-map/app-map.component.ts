@@ -12,6 +12,7 @@ import { UserLocationService } from '../../services/user/user-location/user-loca
 import { MapService, MapMarker } from '../../services/map/map-service';
 import { LeafletService } from '../../services/map/leaflet/leaflet.service';
 import { IconComponent } from '../../components/icon/icon.component';
+import { ButtonContainerComponent } from '../../components/button-container/button-container.component';
 import { OccurrenceMarkerService } from './services/occurrence-marker/occurrence-marker.service';
 import { ScoutLensComponent } from './components/scout-lens/scout-lens.component';
 import { SearchResultSelectionService } from '../search/services/search-result-selection/search-result-selection.service';
@@ -33,6 +34,7 @@ const SETTLE_DEBOUNCE_MS = 600;
   selector: 'app-map',
   imports: [
     IconComponent,
+    ButtonContainerComponent,
     ScoutLensComponent,
     OccurrencePreviewModalComponent,
     LogOccurrenceModalComponent,

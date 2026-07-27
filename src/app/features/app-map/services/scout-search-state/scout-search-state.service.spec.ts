@@ -13,6 +13,8 @@ describe('ScoutSearchStateService', () => {
   let service: ScoutSearchStateService;
   let camera: ReturnType<typeof signal<MapCamera | null>>;
   let activeRadiusLevel: ReturnType<typeof signal<OccurrenceSearchRadiusLevel>>;
+  let userCoordinate: ReturnType<typeof signal<Coordinate>>;
+  let userIsValid: ReturnType<typeof signal<boolean>>;
 
   beforeEach(() => {
     camera = signal<MapCamera | null>({
@@ -22,6 +24,8 @@ describe('ScoutSearchStateService', () => {
       height: 500,
     });
     activeRadiusLevel = signal<OccurrenceSearchRadiusLevel>(3);
+    userCoordinate = signal<Coordinate>({ latitude: 56, longitude: 13 });
+    userIsValid = signal(true);
 
     TestBed.configureTestingModule({
       providers: [
@@ -30,8 +34,8 @@ describe('ScoutSearchStateService', () => {
         {
           provide: UserLocationService,
           useValue: {
-            coordinate: signal<Coordinate>({ latitude: 56, longitude: 13 }),
-            isValid: signal(true),
+            coordinate: userCoordinate,
+            isValid: userIsValid,
             hasResolved: signal(true),
           },
         },
@@ -110,6 +114,35 @@ describe('ScoutSearchStateService', () => {
     service.increaseRadius();
 
     expect(service.ghostLens()?.radius).toBe(200);
+  });
+
+  it('snaps the ghost search coordinate to the user when the lens is anchored', () => {
+    const manualCoordinate = { latitude: 57, longitude: 14 };
+    const mapCenter = { latitude: 58, longitude: 15 };
+    service.completeSearch(manualCoordinate);
+    camera.set({
+      center: mapCenter,
+      zoom: 13,
+      width: 500,
+      height: 500,
+    });
+
+    expect(service.searchHereCoordinate()).toEqual(userCoordinate());
+  });
+
+  it('keeps the ghost search coordinate at the map center while scouting away from the anchor', () => {
+    const scoutLens = TestBed.inject(ScoutLensService);
+    const mapCenter = { latitude: 58, longitude: 15 };
+    service.completeSearch({ latitude: 57, longitude: 14 });
+    camera.set({
+      center: mapCenter,
+      zoom: 13,
+      width: 500,
+      height: 500,
+    });
+    scoutLens.phase.set('scouting');
+
+    expect(service.searchHereCoordinate()).toEqual(mapCenter);
   });
 
   it('keeps radius controls within the supported search levels', () => {
