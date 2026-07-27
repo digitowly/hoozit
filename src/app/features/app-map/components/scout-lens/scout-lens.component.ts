@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { IconComponent } from '../../../../components/icon/icon.component';
 import { LensPhase } from '../../services/scout-lens/scout-lens.service';
+import { ButtonContainerComponent } from '../../../../components/button-container/button-container.component';
 
 const GLIDE_DURATION_MS = 500;
 
@@ -26,7 +27,7 @@ export interface ScoutLensPoint {
 
 @Component({
   selector: 'scout-lens',
-  imports: [IconComponent],
+  imports: [IconComponent, ButtonContainerComponent],
   templateUrl: './scout-lens.component.html',
   styleUrl: './scout-lens.component.scss',
 })
@@ -61,6 +62,11 @@ export class ScoutLensComponent {
   readonly controlAnchor = computed(
     () => this.ghostLens() ?? this.activeLens(),
   );
+
+  readonly showSearchControl = computed(() => {
+    const ghost = this.ghostLens();
+    return !!ghost && !ghost.loading;
+  });
 
   constructor() {
     let previousPhase: LensPhase | null = null;

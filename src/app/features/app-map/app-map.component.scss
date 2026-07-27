@@ -1,6 +1,5 @@
 @use "../../style/layout";
 @use "../../style/breakpoint";
-@use "../../style/shadow";
 
 $btn-size: 56px;
 
@@ -11,23 +10,6 @@ $btn-size: 56px;
   top: 0;
   left: 0;
   z-index: 1;
-}
-
-.map-fab {
-  position: absolute;
-  z-index: 99;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: shadow.$lg;
-  background: var(--color-background-overlay);
-  transition: background 0.15s ease;
-
-  &:active {
-    background: rgba(0, 0, 0, 0.08);
-  }
 }
 
 .map-controls {
@@ -45,35 +27,30 @@ $btn-size: 56px;
   }
 }
 
-.map-control-section {
+.map-button {
+  width: $btn-size;
+  height: $btn-size;
+  border: none;
+  background: transparent;
+  border-radius: 2rem;
+  cursor: pointer;
   display: flex;
-  overflow: hidden;
-  border-radius: 1.5rem;
-  box-shadow: shadow.$lg;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
   background: var(--color-background-overlay);
 
-  &__btn {
-    width: $btn-size;
-    height: $btn-size;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s ease;
-
-    &:active {
-      background: rgba(0, 0, 0, 0.08);
-    }
-
-    &:disabled {
-      cursor: default;
-      opacity: 0.35;
-    }
+  &.log-button {
+    background: var(--color-text);
+    color: var(--color-background-overlay);
   }
-}
 
-.map-action-controls {
-  flex-direction: column;
+  &:active {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.35;
+  }
 }

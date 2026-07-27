@@ -32,22 +32,22 @@ describe('ScoutLensService', () => {
   });
 
   it('stays anchored for small offsets', () => {
-    service.update({ zoom: 13, userOffset: { nx: 0.3, ny: 0.2 } });
+    service.update({ zoom: 13, userOffset: { nx: 0.05, ny: 0.02 } });
     expect(service.phase()).toBe('anchored');
   });
 
-  it('detaches when the user nears the screen edge', () => {
-    service.update({ zoom: 13, userOffset: { nx: 0.45, ny: 0 } });
+  it('detaches when the user moves clearly away from the center', () => {
+    service.update({ zoom: 13, userOffset: { nx: 0.1, ny: 0 } });
     expect(service.phase()).toBe('scouting');
   });
 
-  it('does not reattach until the user is near the center', () => {
-    service.update({ zoom: 13, userOffset: { nx: 0.45, ny: 0 } });
+  it('does not reattach until the user is back inside the snap area', () => {
+    service.update({ zoom: 13, userOffset: { nx: 0.1, ny: 0 } });
     // Inside the detach threshold but outside the reattach threshold.
-    service.update({ zoom: 13, userOffset: { nx: 0.3, ny: 0 } });
+    service.update({ zoom: 13, userOffset: { nx: 0.05, ny: 0 } });
     expect(service.phase()).toBe('scouting');
 
-    service.update({ zoom: 13, userOffset: { nx: 0.1, ny: 0.05 } });
+    service.update({ zoom: 13, userOffset: { nx: 0.03, ny: 0.02 } });
     expect(service.phase()).toBe('anchored');
   });
 
@@ -55,7 +55,7 @@ describe('ScoutLensService', () => {
     service.update({ zoom: SCOUT_MIN_ZOOM - 1, userOffset: { nx: 0, ny: 0 } });
     expect(service.phase()).toBe('zoomedOut');
 
-    service.update({ zoom: 13, userOffset: { nx: 0.05, ny: 0.05 } });
+    service.update({ zoom: 13, userOffset: { nx: 0.02, ny: 0.02 } });
     expect(service.phase()).toBe('anchored');
   });
 });

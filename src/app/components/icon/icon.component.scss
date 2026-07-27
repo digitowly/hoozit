@@ -6,16 +6,6 @@
   align-items: center;
 }
 
-.color {
-  &-primary-dark {
-    color: var(--color-text);
-  }
-
-  &-neutral-light {
-    color: var(--color-text);
-  }
-}
-
 .size {
   &-small {
     width: 18px;
