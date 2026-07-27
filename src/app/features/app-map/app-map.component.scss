@@ -31,14 +31,13 @@ $btn-size: 56px;
   width: $btn-size;
   height: $btn-size;
   border: none;
-  background: transparent;
+  background: var(--color-background-overlay);
   border-radius: 2rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.15s ease;
-  background: var(--color-background-overlay);
 
   &.log-button {
     background: var(--color-text);
