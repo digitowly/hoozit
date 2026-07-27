@@ -23,6 +23,7 @@ describe('OccurrenceSearchService', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   it('posts the requested location, radius level, and taxon keys to Scout', async () => {
