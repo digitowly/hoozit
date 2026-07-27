@@ -4,7 +4,6 @@
   } @else {
     <div
       class="scout-lens"
-      [class.scout-lens--gliding]="gliding()"
       [class.scout-lens--loading]="activeLens().loading"
       [class.scout-lens--failed]="showFailure()"
       [style.left.px]="activeLens().x"
@@ -31,17 +30,6 @@
         }
         <div class="scout-lens__dot"></div>
       </div>
-      @if (!ghost.loading) {
-        <button
-          class="scout-lens-badge scout-lens-badge--search"
-          [style.left.px]="ghost.x"
-          [style.top.px]="ghost.y + 52"
-          (click)="searchHere.emit()"
-        >
-          <app-icon name="binoculars" size="size-small" />
-          <span i18n>Search here</span>
-        </button>
-      }
     }
     @if (showFailure()) {
       <button
@@ -56,14 +44,13 @@
       </button>
     }
     @if (controlAnchor(); as anchor) {
-      <div
-        class="scout-lens-controls"
-        [class.scout-lens-controls--gliding]="gliding()"
+      <app-button-container
+        class="scout-controls"
         [style.left.px]="anchor.x"
-        [style.top.px]="anchor.y + 96"
+        [style.top.px]="anchor.y + anchor.radius + 24"
       >
         <button
-          class="scout-lens-controls__btn"
+          class="scout-control"
           [disabled]="!canDecreaseRadius()"
           i18n-aria-label
           aria-label="Decrease lens size"
@@ -74,7 +61,22 @@
           <app-icon name="zoom-out" size="size-small" />
         </button>
         <button
-          class="scout-lens-controls__btn"
+          class="scout-control search-button"
+          [class.is-visible]="showSearchControl()"
+          [disabled]="!showSearchControl()"
+          [attr.tabindex]="showSearchControl() ? null : -1"
+          [attr.aria-hidden]="showSearchControl() ? null : true"
+          i18n-aria-label
+          aria-label="Scout here"
+          i18n-title
+          title="Scout here"
+          (click)="searchHere.emit()"
+        >
+          <app-icon name="binoculars" size="size-small" />
+          <span i18n>Scout</span>
+        </button>
+        <button
+          class="scout-control"
           [disabled]="!canIncreaseRadius()"
           i18n-aria-label
           aria-label="Increase lens size"
@@ -84,7 +86,7 @@
         >
           <app-icon name="zoom-in" size="size-small" />
         </button>
-      </div>
+      </app-button-container>
     }
   }
   @if (userIndicator(); as user) {

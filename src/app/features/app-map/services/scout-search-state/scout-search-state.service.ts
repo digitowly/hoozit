@@ -163,6 +163,8 @@ export class ScoutSearchStateService {
   }
 
   searchHereCoordinate() {
+    if (this.isAnchored() && this.userLocation.isValid())
+      return this.userLocation.coordinate();
     if (!this.committedCoordinate())
       return this.initialSearchTargetCoordinate();
     return (

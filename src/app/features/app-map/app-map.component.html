@@ -14,25 +14,18 @@
 />
 @if (!isAnyModalOpen()) {
   <div class="map-controls">
-    <div class="map-control-section map-action-controls">
-      <button
-        class="map-control-section__btn"
-        (click)="openLogOccurrenceModal()"
-      >
-        <app-icon
-          name="add-pin"
-          size="size-medium"
-          color="color-neutral-light"
-        />
+    <app-button-container class="map-actions" direction="vertical">
+      <button class="map-button log-button" (click)="openLogOccurrenceModal()">
+        <app-icon name="plus" size="size-medium" color="color-primary-dark" />
       </button>
-      <button class="map-control-section__btn" (click)="centerToUserLocation()">
+      <button class="map-button" (click)="centerToUserLocation()">
         <app-icon
           name="map-arrow"
           size="size-medium"
           color="color-neutral-light"
         />
       </button>
-    </div>
+    </app-button-container>
   </div>
 }
 <occurrence-preview-modal

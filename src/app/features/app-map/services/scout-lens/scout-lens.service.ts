@@ -4,8 +4,8 @@ export type LensPhase = 'anchored' | 'scouting' | 'zoomedOut';
 
 export const SCOUT_MIN_ZOOM = 11;
 
-const DETACH_FRACTION = 0.42;
-const REATTACH_FRACTION = 0.12;
+const DETACH_FRACTION = 0.08;
+const REATTACH_FRACTION = 0.035;
 
 export interface LensUpdate {
   zoom: number;

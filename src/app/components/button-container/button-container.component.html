@@ -1,0 +1,7 @@
+<div
+  class="button-container"
+  [class.vertical]="direction() === 'vertical'"
+  [style.gap.px]="renderedGap()"
+>
+  <ng-content></ng-content>
+</div>
