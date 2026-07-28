@@ -1,7 +1,9 @@
-@if (!zooming()) {
-  @if (phase() === "zoomedOut") {
+@if (phase() === "zoomedOut") {
+  @if (!zooming()) {
     <p class="scout-lens-caption" i18n>Zoom in to scout</p>
-  } @else {
+  }
+} @else {
+  @if (!zooming()) {
     <div
       class="scout-lens"
       [class.scout-lens--loading]="activeLens().loading"
@@ -43,52 +45,48 @@
         <span i18n>Sightings unavailable — tap to retry</span>
       </button>
     }
-    @if (controlAnchor(); as anchor) {
-      <app-button-container
-        class="scout-controls"
-        [style.left.px]="anchor.x"
-        [style.top.px]="anchor.y + anchor.radius + 24"
-      >
-        <button
-          class="scout-control"
-          [disabled]="!canDecreaseRadius()"
-          i18n-aria-label
-          aria-label="Decrease lens size"
-          i18n-title
-          title="Decrease lens size"
-          (click)="decreaseRadius.emit()"
-        >
-          <app-icon name="zoom-out" size="size-small" />
-        </button>
-        <button
-          class="scout-control search-button"
-          [class.is-visible]="showSearchControl()"
-          [disabled]="!showSearchControl()"
-          [attr.tabindex]="showSearchControl() ? null : -1"
-          [attr.aria-hidden]="showSearchControl() ? null : true"
-          i18n-aria-label
-          aria-label="Scout here"
-          i18n-title
-          title="Scout here"
-          (click)="searchHere.emit()"
-        >
-          <app-icon name="binoculars" size="size-small" />
-          <span i18n>Scout</span>
-        </button>
-        <button
-          class="scout-control"
-          [disabled]="!canIncreaseRadius()"
-          i18n-aria-label
-          aria-label="Increase lens size"
-          i18n-title
-          title="Increase lens size"
-          (click)="increaseRadius.emit()"
-        >
-          <app-icon name="zoom-in" size="size-small" />
-        </button>
-      </app-button-container>
-    }
   }
+  <app-button-container class="scout-controls">
+    <button
+      class="scout-control"
+      [disabled]="!canDecreaseRadius()"
+      i18n-aria-label
+      aria-label="Decrease lens size"
+      i18n-title
+      title="Decrease lens size"
+      (click)="decreaseRadius.emit()"
+    >
+      <app-icon name="minus-circle" size="size-small" />
+    </button>
+    <button
+      class="scout-control search-button"
+      [class.is-visible]="showSearchControl()"
+      [disabled]="!showSearchControl()"
+      [attr.tabindex]="showSearchControl() ? null : -1"
+      [attr.aria-hidden]="showSearchControl() ? null : true"
+      i18n-aria-label
+      aria-label="Scout here"
+      i18n-title
+      title="Scout here"
+      (click)="searchHere.emit()"
+    >
+      <app-icon name="binoculars" size="size-small" />
+      <span i18n>Scout</span>
+    </button>
+    <button
+      class="scout-control"
+      [disabled]="!canIncreaseRadius()"
+      i18n-aria-label
+      aria-label="Increase lens size"
+      i18n-title
+      title="Increase lens size"
+      (click)="increaseRadius.emit()"
+    >
+      <app-icon name="plus-circle" size="size-small" />
+    </button>
+  </app-button-container>
+}
+@if (!zooming()) {
   @if (userIndicator(); as user) {
     <div
       class="scout-user-indicator"

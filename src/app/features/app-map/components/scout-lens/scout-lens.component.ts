@@ -59,10 +59,6 @@ export class ScoutLensComponent {
       this.phase() !== 'zoomedOut',
   );
 
-  readonly controlAnchor = computed(
-    () => this.ghostLens() ?? this.activeLens(),
-  );
-
   readonly showSearchControl = computed(() => {
     const ghost = this.ghostLens();
     return !!ghost && !ghost.loading;
