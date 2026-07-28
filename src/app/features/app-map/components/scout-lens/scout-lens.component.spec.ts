@@ -74,7 +74,7 @@ describe('ScoutLensComponent', () => {
     ).toBeFalsy();
   });
 
-  it('renders lens size controls near the lens and emits size changes', () => {
+  it('renders lens size controls and emits size changes', () => {
     fixture.componentRef.setInput('activeLens', {
       x: 120,
       y: 160,
@@ -99,8 +99,8 @@ describe('ScoutLensComponent', () => {
       '.scout-control',
     ) as NodeListOf<HTMLButtonElement>;
 
-    expect(controls?.style.left).toBe('120px');
-    expect(controls?.style.top).toBe('264px');
+    expect(controls?.style.left).toBe('');
+    expect(controls?.style.top).toBe('');
     expect(buttons).toHaveLength(3);
     expect(buttons[0].disabled).toBe(false);
     expect(buttons[1].classList).not.toContain('is-visible');
@@ -117,7 +117,7 @@ describe('ScoutLensComponent', () => {
     expect(increase).not.toHaveBeenCalled();
   });
 
-  it('positions lens controls below the rendered radius circle', () => {
+  it('does not derive control placement from the lens radius', () => {
     fixture.componentRef.setInput('activeLens', {
       x: 120,
       y: 160,
@@ -130,7 +130,26 @@ describe('ScoutLensComponent', () => {
     const controls: HTMLElement | null =
       fixture.nativeElement.querySelector('.scout-controls');
 
-    expect(controls?.style.top).toBe('324px');
+    expect(controls?.style.top).toBe('');
+    expect(controls?.style.getPropertyValue('--scout-controls-top')).toBe('');
+  });
+
+  it('uses static bottom placement for controls', () => {
+    fixture.componentRef.setInput('activeLens', {
+      x: 120,
+      y: 160,
+      radius: 140,
+      loading: false,
+      failed: false,
+    });
+    fixture.detectChanges();
+
+    const controls: HTMLElement | null =
+      fixture.nativeElement.querySelector('.scout-controls');
+
+    expect(getComputedStyle(controls!).bottom).toBe(
+      'calc(72px + 0.75rem + 1rem)',
+    );
   });
 
   it('renders search between the lens size buttons when a ghost lens is available', () => {
@@ -221,7 +240,7 @@ describe('ScoutLensComponent', () => {
     expect(getComputedStyle(buttons[1]).borderLeftWidth).toBe('0px');
   });
 
-  it('hides lens overlays while zooming the map', () => {
+  it('keeps controls visible while hiding lens overlays during map zooming', () => {
     fixture.componentRef.setInput('activeLens', {
       x: 130,
       y: 170,
@@ -240,7 +259,7 @@ describe('ScoutLensComponent', () => {
     const element: HTMLElement = fixture.nativeElement;
     expect(element.querySelector('.scout-lens')).toBeFalsy();
     expect(element.querySelector('.scout-lens-badge')).toBeFalsy();
-    expect(element.querySelector('.scout-controls')).toBeFalsy();
+    expect(element.querySelector('.scout-controls')).toBeTruthy();
     expect(element.querySelector('.scout-user-indicator')).toBeFalsy();
   });
 });

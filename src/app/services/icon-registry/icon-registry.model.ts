@@ -11,6 +11,8 @@ export type IconName =
   | 'plus'
   | 'zoom-in'
   | 'zoom-out'
+  | 'minus-circle'
+  | 'plus-circle'
   | 'add-pin'
   | 'pencil'
   | 'trash'
