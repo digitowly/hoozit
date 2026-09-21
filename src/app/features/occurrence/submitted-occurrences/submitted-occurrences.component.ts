@@ -22,6 +22,7 @@ import { OccurrenceValidationIndicatorsComponent } from './validation-indicators
 })
 export class SubmittedOccurrencesComponent {
   private readonly userOccurrencesService = inject(UserOccurrencesService);
+  private validationReloadPending = false;
   protected readonly validationService = inject(OccurrenceValidationService);
   protected readonly publicationService = inject(OccurrencePublicationService);
   protected readonly SubmissionStatus = SubmissionStatus;
@@ -44,8 +45,23 @@ export class SubmittedOccurrencesComponent {
 
   constructor() {
     effect(() => {
-      if (this.validationService.resource.status() === 'resolved') {
-        this.userOccurrencesService.resource.reload();
+      const validationStatus = this.validationService.resource.status();
+      const occurrencesStatus = this.userOccurrencesService.resource.status();
+
+      if (validationStatus !== 'resolved') {
+        this.validationReloadPending = false;
+        return;
+      }
+
+      if (!this.validationReloadPending) {
+        this.validationReloadPending =
+          this.userOccurrencesService.resource.reload();
+        return;
+      }
+
+      if (occurrencesStatus === 'resolved') {
+        this.validationService.resource.set(undefined);
+        this.validationReloadPending = false;
       }
     });
   }
