@@ -1,6 +1,9 @@
 <div class="content">
   @if (hasPreviousRoute && !hideBackButton()) {
-    <button class="back-link" (click)="goBack()">← Back</button>
+    <button class="back-link" type="button" (click)="goBack()">
+      <app-icon class="back-chevron" name="chevron" size="size-small" />
+      <span i18n>Back</span>
+    </button>
   }
   @if (title()) {
     <h1 class="page-title">{{ title() }}</h1>

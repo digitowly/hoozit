@@ -16,6 +16,20 @@ export interface UserOccurrenceRequest {
   is_captive?: boolean;
 }
 
+export enum SubmissionStatus {
+  DRAFT = 'draft',
+  IN_REVIEW = 'in_review',
+  NAME_VERIFIED = 'name_verified',
+  GEO_CONTINENT_VERIFIED = 'geo_continent_verified',
+  GEO_COUNTRY_VERIFIED = 'geo_country_verified',
+  GEO_REGION_VERIFIED = 'geo_region_verified',
+  GEO_LOCALITY_VERIFIED = 'geo_locality_verified',
+  VERIFIED = 'verified',
+  REJECTED = 'rejected',
+  DELETED = 'deleted',
+  UNKNOWN = 'unknown',
+}
+
 export interface Occurrence {
   id: string;
   author: { nickname: string; image: string; role: string };
@@ -23,7 +37,7 @@ export interface Occurrence {
   description: string;
   confidence: number;
   observed_at: string;
-  status: string;
+  status: SubmissionStatus;
   is_visible: boolean;
   kingdom: string;
   detection_method: string;

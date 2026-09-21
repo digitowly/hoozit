@@ -15,6 +15,11 @@
   opacity: 0.6;
   cursor: pointer;
 
+  .back-chevron {
+    display: inline-flex;
+    transform: rotate(180deg);
+  }
+
   &:hover {
     opacity: 1;
     background: none;

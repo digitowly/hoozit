@@ -49,6 +49,11 @@
     opacity: 1;
     transform: translateX(0px);
 
+    .back-chevron {
+      display: inline-flex;
+      transform: rotate(180deg);
+    }
+
     &:disabled {
       opacity: 0;
       transform: translateX(-50px);
