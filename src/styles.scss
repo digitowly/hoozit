@@ -1,5 +1,6 @@
 @use "./app/style/color";
 @use "./app/style/shadow";
+@use "./app/style/breakpoint";
 
 @import url("leaflet/dist/leaflet.css");
 
@@ -67,30 +68,54 @@ button {
   }
 }
 
+.btn-primary,
+.btn-link,
+.btn-secondary {
+  width: 100%;
+
+  @media (min-width: breakpoint.$xs) {
+    width: fit-content;
+  }
+}
+
 .btn-primary {
-  padding: 0.65rem 1.75rem;
-  border-radius: 1rem;
+  min-height: 3.25rem;
+  padding: 0.7rem 1.75rem;
+  border: 2px solid color-mix(in srgb, #{color.$primary-light} 45%, transparent);
+  border-radius: 0.9rem;
   background-color: color.$primary-base;
   color: #fff;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  box-shadow: 0 4px 14px
-    color-mix(in srgb, #{color.$primary-base} 40%, transparent);
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  line-height: 1.2;
+  box-shadow:
+    0 5px 0 color-mix(in srgb, #{color.$primary-base} 72%, black),
+    0 8px 14px color-mix(in srgb, #{color.$primary-base} 22%, transparent);
   transition:
     background-color 0.15s ease,
+    border-color 0.15s ease,
     box-shadow 0.15s ease,
     transform 0.1s ease;
 
   &:hover:not(:disabled) {
     background-color: color.$primary-light;
-    box-shadow: 0 6px 18px
-      color-mix(in srgb, #{color.$primary-base} 50%, transparent);
+    border-color: color-mix(in srgb, white 35%, transparent);
+    box-shadow:
+      0 5px 0 color-mix(in srgb, #{color.$primary-base} 72%, black),
+      0 9px 16px color-mix(in srgb, #{color.$primary-base} 28%, transparent);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(1px);
-    box-shadow: 0 2px 8px
-      color-mix(in srgb, #{color.$primary-base} 30%, transparent);
+    transform: translateY(4px);
+    box-shadow:
+      0 1px 0 color-mix(in srgb, #{color.$primary-base} 72%, black),
+      0 3px 7px color-mix(in srgb, #{color.$primary-base} 20%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 3px solid
+      color-mix(in srgb, #{color.$primary-light} 45%, transparent);
+    outline-offset: 3px;
   }
 
   &:disabled {
@@ -98,6 +123,59 @@ button {
     cursor: not-allowed;
     box-shadow: none;
   }
+}
+
+.btn-link,
+.btn-secondary {
+  display: inline-flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1.25rem;
+  border: 2px solid currentColor;
+  border-radius: 0.9rem;
+  background-color: var(--color-background-overlay);
+  color: color-mix(in srgb, #{color.$primary-base} 78%, var(--color-text));
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  line-height: 1.2;
+  text-decoration: none;
+  box-shadow:
+    0 5px 0 color-mix(in srgb, currentColor 30%, var(--color-background)),
+    0 8px 14px color-mix(in srgb, currentColor 10%, transparent);
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-background);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow:
+      0 1px 0 color-mix(in srgb, currentColor 34%, var(--color-background)),
+      0 3px 7px color-mix(in srgb, currentColor 9%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 3px solid
+      color-mix(in srgb, #{color.$primary-light} 45%, transparent);
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+html[data-theme="dark"] .btn-link,
+html[data-theme="dark"] .btn-secondary {
+  color: color.$primary-light;
 }
 
 input {

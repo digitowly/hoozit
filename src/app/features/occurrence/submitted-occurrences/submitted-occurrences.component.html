@@ -18,30 +18,75 @@
       <p class="occurrence-item-description">{{ occurrence.description }}</p>
 
       <div class="attributes">
-        <div
-          class="attribute occurrence-item-visibility"
-          [tooltip]="occurrence.is_visible ? 'Public' : 'Private'"
-        >
-          <app-icon
-            [name]="occurrence.is_visible ? 'eye-open' : 'eye-closed'"
-            size="size-small"
-          />
-        </div>
-        <div
-          class="attribute occurrence-item-status"
-          [tooltip]="occurrence.status"
-        >
-          {{occurrence.status}}
-        </div>
+        @if (!occurrence.is_visible) {
+          <div class="attribute occurrence-item-visibility" tooltip="Private">
+            <app-icon name="eye-closed" size="size-small" />
+          </div>
+        }
         <span
           class="attribute occurrence-item-confidence"
-          [tooltip]="'Confidence '+occurrence.confidence + '%'"
+          [tooltip]="'Confidence ' + occurrence.confidence + '%'"
         >
           {{ occurrence.confidence }}
         </span>
       </div>
 
+      <div class="occurrence-status-row">
+        @if (occurrence.status === SubmissionStatus.DRAFT) {
+          <span class="occurrence-status-label" i18n>Draft</span>
+        } @else {
+          <occurrence-validation-indicators [status]="occurrence.status" />
+        }
+      </div>
 
+      <div class="occurrence-action-row">
+        @if (occurrence.is_visible) {
+          <span class="publication-state">
+            <app-icon name="eye-open" size="size-small" aria-hidden="true" />
+            <span i18n>Public</span>
+          </span>
+        } @else if (occurrence.status === SubmissionStatus.DRAFT) {
+          <button
+            class="validate-button btn-primary"
+            type="button"
+            [disabled]="validationService.resource.isLoading()"
+            (click)="validate(occurrence)"
+          >
+            <app-icon name="check" size="size-small" aria-hidden="true" />
+            @if (validationService.isValidating(occurrence.id)) {
+              <span i18n>Validating…</span>
+            } @else {
+              <span i18n>Validate</span>
+            }
+          </button>
+
+          @if (validationService.hasError(occurrence.id)) {
+            <p class="action-error" role="alert" i18n>
+              Validation failed. Please try again.
+            </p>
+          }
+        } @else if (publicationService.canPublish(occurrence)) {
+          <button
+            class="publish-button btn-secondary"
+            type="button"
+            [disabled]="publicationService.isLoading()"
+            (click)="publish(occurrence)"
+          >
+            <app-icon name="eye-open" size="size-small" aria-hidden="true" />
+            @if (publicationService.isPublishing(occurrence.id)) {
+              <span i18n>Publishing…</span>
+            } @else {
+              <span i18n>Publish</span>
+            }
+          </button>
+
+          @if (publicationService.hasPublishError(occurrence.id)) {
+            <p class="action-error" role="alert" i18n>
+              Publishing failed. Please try again.
+            </p>
+          }
+        }
+      </div>
     </div>
   }
 </div>

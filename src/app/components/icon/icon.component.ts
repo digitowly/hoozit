@@ -2,7 +2,7 @@ import { Component, computed, inject, input } from '@angular/core';
 import { IconRegistryService } from '../../services/icon-registry/icon-registry.service';
 import { IconName } from '../../services/icon-registry/icon-registry.model';
 
-type Size = 'size-small' | 'size-medium' | 'size-large';
+type Size = 'size-xsmall' | 'size-small' | 'size-medium' | 'size-large';
 
 @Component({
   selector: 'app-icon',
