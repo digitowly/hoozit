@@ -1,0 +1,99 @@
+@use "../../../../style/color";
+@use "../../../../style/shadow";
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.validation-progress {
+  position: relative;
+  display: flex;
+  min-height: 3.25rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0.3rem;
+  border-radius: 0.75rem;
+
+  &::before {
+    position: absolute;
+    top: 0.925rem;
+    right: 0.925rem;
+    left: 0.925rem;
+    height: 2px;
+    border-radius: 10rem;
+    background-color: color-mix(in srgb, var(--color-text) 16%, transparent);
+    content: "";
+  }
+}
+
+.validation-step {
+  position: relative;
+  display: flex;
+  width: 1.25rem;
+  flex: 0 0 1.25rem;
+  flex-direction: column;
+  align-items: center;
+  color: color-mix(in srgb, var(--color-text) 52%, transparent);
+
+  &--complete {
+    color: color.$success;
+  }
+}
+
+.validation-step-dot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 1.25rem;
+  height: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: var(--color-background-overlay);
+  box-shadow: shadow.$sm;
+}
+
+.validation-step--complete .validation-step-dot {
+  border-color: color.$success;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, #{color.$success} 78%, white),
+    color.$success
+  );
+  color: var(--color-background);
+}
+
+.validation-step-label {
+  position: absolute;
+  top: 1.85rem;
+  left: 50%;
+  overflow: hidden;
+  width: max-content;
+  max-width: 4rem;
+  transform: translateX(-50%);
+  font-size: 0.66rem;
+  line-height: 1.2;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  span {
+    font-size: inherit;
+    line-height: inherit;
+  }
+}
+
+.validation-step:first-child .validation-step-label {
+  left: 0;
+  transform: none;
+  text-align: left;
+}
+
+.validation-step:last-child .validation-step-label {
+  right: 0;
+  left: auto;
+  transform: none;
+  text-align: right;
+}

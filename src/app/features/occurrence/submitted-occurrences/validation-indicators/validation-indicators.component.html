@@ -1,0 +1,47 @@
+<div
+  class="validation-progress"
+  role="progressbar"
+  aria-label="Validation progress"
+  i18n-aria-label
+  aria-valuemin="0"
+  aria-valuemax="4"
+  [attr.aria-valuenow]="completedSteps()"
+>
+  @for (step of validationSteps; track step; let stepIndex = $index) {
+    <div
+      class="validation-step"
+      [class.validation-step--complete]="isStepComplete(stepIndex)"
+    >
+      @if (isStepComplete(stepIndex)) {
+        <span class="validation-step-dot" aria-label="Complete" i18n-aria-label>
+          <app-icon name="check" size="size-xsmall" aria-hidden="true" />
+        </span>
+      } @else {
+        <span
+          class="validation-step-dot"
+          aria-label="Not complete"
+          i18n-aria-label
+        >
+          <app-icon name="cross" size="size-xsmall" aria-hidden="true" />
+        </span>
+      }
+
+      <span class="validation-step-label">
+        @switch (step) {
+          @case ("name") {
+            <span i18n>Name</span>
+          }
+          @case ("continent") {
+            <span i18n>Continent</span>
+          }
+          @case ("area") {
+            <span i18n>Area</span>
+          }
+          @case ("locality") {
+            <span i18n>Locality</span>
+          }
+        }
+      </span>
+    </div>
+  }
+</div>

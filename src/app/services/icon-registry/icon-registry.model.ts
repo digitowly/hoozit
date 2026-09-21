@@ -1,11 +1,11 @@
 export type IconName =
   | 'search'
   | 'cross'
+  | 'check'
   | 'map'
   | 'map-arrow'
   | 'user'
   | 'home'
-  | 'arrow-left'
   | 'chevron'
   | 'arrow-link'
   | 'plus'
