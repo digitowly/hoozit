@@ -10,6 +10,7 @@ import {
 } from '../../../services/occurrence/occurrence.model';
 import { OccurrenceValidationService } from '../../../services/occurrence/occurrence-validation/occurrence-validation.service';
 import { OccurrencePublicationService } from '../../../services/occurrence/occurrence-publication/occurrence-publication.service';
+import { OccurrenceValidationResponse } from '../../../services/occurrence/occurrence-validation/occurrence-validation.model';
 
 describe('SubmittedOccurrencesComponent', () => {
   let component: SubmittedOccurrencesComponent;
@@ -17,9 +18,16 @@ describe('SubmittedOccurrencesComponent', () => {
   const validate = vi.fn();
   const publish = vi.fn();
   const reload = vi.fn();
+  const clearValidationResult = vi.fn();
   const validationStatus = signal<
     'idle' | 'error' | 'loading' | 'reloading' | 'resolved' | 'local'
   >('idle');
+  const occurrencesStatus = signal<
+    'idle' | 'error' | 'loading' | 'reloading' | 'resolved' | 'local'
+  >('resolved');
+  const validationValue = signal<OccurrenceValidationResponse | undefined>(
+    undefined,
+  );
   const occurrences = signal<Occurrence[]>([]);
   const publicationLoading = signal(false);
 
@@ -28,7 +36,20 @@ describe('SubmittedOccurrencesComponent', () => {
     publish.mockReset();
     publish.mockResolvedValue(true);
     reload.mockReset();
+    reload.mockImplementation(() => {
+      occurrencesStatus.set('reloading');
+      return true;
+    });
+    clearValidationResult.mockReset();
+    clearValidationResult.mockImplementation(
+      (result: OccurrenceValidationResponse | undefined) => {
+        validationValue.set(result);
+        validationStatus.set('local');
+      },
+    );
     validationStatus.set('idle');
+    occurrencesStatus.set('resolved');
+    validationValue.set(undefined);
     publicationLoading.set(false);
     occurrences.set([
       occurrence('draft-id', SubmissionStatus.DRAFT),
@@ -43,6 +64,7 @@ describe('SubmittedOccurrencesComponent', () => {
           useValue: {
             resource: {
               value: occurrences,
+              status: occurrencesStatus,
               reload,
             },
           },
@@ -51,9 +73,10 @@ describe('SubmittedOccurrencesComponent', () => {
           provide: OccurrenceValidationService,
           useValue: {
             resource: {
-              value: signal(undefined),
+              value: validationValue,
               status: validationStatus,
               isLoading: signal(false),
+              set: clearValidationResult,
             },
             validate,
             isValidating: () => false,
@@ -172,6 +195,27 @@ describe('SubmittedOccurrencesComponent', () => {
     expect(reload).toHaveBeenCalledOnce();
   });
 
+  it('clears the validation result after the occurrence reload resolves', () => {
+    occurrences.set([occurrence('draft-id', SubmissionStatus.DRAFT)]);
+    validationValue.set(validationResponse('draft-id'));
+    validationStatus.set('resolved');
+    TestBed.tick();
+    fixture.detectChanges();
+
+    expect(reload).toHaveBeenCalledOnce();
+    expect(clearValidationResult).not.toHaveBeenCalled();
+    expect(fixture.nativeElement.querySelector('.publish-button')).toBeTruthy();
+
+    occurrences.set([occurrence('draft-id', SubmissionStatus.NAME_VERIFIED)]);
+    occurrencesStatus.set('resolved');
+    TestBed.tick();
+    fixture.detectChanges();
+
+    expect(clearValidationResult).toHaveBeenCalledOnce();
+    expect(clearValidationResult).toHaveBeenCalledWith(undefined);
+    expect(fixture.nativeElement.querySelector('.publish-button')).toBeNull();
+  });
+
   it('publishes a verified occurrence and reloads the list', async () => {
     occurrences.set([occurrence('verified-id', SubmissionStatus.VERIFIED)]);
     fixture.detectChanges();
@@ -201,5 +245,19 @@ function occurrence(id: string, status: SubmissionStatus): Occurrence {
     detection_method: 'visual',
     evidence_type: 'photo',
     coordinates: { latitude: 52.52, longitude: 13.405 },
+  };
+}
+
+function validationResponse(id: string): OccurrenceValidationResponse {
+  return {
+    id,
+    status: SubmissionStatus.GEO_CONTINENT_VERIFIED,
+    validation: {
+      has_specific_name: true,
+      has_valid_continent: true,
+      has_valid_country: null,
+      has_valid_region: null,
+      has_valid_locality: null,
+    },
   };
 }
