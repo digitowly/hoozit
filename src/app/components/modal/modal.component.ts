@@ -33,6 +33,7 @@ export class ModalComponent implements OnDestroy {
   readonly title = input('');
   readonly heroImage = input<ImageSource | null>(null);
   readonly isLoading = input(false);
+  readonly hasBackdrop = input<boolean>();
 
   readonly handleClose = output();
 
@@ -41,6 +42,9 @@ export class ModalComponent implements OnDestroy {
   private readonly appRef = inject(ApplicationRef);
 
   readonly open = computed(() => this.modalService.isOpen(this.modalId()));
+  protected readonly showBackdrop = computed(
+    () => this.hasBackdrop() ?? this.modalType() === 'large',
+  );
 
   @ViewChild('modalTemplate') private modalTemplate!: TemplateRef<void>;
   private viewRef?: EmbeddedViewRef<void>;
@@ -65,6 +69,8 @@ export class ModalComponent implements OnDestroy {
       if (!this.viewReady()) return;
       if (this.open()) {
         this.attachView();
+      } else if (this.modalService.hasOpenModal()) {
+        this.cleanupView();
       } else {
         const id = setTimeout(() => this.cleanupView(), 400);
         onCleanup(() => clearTimeout(id));
@@ -78,6 +84,7 @@ export class ModalComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
+    this.modalService.close(this.modalId());
     this.cleanupView();
   }
 

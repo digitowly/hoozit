@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 
@@ -61,7 +61,14 @@ export class OccurrenceViewComponent {
 
   constructor() {
     effect(() => {
-      this.userOccurrenceService.id.set(this.params().id);
+      const id = this.params().id;
+      untracked(() => {
+        if (this.userOccurrenceService.id() === id) {
+          this.userOccurrenceService.resource.reload();
+        } else {
+          this.userOccurrenceService.id.set(id);
+        }
+      });
     });
 
     effect(() => {

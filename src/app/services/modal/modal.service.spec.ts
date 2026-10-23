@@ -10,10 +10,7 @@ describe('ModalService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideZonelessChangeDetection(),
-        provideRouter([]),
-      ],
+      providers: [provideZonelessChangeDetection(), provideRouter([])],
     });
 
     service = TestBed.inject(ModalService);
@@ -39,15 +36,35 @@ describe('ModalService', () => {
     expect(service.isOpen('a')).toBe(false);
   });
 
-  it('should track multiple modals independently', () => {
+  it.each([
+    ['compact', 'compact'],
+    ['compact', 'large'],
+    ['large', 'compact'],
+    ['large', 'large'],
+  ] as const)(
+    'replaces a %s modal with a %s modal',
+    (previousType, nextType) => {
+      service.open('a', previousType);
+      TestBed.tick();
+      service.open('b', nextType);
+      TestBed.tick();
+
+      expect(service.isOpen('a')).toBe(false);
+      expect(service.isOpen('b')).toBe(true);
+      expect(service.hasOpenModal()).toBe(true);
+      expect(document.body.style.overflow).toBe(
+        nextType === 'large' ? 'hidden' : '',
+      );
+    },
+  );
+
+  it('ignores a delayed close for a replaced modal', () => {
     service.open('a');
     service.open('b');
-    expect(service.isOpen('a')).toBe(true);
-    expect(service.isOpen('b')).toBe(true);
-
     service.close('a');
-    expect(service.isOpen('a')).toBe(false);
+
     expect(service.isOpen('b')).toBe(true);
+    expect(service.hasOpenModal()).toBe(true);
   });
 
   it('should close all modals', () => {
@@ -56,6 +73,7 @@ describe('ModalService', () => {
     service.closeAll();
     expect(service.isOpen('a')).toBe(false);
     expect(service.isOpen('b')).toBe(false);
+    expect(service.hasOpenModal()).toBe(false);
   });
 
   it('should close all modals on NavigationStart', async () => {
@@ -100,7 +118,7 @@ describe('ModalService', () => {
     expect(document.body.style.overflow).not.toBe('hidden');
   });
 
-  it('should keep body overflow hidden while any large modal remains open', () => {
+  it('keeps the active large modal scroll lock when closing its predecessor', () => {
     service.open('a', 'large');
     service.open('b', 'large');
     TestBed.tick();

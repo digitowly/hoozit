@@ -1,6 +1,6 @@
 <ng-template #modalTemplate>
-  @if (open() && modalType() === "large") {
-    <div class="backdrop" (click)="close()"></div>
+  @if (showBackdrop()) {
+    <div class="backdrop" [class.closed]="!open()" (click)="close()"></div>
   }
   <div
     class="modal"
@@ -23,7 +23,7 @@
       </div>
     }
     <div class="header">
-      @if (modalType() === 'compact' && title()) {
+      @if (modalType() === "compact" && title()) {
         <h2 class="header-title">{{ title() }}</h2>
       }
       <button class="close-button" (click)="close()">
@@ -39,7 +39,7 @@
       @if (isLoading()) {
         <p>Loading...</p>
       } @else {
-        @if (modalType() === 'large') {
+        @if (modalType() === "large") {
           <h2>{{ title() }}</h2>
         }
         <ng-content />

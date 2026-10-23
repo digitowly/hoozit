@@ -30,6 +30,7 @@ describe('LogOccurrenceModalComponent', () => {
     reset: ReturnType<typeof vi.fn>;
   };
   let mockModalService: {
+    hasOpenModal: ReturnType<typeof signal<boolean>>;
     isOpen: ReturnType<typeof vi.fn>;
     open: ReturnType<typeof vi.fn>;
     close: ReturnType<typeof vi.fn>;
@@ -69,6 +70,7 @@ describe('LogOccurrenceModalComponent', () => {
     };
 
     mockModalService = {
+      hasOpenModal: signal(false),
       isOpen: vi.fn().mockReturnValue(false),
       open: vi.fn(),
       close: vi.fn(),

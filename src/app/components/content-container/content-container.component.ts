@@ -16,7 +16,8 @@ export class ContentContainerComponent {
   readonly title = input<string>('');
   readonly hideBackButton = input(false);
   readonly hasPreviousRoute =
-    this.router.lastSuccessfulNavigation()?.previousNavigation != null;
+    (this.router.currentNavigation() ?? this.router.lastSuccessfulNavigation())
+      ?.previousNavigation != null;
 
   goBack(): void {
     this.location.back();

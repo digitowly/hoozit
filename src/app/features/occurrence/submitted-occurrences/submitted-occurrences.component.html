@@ -4,12 +4,12 @@
       <div class="occurrence-item-header">
         <p class="occurrence-item-title">{{ occurrence.submitted_name }}</p>
         <a
-          class="btn-link occurrence-detail-link"
+          class="occurrence-detail-link"
           tooltip="View occurrence details"
           [routerLink]="['/user/occurrence', occurrence.id]"
         >
           <span i18n>Details</span>
-          <app-icon name="chevron" size="size-small" />
+          <app-icon name="chevron" size="size-xsmall" aria-hidden="true" />
         </a>
       </div>
 
@@ -20,6 +20,7 @@
       <div class="occurrence-status-row">
         <occurrence-state-labels
           [occurrence]="occurrence"
+          [hasBackdrop]="true"
           (visibilityChanged)="reloadOccurrences()"
         />
       </div>

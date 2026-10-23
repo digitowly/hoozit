@@ -174,6 +174,28 @@ describe('SubmittedOccurrencesComponent', () => {
     ).toBe(true);
   });
 
+  it.each(['.status-chip', '.visibility-chip'])(
+    'dismisses the list dialog opened from %s when clicking its backdrop',
+    async (selector) => {
+      fixture.nativeElement.querySelector(selector).click();
+      await fixture.whenStable();
+      const modalService = TestBed.inject(ModalService);
+      expect(modalService.hasOpenModal()).toBe(true);
+      expect(document.querySelectorAll('.backdrop')).toHaveLength(1);
+
+      document.querySelector<HTMLElement>('.backdrop')!.click();
+      await fixture.whenStable();
+
+      expect(modalService.hasOpenModal()).toBe(false);
+      expect(document.querySelector('.backdrop.closed')).toBeTruthy();
+      expect(
+        fixture.nativeElement
+          .querySelector(selector)
+          .getAttribute('aria-expanded'),
+      ).toBe('false');
+    },
+  );
+
   it('keeps publication actions out of the card body', () => {
     occurrences.set([
       occurrence('verified-id', SubmissionStatus.GEO_REGION_VERIFIED),
