@@ -9,6 +9,12 @@
   >
     <app-icon [name]="statusIcon()" size="size-small" aria-hidden="true" />
     <span>{{ statusLabel() }}</span>
+    <app-icon
+      class="chip-chevron"
+      name="chevron"
+      size="size-xsmall"
+      aria-hidden="true"
+    />
   </button>
 
   <button
@@ -34,12 +40,19 @@
     } @else {
       <span i18n>Private</span>
     }
+    <app-icon
+      class="chip-chevron"
+      name="chevron"
+      size="size-xsmall"
+      aria-hidden="true"
+    />
   </button>
 </div>
 
 <app-modal
   modalType="compact"
   [modalId]="validationModalId()"
+  [hasBackdrop]="hasBackdrop()"
   title="Validation progress"
   i18n-title
 >
@@ -52,6 +65,7 @@
 <app-modal
   modalType="compact"
   [modalId]="visibilityModalId()"
+  [hasBackdrop]="hasBackdrop()"
   title="Occurrence visibility"
   i18n-title
 >

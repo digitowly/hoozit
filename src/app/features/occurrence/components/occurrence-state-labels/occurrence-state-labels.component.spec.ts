@@ -122,6 +122,35 @@ describe('OccurrenceStateLabelsComponent', () => {
     );
   });
 
+  it('replaces validation progress with visibility settings and back', async () => {
+    fixture.nativeElement.querySelector('.status-chip').click();
+    await fixture.whenStable();
+    expect(document.querySelectorAll('.modal')).toHaveLength(1);
+    expect(document.querySelector('.modal')?.textContent).toContain(
+      'Validation progress',
+    );
+
+    fixture.nativeElement.querySelector('.visibility-chip').click();
+    await fixture.whenStable();
+    expect(modalService.isOpen('occurrence-validation-occurrence-id')).toBe(
+      false,
+    );
+    expect(document.querySelectorAll('.modal')).toHaveLength(1);
+    expect(document.querySelector('.modal')?.textContent).toContain(
+      'Occurrence visibility',
+    );
+
+    fixture.nativeElement.querySelector('.status-chip').click();
+    await fixture.whenStable();
+    expect(modalService.isOpen('occurrence-visibility-occurrence-id')).toBe(
+      false,
+    );
+    expect(document.querySelectorAll('.modal')).toHaveLength(1);
+    expect(document.querySelector('.modal')?.textContent).toContain(
+      'Validation progress',
+    );
+  });
+
   it('unpublishes a public occurrence and emits a visibility change', async () => {
     const changed = vi.fn();
     fixture.componentInstance.visibilityChanged.subscribe(changed);

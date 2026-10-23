@@ -1,3 +1,9 @@
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
 .icon-wrapper {
   display: flex;
   justify-content: center;
@@ -7,17 +13,21 @@
 .size {
   &-xsmall {
     width: 14px;
+    height: 14px;
   }
 
   &-small {
     width: 18px;
+    height: 18px;
   }
 
   &-medium {
     width: 20px;
+    height: 20px;
   }
 
   &-large {
     width: 36px;
+    height: 36px;
   }
 }

@@ -39,6 +39,7 @@ const STATUS_LABELS: Record<SubmissionStatus, string> = {
 })
 export class OccurrenceStateLabelsComponent {
   readonly occurrence = input.required<Occurrence>();
+  readonly hasBackdrop = input(false);
   readonly visibilityChanged = output<void>();
 
   private readonly modalService = inject(ModalService);

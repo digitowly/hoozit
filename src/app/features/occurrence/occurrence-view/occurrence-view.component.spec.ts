@@ -128,6 +128,30 @@ describe('OccurrenceViewComponent', () => {
     expect(occurrenceId()).toBe('test-id');
   });
 
+  it('refetches a previously viewed occurrence when its detail page is reopened', async () => {
+    occurrenceValue.set(occurrence());
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement.querySelector('.visibility-chip').textContent,
+    ).toContain('Private');
+    fixture.destroy();
+    reload.mockClear();
+
+    fixture = TestBed.createComponent(OccurrenceViewComponent);
+    await fixture.whenStable();
+
+    expect(reload).toHaveBeenCalledOnce();
+
+    occurrenceValue.set({ ...occurrence(), is_visible: true });
+    occurrenceStatus.set('resolved');
+    await fixture.whenStable();
+
+    expect(
+      fixture.nativeElement.querySelector('.visibility-chip').textContent,
+    ).toContain('Public');
+    expect(reload).toHaveBeenCalledOnce();
+  });
+
   it('renders the occurrence details', () => {
     occurrenceValue.set(occurrence());
     fixture.detectChanges();
