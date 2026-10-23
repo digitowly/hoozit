@@ -147,9 +147,7 @@ describe('ScoutLensComponent', () => {
     const controls: HTMLElement | null =
       fixture.nativeElement.querySelector('.scout-controls');
 
-    expect(getComputedStyle(controls!).bottom).toBe(
-      'calc(72px + 0.75rem + 1rem)',
-    );
+    expect(getComputedStyle(controls!).bottom).toBe('100px');
   });
 
   it('renders search between the lens size buttons when a ghost lens is available', () => {
