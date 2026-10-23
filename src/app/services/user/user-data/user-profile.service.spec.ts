@@ -10,6 +10,7 @@ import {
 } from '@angular/common/http/testing';
 
 const mockUserResponse: UserResponse = {
+  id: 'mock-user-id',
   email: 'mockuser@mail.com',
   nickname: 'mock',
   image: '',

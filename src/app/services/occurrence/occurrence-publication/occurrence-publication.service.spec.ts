@@ -84,6 +84,19 @@ describe('OccurrencePublicationService', () => {
     await expect(result).resolves.toBe(true);
   });
 
+  it('exposes an unpublish failure for the requested occurrence', async () => {
+    const result = service.unpublish({ ...occurrence(), is_visible: true });
+
+    http
+      .expectOne(
+        `${environment.scoutUrl}/user/occurrences/occurrence-id/unpublish`,
+      )
+      .flush(null, { status: 500, statusText: 'Server Error' });
+
+    await expect(result).resolves.toBe(false);
+    expect(service.hasUnpublishError('occurrence-id')).toBe(true);
+  });
+
   it('exposes a publish failure for the requested occurrence', async () => {
     const result = service.publish(occurrence());
 
@@ -101,7 +114,7 @@ describe('OccurrencePublicationService', () => {
 function occurrence(): Occurrence {
   return {
     id: 'occurrence-id',
-    author: { nickname: 'Scout', image: '', role: 'user' },
+    author: { id: 'scout-id', nickname: 'Scout', image: '', role: 'user' },
     submitted_name: 'Red fox',
     description: 'Seen near the forest edge',
     confidence: 90,

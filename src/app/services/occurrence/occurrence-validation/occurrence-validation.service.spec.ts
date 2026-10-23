@@ -77,7 +77,7 @@ describe('OccurrenceValidationService', () => {
 function occurrence(status: SubmissionStatus): Occurrence {
   return {
     id: 'occurrence-id',
-    author: { nickname: 'Scout', image: '', role: 'user' },
+    author: { id: 'scout-id', nickname: 'Scout', image: '', role: 'user' },
     submitted_name: 'Red fox',
     description: 'Seen near the forest edge',
     confidence: 90,
