@@ -55,8 +55,16 @@ export class OccurrencePublicationService {
     return this.matchesRequest(this.activeRequest(), occurrenceId, 'publish');
   }
 
+  isUnpublishing(occurrenceId: string): boolean {
+    return this.matchesRequest(this.activeRequest(), occurrenceId, 'unpublish');
+  }
+
   hasPublishError(occurrenceId: string): boolean {
     return this.matchesRequest(this.failedRequest(), occurrenceId, 'publish');
+  }
+
+  hasUnpublishError(occurrenceId: string): boolean {
+    return this.matchesRequest(this.failedRequest(), occurrenceId, 'unpublish');
   }
 
   private async updateVisibility(

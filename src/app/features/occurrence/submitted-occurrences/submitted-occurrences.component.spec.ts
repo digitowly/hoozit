@@ -1,6 +1,8 @@
 import { signal } from '@angular/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
 
 import { SubmittedOccurrencesComponent } from './submitted-occurrences.component';
 import { UserOccurrencesService } from '../../../services/occurrence/user-occurrences/user-occurrences.service';
@@ -11,12 +13,16 @@ import {
 import { OccurrenceValidationService } from '../../../services/occurrence/occurrence-validation/occurrence-validation.service';
 import { OccurrencePublicationService } from '../../../services/occurrence/occurrence-publication/occurrence-publication.service';
 import { OccurrenceValidationResponse } from '../../../services/occurrence/occurrence-validation/occurrence-validation.model';
+import { ModalService } from '../../../services/modal/modal.service';
+import { OccurrenceStateLabelsComponent } from '../components/occurrence-state-labels/occurrence-state-labels.component';
+import { UserProfileService } from '../../../services/user/user-data/user-profile.service';
 
 describe('SubmittedOccurrencesComponent', () => {
   let component: SubmittedOccurrencesComponent;
   let fixture: ComponentFixture<SubmittedOccurrencesComponent>;
   const validate = vi.fn();
   const publish = vi.fn();
+  const unpublish = vi.fn();
   const reload = vi.fn();
   const clearValidationResult = vi.fn();
   const validationStatus = signal<
@@ -35,6 +41,8 @@ describe('SubmittedOccurrencesComponent', () => {
     validate.mockReset();
     publish.mockReset();
     publish.mockResolvedValue(true);
+    unpublish.mockReset();
+    unpublish.mockResolvedValue(true);
     reload.mockReset();
     reload.mockImplementation(() => {
       occurrencesStatus.set('reloading');
@@ -59,6 +67,11 @@ describe('SubmittedOccurrencesComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SubmittedOccurrencesComponent],
       providers: [
+        provideRouter([]),
+        {
+          provide: UserProfileService,
+          useValue: { profileResource: { status: signal('idle') } },
+        },
         {
           provide: UserOccurrencesService,
           useValue: {
@@ -88,6 +101,7 @@ describe('SubmittedOccurrencesComponent', () => {
           useValue: {
             isLoading: publicationLoading,
             publish,
+            unpublish,
             canPublish: (occurrence: Occurrence) => {
               const publishableStatuses = new Set<SubmissionStatus>([
                 SubmissionStatus.GEO_CONTINENT_VERIFIED,
@@ -103,7 +117,9 @@ describe('SubmittedOccurrencesComponent', () => {
               );
             },
             isPublishing: () => false,
+            isUnpublishing: () => false,
             hasPublishError: () => false,
+            hasUnpublishError: () => false,
           },
         },
       ],
@@ -118,46 +134,59 @@ describe('SubmittedOccurrencesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('shows a validation button only for draft occurrences', () => {
-    const buttons = fixture.nativeElement.querySelectorAll('.validate-button');
-
-    expect(buttons).toHaveLength(1);
-    expect(buttons[0].textContent).toContain('Validate');
-    expect(buttons[0].querySelector('app-icon[name="check"]')).toBeTruthy();
-    expect(buttons[0].classList).toContain('btn-primary');
-  });
-
-  it('shows validation indicators in place of the button after draft', () => {
+  it('keeps confidence and validation actions out of the card body', () => {
     expect(
-      fixture.nativeElement.querySelectorAll(
-        'occurrence-validation-indicators',
-      ),
-    ).toHaveLength(1);
+      fixture.nativeElement.querySelector('.occurrence-item-confidence'),
+    ).toBeNull();
+    expect(fixture.nativeElement.querySelector('.validate-button')).toBeNull();
   });
 
-  it.each([
-    SubmissionStatus.GEO_CONTINENT_VERIFIED,
-    SubmissionStatus.GEO_COUNTRY_VERIFIED,
-    SubmissionStatus.GEO_REGION_VERIFIED,
-    SubmissionStatus.GEO_LOCALITY_VERIFIED,
-    SubmissionStatus.VERIFIED,
-  ])(
-    'shows a publish button for a private occurrence with status %s',
-    (status) => {
-      occurrences.set([occurrence('verified-id', status)]);
-      fixture.detectChanges();
+  it('links every occurrence to its detail page', () => {
+    const links = fixture.nativeElement.querySelectorAll(
+      '.occurrence-detail-link',
+    );
 
-      const button = fixture.nativeElement.querySelector('.publish-button');
+    expect(links).toHaveLength(2);
+    expect(links[0].getAttribute('href')).toBe('/user/occurrence/draft-id');
+    expect(links[1].getAttribute('href')).toBe('/user/occurrence/review-id');
+  });
 
-      expect(button).toBeTruthy();
-      expect(button.textContent).toContain('Publish');
-      expect(button.querySelector('app-icon[name="eye-open"]')).toBeTruthy();
-      expect(button.classList).toContain('btn-secondary');
-      expect(button.classList).not.toContain('btn-primary');
-    },
-  );
+  it('shows the same state capsules for every occurrence', () => {
+    expect(
+      fixture.nativeElement.querySelectorAll('occurrence-state-labels'),
+    ).toHaveLength(2);
+    expect(
+      fixture.nativeElement.querySelectorAll('.status-chip')[0].textContent,
+    ).toContain('Draft');
+    expect(
+      fixture.nativeElement.querySelectorAll('.status-chip')[1].textContent,
+    ).toContain('In review');
+    expect(
+      fixture.nativeElement.querySelector('occurrence-validation-indicators'),
+    ).toBeNull();
+  });
 
-  it('shows public text instead of an action for a published occurrence', () => {
+  it('opens the validation progress modal from a status capsule', () => {
+    fixture.nativeElement.querySelectorAll('.status-chip')[1].click();
+
+    expect(
+      TestBed.inject(ModalService).isOpen('occurrence-validation-review-id'),
+    ).toBe(true);
+  });
+
+  it('keeps publication actions out of the card body', () => {
+    occurrences.set([
+      occurrence('verified-id', SubmissionStatus.GEO_REGION_VERIFIED),
+    ]);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.publish-button')).toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('.visibility-chip'),
+    ).toBeTruthy();
+  });
+
+  it('shows public state without a publication action', () => {
     occurrences.set([
       {
         ...occurrence('public-id', SubmissionStatus.VERIFIED),
@@ -167,25 +196,18 @@ describe('SubmittedOccurrencesComponent', () => {
     fixture.detectChanges();
 
     expect(
-      fixture.nativeElement.querySelector('.publication-state').textContent,
+      fixture.nativeElement.querySelector('.visibility-chip').textContent,
     ).toContain('Public');
     expect(
-      fixture.nativeElement.querySelector(
-        '.publication-state app-icon[name="eye-open"]',
-      ),
+      fixture.nativeElement.querySelector('.visibility-chip app-icon'),
     ).toBeTruthy();
     expect(
       fixture.nativeElement.querySelector('.occurrence-item-visibility'),
     ).toBeNull();
     expect(fixture.nativeElement.querySelector('.publish-button')).toBeNull();
-  });
-
-  it('delegates validation to the validation service', () => {
-    fixture.nativeElement.querySelector('.validate-button').click();
-
-    expect(validate).toHaveBeenCalledWith(
-      expect.objectContaining({ id: 'draft-id' }),
-    );
+    expect(
+      fixture.nativeElement.querySelector('.occurrence-action-row'),
+    ).toBeNull();
   });
 
   it('reloads occurrences after validation resolves', () => {
@@ -204,7 +226,9 @@ describe('SubmittedOccurrencesComponent', () => {
 
     expect(reload).toHaveBeenCalledOnce();
     expect(clearValidationResult).not.toHaveBeenCalled();
-    expect(fixture.nativeElement.querySelector('.publish-button')).toBeTruthy();
+    expect(
+      fixture.nativeElement.querySelector('.status-chip').textContent,
+    ).toContain('Continent verified');
 
     occurrences.set([occurrence('draft-id', SubmissionStatus.NAME_VERIFIED)]);
     occurrencesStatus.set('resolved');
@@ -213,28 +237,29 @@ describe('SubmittedOccurrencesComponent', () => {
 
     expect(clearValidationResult).toHaveBeenCalledOnce();
     expect(clearValidationResult).toHaveBeenCalledWith(undefined);
-    expect(fixture.nativeElement.querySelector('.publish-button')).toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('.status-chip').textContent,
+    ).toContain('Name verified');
   });
 
-  it('publishes a verified occurrence and reloads the list', async () => {
+  it('reloads the list after visibility changes', () => {
     occurrences.set([occurrence('verified-id', SubmissionStatus.VERIFIED)]);
     fixture.detectChanges();
+    reload.mockClear();
 
-    fixture.nativeElement.querySelector('.publish-button').click();
+    const labels = fixture.debugElement.query(
+      By.directive(OccurrenceStateLabelsComponent),
+    ).componentInstance as OccurrenceStateLabelsComponent;
+    labels.visibilityChanged.emit();
 
-    await vi.waitFor(() => {
-      expect(publish).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'verified-id' }),
-      );
-      expect(reload).toHaveBeenCalledOnce();
-    });
+    expect(reload).toHaveBeenCalledOnce();
   });
 });
 
 function occurrence(id: string, status: SubmissionStatus): Occurrence {
   return {
     id,
-    author: { nickname: 'Scout', image: '', role: 'user' },
+    author: { id: 'scout-id', nickname: 'Scout', image: '', role: 'user' },
     submitted_name: 'Red fox',
     description: 'Seen near the forest edge',
     confidence: 90,

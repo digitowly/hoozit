@@ -5,8 +5,8 @@ import { SubmissionStatus } from '../../../../services/occurrence/occurrence.mod
 @Component({
   selector: 'occurrence-validation-indicators',
   imports: [IconComponent],
-  templateUrl: './validation-indicators.component.html',
-  styleUrl: './validation-indicators.component.scss',
+  templateUrl: './occurrence-validation-indicators.component.html',
+  styleUrl: './occurrence-validation-indicators.component.scss',
 })
 export class OccurrenceValidationIndicatorsComponent {
   readonly status = input.required<SubmissionStatus>();

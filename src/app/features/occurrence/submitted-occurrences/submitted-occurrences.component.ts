@@ -1,21 +1,19 @@
 import { Component, computed, effect, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { UserOccurrencesService } from '../../../services/occurrence/user-occurrences/user-occurrences.service';
-import {
-  Occurrence,
-  SubmissionStatus,
-} from '../../../services/occurrence/occurrence.model';
+import { Occurrence } from '../../../services/occurrence/occurrence.model';
 import { IconComponent } from '../../../components/icon/icon.component';
 import { TooltipDirective } from '../../../components/tooltip/tooltip.directive';
 import { OccurrenceValidationService } from '../../../services/occurrence/occurrence-validation/occurrence-validation.service';
-import { OccurrencePublicationService } from '../../../services/occurrence/occurrence-publication/occurrence-publication.service';
-import { OccurrenceValidationIndicatorsComponent } from './validation-indicators/validation-indicators.component';
+import { OccurrenceStateLabelsComponent } from '../components/occurrence-state-labels/occurrence-state-labels.component';
 
 @Component({
   selector: 'submitted-occurrences',
   imports: [
     IconComponent,
+    RouterLink,
     TooltipDirective,
-    OccurrenceValidationIndicatorsComponent,
+    OccurrenceStateLabelsComponent,
   ],
   templateUrl: './submitted-occurrences.component.html',
   styleUrl: './submitted-occurrences.component.scss',
@@ -23,9 +21,7 @@ import { OccurrenceValidationIndicatorsComponent } from './validation-indicators
 export class SubmittedOccurrencesComponent {
   private readonly userOccurrencesService = inject(UserOccurrencesService);
   private validationReloadPending = false;
-  protected readonly validationService = inject(OccurrenceValidationService);
-  protected readonly publicationService = inject(OccurrencePublicationService);
-  protected readonly SubmissionStatus = SubmissionStatus;
+  private readonly validationService = inject(OccurrenceValidationService);
 
   protected readonly occurrences = computed<Occurrence[]>(() => {
     const occurrences = this.userOccurrencesService.resource.value() || [];
@@ -66,13 +62,7 @@ export class SubmittedOccurrencesComponent {
     });
   }
 
-  protected validate(occurrence: Occurrence): void {
-    this.validationService.validate(occurrence);
-  }
-
-  protected async publish(occurrence: Occurrence): Promise<void> {
-    if (await this.publicationService.publish(occurrence)) {
-      this.userOccurrencesService.resource.reload();
-    }
+  protected reloadOccurrences(): void {
+    this.userOccurrencesService.resource.reload();
   }
 }

@@ -32,7 +32,7 @@ export enum SubmissionStatus {
 
 export interface Occurrence {
   id: string;
-  author: { nickname: string; image: string; role: string };
+  author: { id: string; nickname: string; image: string; role: string };
   submitted_name: string;
   description: string;
   confidence: number;

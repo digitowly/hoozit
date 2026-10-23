@@ -1,0 +1,140 @@
+<div class="state-labels">
+  <button
+    class="status-chip"
+    type="button"
+    aria-haspopup="dialog"
+    [attr.aria-expanded]="isValidationModalOpen()"
+    [attr.aria-label]="'Show validation progress: ' + statusLabel()"
+    (click)="openValidationProgress()"
+  >
+    <app-icon [name]="statusIcon()" size="size-small" aria-hidden="true" />
+    <span>{{ statusLabel() }}</span>
+  </button>
+
+  <button
+    class="visibility-chip"
+    type="button"
+    aria-haspopup="dialog"
+    [class.visibility-chip-public]="occurrence().is_visible"
+    [attr.aria-expanded]="isVisibilityModalOpen()"
+    [attr.aria-label]="
+      occurrence().is_visible
+        ? 'Manage public visibility'
+        : 'Manage private visibility'
+    "
+    (click)="openVisibility()"
+  >
+    <app-icon
+      [name]="occurrence().is_visible ? 'eye-open' : 'eye-closed'"
+      size="size-small"
+      aria-hidden="true"
+    />
+    @if (occurrence().is_visible) {
+      <span i18n>Public</span>
+    } @else {
+      <span i18n>Private</span>
+    }
+  </button>
+</div>
+
+<app-modal
+  modalType="compact"
+  [modalId]="validationModalId()"
+  title="Validation progress"
+  i18n-title
+>
+  <div class="validation-modal-content">
+    <p>{{ statusLabel() }}</p>
+    <occurrence-validation-indicators [status]="occurrence().status" />
+  </div>
+</app-modal>
+
+<app-modal
+  modalType="compact"
+  [modalId]="visibilityModalId()"
+  title="Occurrence visibility"
+  i18n-title
+>
+  <div class="visibility-modal-content">
+    @if (occurrence().is_visible) {
+      <p i18n>This occurrence is public and can be seen by everyone.</p>
+      @if (isOwner()) {
+        <p i18n>Unpublishing it will return it to a private state.</p>
+        <button
+          class="visibility-action unpublish-button"
+          type="button"
+          [disabled]="publicationService.isLoading()"
+          (click)="updateVisibility()"
+        >
+          <app-icon name="eye-closed" size="size-small" aria-hidden="true" />
+          @if (publicationService.isUnpublishing(occurrence().id)) {
+            <span i18n>Unpublishing…</span>
+          } @else {
+            <span i18n>Unpublish</span>
+          }
+        </button>
+
+        @if (publicationService.hasUnpublishError(occurrence().id)) {
+          <p class="action-error" role="alert" i18n>
+            Unpublishing failed. Please try again.
+          </p>
+        }
+      }
+    } @else if (publicationService.canPublish(occurrence())) {
+      <p i18n>
+        Publishing makes this occurrence visible to everyone. Its location has
+        been verified and is ready to share.
+      </p>
+      @if (isOwner()) {
+        <button
+          class="visibility-action publish-button btn-secondary"
+          type="button"
+          [disabled]="publicationService.isLoading()"
+          (click)="updateVisibility()"
+        >
+          <app-icon name="eye-open" size="size-small" aria-hidden="true" />
+          @if (publicationService.isPublishing(occurrence().id)) {
+            <span i18n>Publishing…</span>
+          } @else {
+            <span i18n>Publish</span>
+          }
+        </button>
+
+        @if (publicationService.hasPublishError(occurrence().id)) {
+          <p class="action-error" role="alert" i18n>
+            Publishing failed. Please try again.
+          </p>
+        }
+      }
+    } @else if (occurrence().status === SubmissionStatus.DRAFT) {
+      <p i18n>
+        Validate this occurrence before publishing it. Publication becomes
+        available as soon as its location is verified.
+      </p>
+      <button
+        class="visibility-action validate-button btn-primary"
+        type="button"
+        [disabled]="validationService.resource.isLoading()"
+        (click)="validateOccurrence()"
+      >
+        <app-icon name="check" size="size-small" aria-hidden="true" />
+        @if (validationService.isValidating(occurrence().id)) {
+          <span i18n>Validating…</span>
+        } @else {
+          <span i18n>Validate</span>
+        }
+      </button>
+
+      @if (validationService.hasError(occurrence().id)) {
+        <p class="action-error" role="alert" i18n>
+          Validation failed. Please try again.
+        </p>
+      }
+    } @else {
+      <p class="pending-message" i18n>
+        Validation is still in progress. Publishing will become available once
+        the location is verified.
+      </p>
+    }
+  </div>
+</app-modal>

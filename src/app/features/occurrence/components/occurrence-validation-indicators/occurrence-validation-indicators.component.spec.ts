@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { SubmissionStatus } from '../../../../services/occurrence/occurrence.model';
-import { OccurrenceValidationIndicatorsComponent } from './validation-indicators.component';
+import { OccurrenceValidationIndicatorsComponent } from './occurrence-validation-indicators.component';
 
 describe('OccurrenceValidationIndicatorsComponent', () => {
   let fixture: ComponentFixture<OccurrenceValidationIndicatorsComponent>;
@@ -33,7 +33,7 @@ describe('OccurrenceValidationIndicatorsComponent', () => {
     ).toHaveLength(completedSteps);
     expect(
       fixture.nativeElement
-        .querySelector('.validation-progress')
+        .querySelector('.verification-progress')
         .getAttribute('aria-valuenow'),
     ).toBe(String(completedSteps));
   });
