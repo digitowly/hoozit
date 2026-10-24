@@ -1,20 +1,29 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { Component, ViewEncapsulation } from '@angular/core';
 
 import { IconComponent } from './icon.component';
 import { registerIcons } from '../../icons';
 import { IconRegistryService } from '../../services/icon-registry/icon-registry.service';
+
+@Component({
+  template: '',
+  styleUrl: '../../../styles.scss',
+  encapsulation: ViewEncapsulation.None,
+})
+class AppStylesComponent {}
 
 describe('IconComponent', () => {
   let fixture: ComponentFixture<IconComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IconComponent],
+      imports: [IconComponent, AppStylesComponent],
     }).compileComponents();
 
     registerIcons(TestBed.inject(IconRegistryService));
-    fixture = TestBed.createComponent(IconComponent);
+    TestBed.createComponent(AppStylesComponent);
+    fixture = TestBed.createComponent(IconComponent, { inferTagName: true });
     fixture.componentRef.setInput('name', 'chevron');
     await fixture.whenStable();
   });
@@ -47,4 +56,22 @@ describe('IconComponent', () => {
       '1.5',
     );
   });
+
+  it.each(['home', 'map', 'search', 'check', 'cross', 'apple'])(
+    'explicitly sizes the injected %s SVG even without width and height attributes',
+    async (name) => {
+      fixture.componentRef.setInput('name', name);
+      await fixture.whenStable();
+
+      const svg = fixture.nativeElement.querySelector('svg');
+      expect(svg).not.toBeNull();
+      expect(svg.hasAttribute('width')).toBe(false);
+      expect(svg.hasAttribute('height')).toBe(false);
+      const style = getComputedStyle(svg);
+      expect(style.display).toBe('block');
+      expect(style.width).toBe('100%');
+      expect(style.height).toBe('100%');
+      expect(style.flexShrink).toBe('0');
+    },
+  );
 });
