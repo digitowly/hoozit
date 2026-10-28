@@ -31,5 +31,22 @@
         />
       </div>
     </div>
+  } @empty {
+    @if (hasLoadedOccurrences()) {
+      <div class="occurrence-empty" role="status">
+        <span class="occurrence-empty-icon" aria-hidden="true">
+          <app-icon name="binoculars" size="size-large" />
+        </span>
+        <h2 i18n="@@occurrencesEmptyTitle">Your first discovery awaits!</h2>
+        <p i18n="@@occurrencesEmptyDescription">
+          No sightings logged yet. Head to the map and add your first wildlife
+          discovery.
+        </p>
+        <a routerLink="/map" class="btn-primary">
+          <app-icon name="map" size="size-small" aria-hidden="true" />
+          <span i18n="@@occurrencesEmptyAction">Explore the map</span>
+        </a>
+      </div>
+    }
   }
 </div>

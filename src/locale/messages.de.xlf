@@ -2,6 +2,18 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="occurrencesEmptyTitle" datatype="html">
+        <source>Your first discovery awaits!</source>
+        <target>Deine erste Entdeckung wartet!</target>
+      </trans-unit>
+      <trans-unit id="occurrencesEmptyDescription" datatype="html">
+        <source> No sightings logged yet. Head to the map and add your first wildlife discovery. </source>
+        <target> Noch keine Beobachtungen erfasst. Öffne die Karte und halte deine erste Tierbeobachtung fest. </target>
+      </trans-unit>
+      <trans-unit id="occurrencesEmptyAction" datatype="html">
+        <source>Explore the map</source>
+        <target>Karte entdecken</target>
+      </trans-unit>
       <trans-unit id="homeLoginTitle" datatype="html">
         <source> Ready to get spotting? </source>
         <target> Bereit für Entdeckungen? </target>

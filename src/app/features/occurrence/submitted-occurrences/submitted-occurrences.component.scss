@@ -13,6 +13,37 @@
   }
 }
 
+.occurrence-empty {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--gradient-surface);
+  text-align: center;
+
+  h2 {
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+  }
+
+  p {
+    max-width: 28rem;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+  }
+}
+
+.occurrence-empty-icon {
+  display: inline-flex;
+  padding: 1rem;
+  border-radius: 50%;
+  background: var(--color-background-overlay);
+  color: var(--color-accent-text);
+}
+
 .occurrence-item {
   display: flex;
   min-width: 0;
