@@ -1,5 +1,4 @@
 @use "../../style/border";
-@use "../../style/color";
 @use "../../style/layout";
 @use "../../style/shadow";
 @use "../../style/breakpoint";
@@ -7,45 +6,30 @@
 $hero-image-height: 250px;
 
 .modal {
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0.035),
-      transparent 45%
-    );
-    pointer-events: none;
-  }
-
+  --modal-inset: 1.5rem;
+  display: flex;
+  flex-direction: column;
   position: fixed;
   bottom: 0;
   left: 0;
 
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.85),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-
-  background: linear-gradient(
-    180deg,
-    var(--color-background-overlay) 0%,
-    var(--color-background) 100%
-  );
+  box-shadow: shadow.$xl;
+  background: var(--gradient-surface);
 
   width: 100%;
-  height: 95%;
+  height: 95dvh;
+  max-height: calc(100dvh - 2rem);
   transform: translateY(0) translateZ(0);
   z-index: 1000000;
   transition:
     transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     opacity 0.25s ease-in;
   border-radius: border.$radius border.$radius 0 0;
-  overflow: scroll;
+  overflow: hidden;
   isolation: isolate;
 
   @media (min-width: breakpoint.$sm) {
+    --modal-inset: 2rem;
     max-width: 650px;
     left: 50%;
     top: 50%;
@@ -64,20 +48,15 @@ $hero-image-height: 250px;
 
   .hero-image {
     width: 100%;
-    height: $hero-image-height;
-    position: absolute;
-    top: 0;
-    left: 0;
-    object-fit: contain;
 
     &-source {
-      padding: 0 1rem;
-      opacity: 0.5;
-      position: absolute;
-      bottom: -1.5rem;
-      right: 0;
+      padding: 0.5rem var(--modal-inset) 0;
+      color: var(--color-text-muted);
       display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
       gap: 0.25rem;
+      overflow-wrap: anywhere;
 
       span,
       a {
@@ -86,87 +65,107 @@ $hero-image-height: 250px;
     }
 
     img {
+      display: block;
       width: 100%;
-      height: 100%;
+      height: $hero-image-height;
       object-fit: cover;
     }
   }
 
   .content {
-    padding: 0 1rem 1rem 1rem;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scroll-padding-block: 1rem;
+  }
 
-    @media (min-width: breakpoint.$sm) {
-      padding: 0 2rem 2rem 2rem;
-    }
-
-    &.with-hero-image {
-      padding: 1rem;
-      margin-top: $hero-image-height - 50px;
-
-      @media (min-width: breakpoint.$sm) {
-        padding: 2rem;
-      }
-    }
-
-    h2 {
-      font-size: 1.2rem;
-      font-weight: 500;
-      margin-bottom: 1.75rem;
-    }
+  .content-body {
+    padding: 1.25rem var(--modal-inset) 2rem;
   }
 
   .header {
     width: 100%;
     display: flex;
+    flex: 0 0 auto;
     justify-content: end;
     align-items: center;
-    margin-bottom: 0.25rem;
-    max-height: 50px;
-    position: sticky;
-    padding: layout.$safe-area-inset-sm;
-    top: 0;
+    gap: 1rem;
+    min-height: 3.5rem;
+    position: relative;
+    padding: 0.875rem var(--modal-inset);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-border) 65%, transparent);
+    background: var(--gradient-surface);
     z-index: 1;
 
-    @media (min-width: breakpoint.$md) {
-      padding: layout.$safe-area-inset-sm * 4 layout.$safe-area-inset-sm * 2;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      inset-inline: 0;
+      height: 1.25rem;
+      background: linear-gradient(
+        to bottom,
+        var(--color-background-overlay),
+        transparent
+      );
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    &.scrolled {
+      border-bottom-color: var(--color-border);
+
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    .header-title {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+      font-size: 1.375rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      overflow-wrap: anywhere;
+      text-wrap: pretty;
     }
 
     .close-button {
       cursor: pointer;
       display: flex;
       justify-content: center;
-      box-shadow: shadow.$sm;
+      box-shadow: var(--control-shadow);
       align-items: center;
       background: var(--color-background);
-      transition: all 0.3s ease-in-out;
-      border-radius: 100%;
-      width: 40px;
-      height: 40px;
+      transition: var(--control-transition);
+      flex: 0 0 auto;
+      border-radius: var(--control-radius);
+      width: 44px;
+      height: 44px;
 
-      &:hover {
-        background: var(--color-background-overlay);
+      &:hover:not(:disabled) {
+        background-color: var(--control-hover-background);
       }
 
       &:active {
-        transform: scale(1.1);
-        background: var(--color-background-overlay);
+        transform: translateY(1px);
+        background-color: var(--control-hover-background);
       }
     }
   }
 
   &.compact {
-    background-color: color-mix(
-      in srgb,
-      var(--color-background) 85%,
-      transparent
-    );
-    backdrop-filter: blur(15px);
+    --modal-inset: 1.5rem;
+    max-height: calc(100dvh - 2rem);
     margin: 0;
     height: auto;
     width: 100%;
     box-shadow: shadow.$xl;
     border-radius: border.$radius border.$radius 0 0;
-    overflow: hidden;
 
     @media (min-width: breakpoint.$sm) {
       top: auto;
@@ -178,22 +177,12 @@ $hero-image-height: 250px;
       border-radius: border.$radius;
     }
 
-    .header {
-      justify-content: space-between;
-      margin-bottom: 0;
-
-      .header-title {
-        font-size: 1rem;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        margin: 0;
-        padding-left: 0.25rem;
-      }
+    .header-title {
+      font-size: 1.25rem;
     }
 
-    .content {
-      margin-top: 0;
-      padding: 0 1.5rem 1.5rem;
+    .content-body {
+      padding-block: 1rem 1.5rem;
     }
 
     &.closed {
@@ -204,6 +193,14 @@ $hero-image-height: 250px;
         );
       }
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal,
+  .modal .header::after,
+  .modal .close-button {
+    transition: none;
   }
 }
 
@@ -244,8 +241,8 @@ $hero-image-height: 250px;
   width: 100%;
   height: 100%;
   transition: opacity 0.3s ease-in-out;
-  background-color: color.$neutral-dark;
-  opacity: 0.8;
+  background-color: #111a14;
+  opacity: 0.55;
   isolation: isolate;
 
   &.closed {

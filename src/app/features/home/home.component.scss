@@ -5,20 +5,20 @@
 
   .greeting {
     margin: 0;
-    font-size: 1.75rem;
-    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 400;
   }
 
   .notice {
     background: var(--color-background-overlay);
-    border-left: 3px solid var(--color-primary-base, #127c7e);
+    border-left: 3px solid var(--color-accent-text);
     border-radius: 0.5rem;
     padding: 1rem 1.25rem;
 
     p {
       margin: 0;
-      font-size: 0.95rem;
-      color: var(--color-text);
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
     }
   }
 }

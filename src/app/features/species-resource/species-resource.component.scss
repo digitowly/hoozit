@@ -5,10 +5,10 @@
   margin: 0;
 
   &--success {
-    color: color.$success;
+    color: var(--color-success);
   }
 
   &--error {
-    color: color.$error;
+    color: var(--color-error);
   }
 }

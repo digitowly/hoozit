@@ -1,50 +1,28 @@
-// ---------- Brand ----------
-$primary-light: #4baba7; // teal highlight
-$primary-base: #127c7e; // main teal
-$primary-dark: #031e24; // deep contrast
+// Shared palette. Theme rules live in _theme.scss and are emitted once globally.
+$primary-light: #65aaa3;
+$primary-base: #277873;
+$primary-dark: #102f30;
 
-// ---------- Accent ----------
-$accent-light: #ffd8a8; // warm accent highlight
-$accent-base: #ff8c32; // orange accent (owl beak/energy)
-$accent-dark: #b55a1c; // muted earth tone
+$accent-light: #f1d8b6;
+$accent-base: #d58f4b;
+$accent-dark: #9d6937;
 
-// ---------- Nature ----------
-$nature-light: #a6e6a1; // vibrant green (leaves)
-$nature-base: #3cbf6d; // balanced green (growth)
-$nature-dark: #2a8f4e; // forest tone
+$nature-light: #abd5aa;
+$nature-base: #48ac6d;
+$nature-dark: #358058;
 
-// ---------- Neutral ----------
-$neutral-light: #f7fcf9;
-$neutral-base: #f5f7f8;
-$neutral-dark: #102e2d;
-$neutral-night: #011514;
+$neutral-light: #f5f8f3;
+$neutral-base: #edf2ed;
+$neutral-dark: #203532;
+$neutral-night: #0b1b19;
 
-// ---------- Semantic ----------
-$success: #3ecf8e;
-$info: #3da9fc; // informational blue
-$warning: #f7b731; // caution or notice
-$error: #eb5757; // error or critical state
+$success: #50b480;
+$info: #579dbb;
+$warning: #d4a04d;
+$error: #cf6157;
 
-// ---------- Utility ----------
-$shadow: rgba(0, 0, 0, 0.2);
-$overlay: rgba(0, 0, 0, 0.3);
+$shadow: rgba(12, 32, 29, 0.14);
+$overlay: rgba(12, 32, 29, 0.42);
 
-// ---------- Example Gradients ----------
-$gradient-primary: linear-gradient(135deg, $primary-base, $accent-base);
-$gradient-forest: linear-gradient(135deg, $nature-base, $primary-base);
-
-// ---------- Theme ----------
-
-html[data-theme="light"] {
-  --color-text: #{$neutral-night};
-  --color-background: #{$neutral-light};
-  --color-background-overlay: #{$neutral-base};
-  --color-outline: #{$neutral-dark};
-}
-
-html[data-theme="dark"] {
-  --color-text: #{$neutral-base};
-  --color-background: #{$neutral-night};
-  --color-background-overlay: #{$neutral-dark};
-  --color-outline: #{$neutral-light};
-}
+$gradient-primary: linear-gradient(135deg, $primary-dark, $primary-base);
+$gradient-forest: linear-gradient(135deg, $primary-base, $nature-dark);

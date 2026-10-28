@@ -14,12 +14,14 @@ describe('ModalComponent', () => {
   let modalService: ModalService;
   let additionalFixtures: ComponentFixture<ModalComponent>[];
 
+  const title = signal('');
   const modalId = signal(TEST_ID);
   const modalType = signal<'large' | 'compact'>('large');
   const hasBackdrop = signal<boolean | undefined>(undefined);
 
   beforeEach(async () => {
     additionalFixtures = [];
+    title.set('');
     modalType.set('large');
     hasBackdrop.set(undefined);
     await TestBed.configureTestingModule({
@@ -30,6 +32,7 @@ describe('ModalComponent', () => {
     fixture = TestBed.createComponent(ModalComponent, {
       bindings: [
         inputBinding('modalId', modalId),
+        inputBinding('title', title),
         inputBinding('modalType', modalType),
         inputBinding('hasBackdrop', hasBackdrop),
       ],
@@ -52,6 +55,73 @@ describe('ModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('provides an accessible dialog name and close control', async () => {
+    title.set('Visibility settings');
+    modalService.open(TEST_ID);
+    await fixture.whenStable();
+    const dialog = document.querySelector('[role="dialog"]');
+    expect(dialog?.getAttribute('id')).toBe(TEST_ID);
+    expect(dialog?.getAttribute('aria-label')).toBe('Visibility settings');
+    expect(dialog?.getAttribute('aria-modal')).toBe('true');
+    expect(
+      dialog?.querySelector('.close-button')?.getAttribute('aria-label'),
+    ).toBe('Close dialog');
+  });
+
+  it.each(['large', 'compact'] as const)(
+    'keeps the title and close control outside the scrolling content in a %s modal',
+    async (type) => {
+      modalType.set(type);
+      title.set('Observation details');
+      modalService.open(TEST_ID, type);
+      await fixture.whenStable();
+
+      const dialog = document.querySelector('.modal')!;
+      const header = dialog.querySelector('.header')!;
+      expect(header.querySelector('h2')?.textContent).toBe(
+        'Observation details',
+      );
+      expect(header.querySelector('.close-button')).toBeTruthy();
+      expect(dialog.querySelector('.content .header-title')).toBeNull();
+      expect(dialog.querySelectorAll('h2')).toHaveLength(1);
+    },
+  );
+
+  it('shows the header fade only after scrolling and clears it at the top', async () => {
+    modalService.open(TEST_ID);
+    await fixture.whenStable();
+    const header = document.querySelector('.modal .header')!;
+    const content = document.querySelector<HTMLElement>('.modal .content')!;
+    expect(header.classList.contains('scrolled')).toBe(false);
+
+    content.scrollTop = 80;
+    content.dispatchEvent(new Event('scroll'));
+    await fixture.whenStable();
+    expect(header.classList.contains('scrolled')).toBe(true);
+
+    content.scrollTop = 0;
+    content.dispatchEvent(new Event('scroll'));
+    await fixture.whenStable();
+    expect(header.classList.contains('scrolled')).toBe(false);
+  });
+
+  it('starts a newly opened panel without the previous scroll fade', async () => {
+    await createAnotherModal('compact');
+    modalService.open(TEST_ID);
+    await fixture.whenStable();
+    const content = document.querySelector<HTMLElement>('.modal .content')!;
+    content.scrollTop = 80;
+    content.dispatchEvent(new Event('scroll'));
+    await fixture.whenStable();
+
+    modalService.open('other-modal', 'compact');
+    await fixture.whenStable();
+    modalService.open(TEST_ID);
+    await fixture.whenStable();
+
+    expect(document.querySelector('.modal .header.scrolled')).toBeNull();
   });
 
   it('open signal is false when modal is closed', () => {

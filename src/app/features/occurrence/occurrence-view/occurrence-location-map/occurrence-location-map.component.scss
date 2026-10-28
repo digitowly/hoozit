@@ -6,12 +6,12 @@
 
 .map {
   width: 100%;
-  height: 18rem;
+  height: 12rem;
   overflow: hidden;
   border-radius: 0.75rem;
 
   @media (min-width: breakpoint.$md) {
-    height: 24rem;
+    height: 15rem;
   }
 }
 

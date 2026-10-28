@@ -49,11 +49,15 @@ export class OccurrenceViewComponent {
 
     return { ...occurrence, status: validationResult.status };
   });
-  protected readonly isLoading = computed(() =>
-    this.userOccurrenceService.resource.isLoading(),
+  protected readonly isLoading = computed(
+    () =>
+      this.userOccurrenceService.resource.isLoading() &&
+      !this.userOccurrenceService.resource.value(),
   );
   protected readonly pageTitle = computed(
-    () => this.occurrence()?.submitted_name || 'Occurrence details',
+    () =>
+      this.occurrence()?.submitted_name ||
+      $localize`:@@occurrenceDetailTitle:Occurrence details`,
   );
   protected readonly confidencePercentage = computed(() =>
     Math.round((this.occurrence()?.confidence ?? 0) * 100),
@@ -97,8 +101,11 @@ export class OccurrenceViewComponent {
     });
   }
 
-  protected displayValue(value: string): string {
-    return value.replaceAll('_', ' ');
+  protected displayValue(value: string | null | undefined): string {
+    return (
+      value?.replaceAll('_', ' ').trim() ||
+      $localize`:@@occurrenceNotProvided:Not provided`
+    );
   }
 
   protected reloadAfterVisibilityChange(): void {

@@ -52,8 +52,8 @@ export class OccurrenceLocationMapComponent
       } else {
         this.marker = L.circleMarker(location, {
           className: 'occurrence-location-marker',
-          color: '#f7fcf9',
-          fillColor: '#127c7e',
+          color: '#fbfcf7',
+          fillColor: '#277873',
           fillOpacity: 1,
           opacity: 1,
           radius: 9,

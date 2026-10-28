@@ -9,6 +9,7 @@ import {
 import { form, FormField } from '@angular/forms/signals';
 import { firstValueFrom } from 'rxjs';
 import { ModalComponent } from '../../../components/modal/modal.component';
+import { IconComponent } from '../../../components/icon/icon.component';
 import { FieldContainerComponent } from '../../../components/forms/field-container/field-container.component';
 import { AutosuggestComponent } from '../../../components/autosuggest/autosuggest.component';
 import { AutoSuggestEntry } from '../../../components/autosuggest/autosuggest.model';
@@ -27,6 +28,7 @@ import { LoginComponent } from '../../login/login.component';
   selector: 'log-occurrence-modal',
   imports: [
     ModalComponent,
+    IconComponent,
     FieldContainerComponent,
     AutosuggestComponent,
     FormField,

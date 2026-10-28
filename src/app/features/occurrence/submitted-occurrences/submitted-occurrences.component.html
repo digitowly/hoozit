@@ -13,9 +13,15 @@
         </a>
       </div>
 
-      <p class="occurrence-item-observed-at">{{ occurrence.observed_at }}</p>
+      <time
+        class="occurrence-item-observed-at"
+        [attr.datetime]="occurrence.observed_at"
+        >{{ occurrence.observed_at | date: "mediumDate" }}</time
+      >
 
-      <p class="occurrence-item-description">{{ occurrence.description }}</p>
+      @if (occurrence.description.trim()) {
+        <p class="occurrence-item-description">{{ occurrence.description }}</p>
+      }
 
       <div class="occurrence-status-row">
         <occurrence-state-labels

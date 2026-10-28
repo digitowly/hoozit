@@ -1,104 +1,99 @@
-<content-container [title]="pageTitle()">
+<content-container>
   @if (isLoading()) {
     <div class="page-state" role="status">
       <span class="loading-orbit" aria-hidden="true"></span>
-      <p i18n>Loading occurrence…</p>
+      <h1 i18n="@@occurrenceDetailTitle">Occurrence details</h1>
+      <p i18n="@@occurrenceLoading">Loading occurrence…</p>
     </div>
   } @else if (occurrence(); as occurrence) {
     <article class="occurrence-detail">
       <header class="occurrence-summary">
-        <div class="summary-meta">
-          <span class="summary-kicker" i18n>Field observation</span>
-          <occurrence-state-labels
-            [occurrence]="occurrence"
-            (visibilityChanged)="reloadAfterVisibilityChange()"
-          />
-        </div>
+        <h1>{{ pageTitle() }}</h1>
+        <time class="observed-at" [attr.datetime]="occurrence.observed_at">
+          {{ occurrence.observed_at | date: "medium" }}
+        </time>
 
-        <p class="occurrence-description">
-          {{ occurrence.description || "No description provided." }}
-        </p>
-
-        <div
-          class="confidence-block"
-          role="progressbar"
-          aria-label="Identification confidence"
-          i18n-aria-label
-          aria-valuemin="0"
-          aria-valuemax="100"
-          [attr.aria-valuenow]="confidencePercentage()"
-        >
-          <span i18n>Confidence</span>
-          <span class="confidence-track" aria-hidden="true">
-            <span
-              class="confidence-fill"
-              [style.width.%]="confidencePercentage()"
-            ></span>
+        <div class="observer-byline">
+          <span class="observer-avatar" aria-hidden="true">
+            @if (occurrence.author.image) {
+              <img [src]="occurrence.author.image" alt="" />
+            } @else {
+              <app-icon name="user" size="size-small" />
+            }
           </span>
-          <strong>{{ confidencePercentage() }}%</strong>
+          <p>
+            <span i18n="@@occurrenceObservedBy">Observed by</span>
+            {{ occurrence.author.nickname }}
+          </p>
         </div>
+
+        <occurrence-state-labels
+          [occurrence]="occurrence"
+          [hasBackdrop]="true"
+          (visibilityChanged)="reloadAfterVisibilityChange()"
+        />
       </header>
 
-      <section class="detail-section observation-section">
-        <div class="section-heading">
-          <h2 i18n>Observation</h2>
-          <app-icon name="binoculars" size="size-small" aria-hidden="true" />
-        </div>
+      @if (occurrence.description.trim()) {
+        <p class="occurrence-description">{{ occurrence.description }}</p>
+      }
 
-        <dl class="detail-grid">
-          <div class="detail-field">
-            <dt i18n>Observed</dt>
-            <dd>{{ occurrence.observed_at | date: "medium" }}</dd>
-          </div>
-          <div class="detail-field">
-            <dt i18n>Kingdom</dt>
-            <dd>{{ occurrence.kingdom || "Unknown" }}</dd>
-          </div>
-          <div class="detail-field">
-            <dt i18n>Detection method</dt>
-            <dd>{{ displayValue(occurrence.detection_method) }}</dd>
-          </div>
-          <div class="detail-field">
-            <dt i18n>Evidence</dt>
-            <dd>{{ displayValue(occurrence.evidence_type) }}</dd>
-          </div>
-        </dl>
-      </section>
-
-      <section class="detail-section location-section">
-        <div class="section-heading location-heading">
-          <h2 i18n>Location</h2>
-          <span class="coordinates">
-            {{ occurrence.coordinates.latitude }},
-            {{ occurrence.coordinates.longitude }}
-          </span>
-        </div>
-
+      <section
+        class="location-section"
+        aria-labelledby="occurrence-location-heading"
+      >
+        <h2 id="occurrence-location-heading" i18n="@@occurrenceLocation">
+          Location
+        </h2>
         <occurrence-location-map [coordinate]="occurrence.coordinates" />
       </section>
 
-      <footer class="observer-section">
-        <div class="observer-avatar" aria-hidden="true">
-          @if (occurrence.author.image) {
-            <img [src]="occurrence.author.image" alt="" />
-          } @else {
-            <app-icon name="user" size="size-large" />
-          }
-        </div>
-        <div>
-          <span class="field-label" i18n>Observed by</span>
-          <h2>{{ occurrence.author.nickname }}</h2>
-          <p>{{ displayValue(occurrence.author.role) }}</p>
-        </div>
-      </footer>
+      <section
+        class="observation-details"
+        aria-labelledby="observation-details-heading"
+      >
+        <h2
+          id="observation-details-heading"
+          i18n="@@occurrenceObservationDetails"
+        >
+          Observation details
+        </h2>
+        <dl class="detail-grid">
+          <div class="detail-field">
+            <dt i18n="@@occurrenceKingdom">Kingdom</dt>
+            <dd>{{ displayValue(occurrence.kingdom) }}</dd>
+          </div>
+          <div class="detail-field">
+            <dt i18n="@@occurrenceDetectionMethod">Detection method</dt>
+            <dd>{{ displayValue(occurrence.detection_method) }}</dd>
+          </div>
+          <div class="detail-field">
+            <dt i18n="@@occurrenceEvidence">Evidence</dt>
+            <dd>{{ displayValue(occurrence.evidence_type) }}</dd>
+          </div>
+          <div class="detail-field">
+            <dt i18n="@@occurrenceObserverConfidence">Observer confidence</dt>
+            <dd>{{ confidencePercentage() }}%</dd>
+          </div>
+          <div class="detail-field detail-field-coordinates">
+            <dt i18n="@@occurrenceCoordinates">Coordinates</dt>
+            <dd>
+              {{ occurrence.coordinates.latitude }},
+              {{ occurrence.coordinates.longitude }}
+            </dd>
+          </div>
+        </dl>
+      </section>
     </article>
   } @else {
     <div class="page-state page-state-empty">
       <span class="empty-icon" aria-hidden="true">
         <app-icon name="binoculars" size="size-large" />
       </span>
-      <h2 i18n>Occurrence not found</h2>
-      <p i18n>This occurrence may have been removed or is unavailable.</p>
+      <h1 i18n="@@occurrenceNotFound">Occurrence not found</h1>
+      <p i18n="@@occurrenceUnavailable">
+        This occurrence may have been removed or is unavailable.
+      </p>
     </div>
   }
 </content-container>

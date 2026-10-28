@@ -1,4 +1,5 @@
 import { NgClass, DOCUMENT } from '@angular/common';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import {
   afterNextRender,
   ApplicationRef,
@@ -25,7 +26,7 @@ type ModalType = 'large' | 'compact';
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.scss',
   standalone: true,
-  imports: [NgClass, IconComponent],
+  imports: [NgClass, IconComponent, CdkTrapFocus],
 })
 export class ModalComponent implements OnDestroy {
   readonly modalType = input<ModalType>('large');
@@ -45,6 +46,7 @@ export class ModalComponent implements OnDestroy {
   protected readonly showBackdrop = computed(
     () => this.hasBackdrop() ?? this.modalType() === 'large',
   );
+  protected readonly hasScrolled = signal(false);
 
   @ViewChild('modalTemplate') private modalTemplate!: TemplateRef<void>;
   private viewRef?: EmbeddedViewRef<void>;
@@ -105,5 +107,6 @@ export class ModalComponent implements OnDestroy {
     }
     this.containerEl?.remove();
     this.containerEl = undefined;
+    this.hasScrolled.set(false);
   }
 }

@@ -1,4 +1,5 @@
 import { Component, computed, effect, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UserOccurrencesService } from '../../../services/occurrence/user-occurrences/user-occurrences.service';
 import { Occurrence } from '../../../services/occurrence/occurrence.model';
@@ -11,6 +12,7 @@ import { OccurrenceStateLabelsComponent } from '../components/occurrence-state-l
   selector: 'submitted-occurrences',
   imports: [
     IconComponent,
+    DatePipe,
     RouterLink,
     TooltipDirective,
     OccurrenceStateLabelsComponent,

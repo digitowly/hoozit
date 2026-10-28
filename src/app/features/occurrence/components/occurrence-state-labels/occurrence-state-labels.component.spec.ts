@@ -22,6 +22,9 @@ describe('OccurrenceStateLabelsComponent', () => {
   const validate = vi.fn();
   const loading = signal(false);
   const validationLoading = signal(false);
+  const validationError = signal(false);
+  const publishError = signal(false);
+  const unpublishError = signal(false);
   const profileValue = signal<ProfileResponse | null>(null);
   const profileStatus = signal<
     'idle' | 'loading' | 'reloading' | 'resolved' | 'local' | 'error'
@@ -36,6 +39,9 @@ describe('OccurrenceStateLabelsComponent', () => {
     validate.mockReturnValue(true);
     loading.set(false);
     validationLoading.set(false);
+    validationError.set(false);
+    publishError.set(false);
+    unpublishError.set(false);
     profileValue.set(profile());
     profileStatus.set('resolved');
 
@@ -68,8 +74,8 @@ describe('OccurrenceStateLabelsComponent', () => {
               value.status === SubmissionStatus.GEO_REGION_VERIFIED,
             isPublishing: () => false,
             isUnpublishing: () => false,
-            hasPublishError: () => false,
-            hasUnpublishError: () => false,
+            hasPublishError: () => publishError(),
+            hasUnpublishError: () => unpublishError(),
           },
         },
         {
@@ -78,7 +84,7 @@ describe('OccurrenceStateLabelsComponent', () => {
             resource: { isLoading: validationLoading },
             validate,
             isValidating: () => false,
-            hasError: () => false,
+            hasError: () => validationError(),
           },
         },
       ],
@@ -106,17 +112,15 @@ describe('OccurrenceStateLabelsComponent', () => {
     ).toContain('Public');
   });
 
-  it('opens validation progress from the status capsule', () => {
+  it('opens validation progress from the status control', () => {
     fixture.nativeElement.querySelector('.status-chip').click();
-
     expect(modalService.isOpen('occurrence-validation-occurrence-id')).toBe(
       true,
     );
   });
 
-  it('opens visibility settings from the visibility capsule', () => {
+  it('opens visibility settings from the visibility control', () => {
     fixture.nativeElement.querySelector('.visibility-chip').click();
-
     expect(modalService.isOpen('occurrence-visibility-occurrence-id')).toBe(
       true,
     );
@@ -127,7 +131,7 @@ describe('OccurrenceStateLabelsComponent', () => {
     await fixture.whenStable();
     expect(document.querySelectorAll('.modal')).toHaveLength(1);
     expect(document.querySelector('.modal')?.textContent).toContain(
-      'Validation progress',
+      'Verification progress',
     );
 
     fixture.nativeElement.querySelector('.visibility-chip').click();
@@ -137,7 +141,7 @@ describe('OccurrenceStateLabelsComponent', () => {
     );
     expect(document.querySelectorAll('.modal')).toHaveLength(1);
     expect(document.querySelector('.modal')?.textContent).toContain(
-      'Occurrence visibility',
+      'Who can see this observation?',
     );
 
     fixture.nativeElement.querySelector('.status-chip').click();
@@ -147,7 +151,7 @@ describe('OccurrenceStateLabelsComponent', () => {
     );
     expect(document.querySelectorAll('.modal')).toHaveLength(1);
     expect(document.querySelector('.modal')?.textContent).toContain(
-      'Validation progress',
+      'Verification progress',
     );
   });
 
@@ -196,6 +200,119 @@ describe('OccurrenceStateLabelsComponent', () => {
     );
   });
 
+  it('lets the owner start verification of a draft from its verification control', async () => {
+    fixture.componentRef.setInput('occurrence', {
+      ...occurrence(),
+      status: SubmissionStatus.DRAFT,
+      is_visible: false,
+    });
+    await fixture.whenStable();
+    const control = fixture.nativeElement.querySelector('.status-chip');
+    expect(control.querySelector('.control-action').textContent).toContain(
+      'Verify',
+    );
+    control.click();
+    await fixture.whenStable();
+    const action = document.querySelector<HTMLButtonElement>(
+      '.validation-modal-content .validate-button',
+    );
+    expect(action?.textContent).toContain('Verify observation');
+    expect(action?.disabled).toBe(false);
+    action!.click();
+    expect(validate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: 'occurrence-id',
+        status: SubmissionStatus.DRAFT,
+      }),
+    );
+    expect(publish).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.occurrence().is_visible).toBe(false);
+
+    fixture.componentRef.setInput('occurrence', {
+      ...occurrence(),
+      is_visible: false,
+    });
+    await fixture.whenStable();
+    expect(
+      document.querySelector('.validation-modal-content .validate-button'),
+    ).toBeNull();
+    expect(control.querySelector('.control-action').textContent).toContain(
+      'Details',
+    );
+  });
+
+  it('keeps verification information read-only for another observer’s draft', async () => {
+    profileValue.set(null);
+    fixture.componentRef.setInput('occurrence', {
+      ...occurrence(),
+      status: SubmissionStatus.DRAFT,
+      is_visible: false,
+    });
+    await fixture.whenStable();
+    const control = fixture.nativeElement.querySelector('.status-chip');
+    expect(control.querySelector('.control-action').textContent).toContain(
+      'Details',
+    );
+    control.click();
+    await fixture.whenStable();
+    expect(
+      document.querySelector('.validation-modal-content .validate-button'),
+    ).toBeNull();
+    (fixture.componentInstance as any).validateOccurrence();
+    expect(validate).not.toHaveBeenCalled();
+  });
+
+  it('disables draft verification while a verification request is pending', async () => {
+    fixture.componentRef.setInput('occurrence', {
+      ...occurrence(),
+      status: SubmissionStatus.DRAFT,
+      is_visible: false,
+    });
+    await fixture.whenStable();
+    fixture.nativeElement.querySelector('.status-chip').click();
+    validationLoading.set(true);
+    await fixture.whenStable();
+    const action = document.querySelector<HTMLButtonElement>(
+      '.validation-modal-content .validate-button',
+    );
+    expect(action?.disabled).toBe(true);
+    action!.click();
+    (fixture.componentInstance as any).validateOccurrence();
+    expect(validate).not.toHaveBeenCalled();
+  });
+
+  it('shows verification errors and allows retrying directly in the verification dialog', async () => {
+    fixture.componentRef.setInput('occurrence', {
+      ...occurrence(),
+      status: SubmissionStatus.DRAFT,
+      is_visible: false,
+    });
+    await fixture.whenStable();
+    fixture.nativeElement.querySelector('.status-chip').click();
+    await fixture.whenStable();
+    validate.mockImplementationOnce(() => {
+      validationError.set(true);
+      return true;
+    });
+    document
+      .querySelector<HTMLButtonElement>(
+        '.validation-modal-content .validate-button',
+      )!
+      .click();
+    await fixture.whenStable();
+    expect(
+      document.querySelector('.validation-modal-content [role="alert"]')
+        ?.textContent,
+    ).toContain('Verification failed');
+    const retry = document.querySelector<HTMLButtonElement>(
+      '.validation-modal-content .validate-button',
+    )!;
+    expect(retry.disabled).toBe(false);
+    retry.click();
+    expect(validate).toHaveBeenCalledTimes(2);
+    expect(publish).not.toHaveBeenCalled();
+  });
+
   it.each([true, false])(
     'shows the owner publication action when public is %s',
     async (isVisible) => {
@@ -227,7 +344,9 @@ describe('OccurrenceStateLabelsComponent', () => {
       const modal = await openVisibilityModal();
 
       expect(modal.querySelector('.visibility-action')).toBeNull();
-      expect(modal.textContent).toContain(isVisible ? 'public' : 'verified');
+      expect(modal.textContent).toContain(
+        isVisible ? 'Anyone can see' : 'not shared publicly',
+      );
       await (fixture.componentInstance as any).updateVisibility();
 
       expect(publish).not.toHaveBeenCalled();
@@ -310,6 +429,141 @@ describe('OccurrenceStateLabelsComponent', () => {
     const modal = await openVisibilityModal();
 
     expect(modal.querySelector('.publish-button')).toBeNull();
+  });
+
+  it.each([true, false])(
+    'explains the audience and offers Change for an owner when public is %s',
+    (isVisible) => {
+      fixture.componentRef.setInput('occurrence', {
+        ...occurrence(),
+        is_visible: isVisible,
+      });
+      fixture.detectChanges();
+      const control = fixture.nativeElement.querySelector('.visibility-chip');
+      expect(control.textContent).toContain(
+        isVisible ? 'Visible to everyone' : 'Only visible to you',
+      );
+      expect(control.textContent).toContain('Change');
+      expect(control.getAttribute('aria-controls')).toBe(
+        'occurrence-visibility-occurrence-id',
+      );
+    },
+  );
+
+  it('offers information without implying a non-owner can change visibility', async () => {
+    profileValue.set(null);
+    fixture.componentRef.setInput('occurrence', {
+      ...occurrence(),
+      is_visible: false,
+      status: SubmissionStatus.DRAFT,
+    });
+    fixture.detectChanges();
+    const control = fixture.nativeElement.querySelector('.visibility-chip');
+    expect(control.textContent).toContain('Not publicly shared');
+    expect(control.textContent).toContain('Details');
+    expect(control.textContent).not.toContain('Only visible to you');
+    const modal = await openVisibilityModal();
+    expect(modal.textContent).toContain('Only the observer can change');
+    expect(modal.querySelector('.validate-button')).toBeNull();
+    (fixture.componentInstance as any).validateOccurrence();
+    expect(validate).not.toHaveBeenCalled();
+  });
+
+  it.each([true, false])(
+    'names the target audience in the action when public is %s',
+    async (isVisible) => {
+      fixture.componentRef.setInput('occurrence', {
+        ...occurrence(),
+        is_visible: isVisible,
+      });
+      const modal = await openVisibilityModal();
+      expect(modal.querySelector('.visibility-action')?.textContent).toContain(
+        isVisible ? 'Make private' : 'Make public',
+      );
+      expect(modal.textContent).toContain('location');
+    },
+  );
+
+  it('explains that verification does not automatically publish a private draft', async () => {
+    fixture.componentRef.setInput('occurrence', {
+      ...occurrence(),
+      is_visible: false,
+      status: SubmissionStatus.DRAFT,
+    });
+    const modal = await openVisibilityModal();
+    expect(modal.textContent).toContain(
+      'It stays private until you choose to share it',
+    );
+    expect(modal.querySelector('.validate-button')?.textContent).toContain(
+      'Verify observation',
+    );
+    modal.querySelector<HTMLButtonElement>('.dialog-link')!.click();
+    await fixture.whenStable();
+    expect(
+      document.querySelector('.validation-modal-content')?.textContent,
+    ).toContain('It does not make the observation public');
+    document
+      .querySelector<HTMLButtonElement>(
+        '.validation-modal-content .dialog-link',
+      )!
+      .click();
+    await fixture.whenStable();
+    expect(modalService.isOpen('occurrence-visibility-occurrence-id')).toBe(
+      true,
+    );
+  });
+
+  it.each([
+    [SubmissionStatus.REJECTED, 'could not be verified'],
+    [SubmissionStatus.DELETED, 'has been deleted'],
+    [SubmissionStatus.UNKNOWN, 'status is unavailable'],
+    [SubmissionStatus.IN_REVIEW, 'verification is in progress'],
+  ])('explains why %s cannot be made public', async (status, explanation) => {
+    fixture.componentRef.setInput('occurrence', {
+      ...occurrence(),
+      is_visible: false,
+      status,
+    });
+    const modal = await openVisibilityModal();
+    expect(modal.textContent).toContain(explanation);
+    expect(modal.querySelector('.publish-button')).toBeNull();
+  });
+
+  it.each([true, false])(
+    'keeps the current visibility and dialog when saving fails (public=%s)',
+    async (isVisible) => {
+      fixture.componentRef.setInput('occurrence', {
+        ...occurrence(),
+        is_visible: isVisible,
+      });
+      const changed = vi.fn();
+      fixture.componentInstance.visibilityChanged.subscribe(changed);
+      (isVisible ? unpublish : publish).mockImplementation(async () => {
+        (isVisible ? unpublishError : publishError).set(true);
+        return false;
+      });
+      await openVisibilityModal();
+      await (fixture.componentInstance as any).updateVisibility();
+      expect(modalService.isOpen('occurrence-visibility-occurrence-id')).toBe(
+        true,
+      );
+      expect(changed).not.toHaveBeenCalled();
+      expect(fixture.componentInstance.occurrence().is_visible).toBe(isVisible);
+      await fixture.whenStable();
+      expect(document.querySelector('[role="alert"]')?.textContent).toContain(
+        isVisible ? 'It is still public' : 'It is still private',
+      );
+    },
+  );
+
+  it('blocks repeated visibility updates while a request is pending', async () => {
+    loading.set(true);
+    const modal = await openVisibilityModal();
+    expect(
+      modal.querySelector<HTMLButtonElement>('.visibility-action')!.disabled,
+    ).toBe(true);
+    await (fixture.componentInstance as any).updateVisibility();
+    expect(unpublish).not.toHaveBeenCalled();
   });
 
   async function openVisibilityModal(): Promise<HTMLElement> {

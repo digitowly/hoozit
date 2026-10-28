@@ -82,6 +82,278 @@
           <context context-type="linenumber">90,91</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="occurrenceDetailTitle" datatype="html">
+        <source>Occurrence details</source>
+        <target>Beobachtungsdetails</target>
+      </trans-unit>
+      <trans-unit id="occurrenceNotProvided" datatype="html">
+        <source>Not provided</source>
+        <target>Nicht angegeben</target>
+      </trans-unit>
+      <trans-unit id="occurrenceObservationDetails" datatype="html">
+        <source>Observation details</source>
+        <target>Angaben zur Beobachtung</target>
+      </trans-unit>
+      <trans-unit id="occurrenceObserverConfidence" datatype="html">
+        <source>Observer confidence</source>
+        <target>Sicherheit der beobachtenden Person</target>
+      </trans-unit>
+      <trans-unit id="occurrenceCoordinates" datatype="html">
+        <source>Coordinates</source>
+        <target>Koordinaten</target>
+      </trans-unit>
+      <trans-unit id="occurrenceLoading" datatype="html">
+        <source>Loading occurrence…</source>
+        <target>Beobachtung wird geladen…</target>
+      </trans-unit>
+      <trans-unit id="occurrenceObservedBy" datatype="html">
+        <source>Observed by</source>
+        <target>Beobachtet von</target>
+      </trans-unit>
+      <trans-unit id="occurrenceLocation" datatype="html">
+        <source>Location</source>
+        <target>Standort</target>
+      </trans-unit>
+      <trans-unit id="occurrenceKingdom" datatype="html">
+        <source>Kingdom</source>
+        <target>Reich</target>
+      </trans-unit>
+      <trans-unit id="occurrenceDetectionMethod" datatype="html">
+        <source>Detection method</source>
+        <target>Beobachtungsmethode</target>
+      </trans-unit>
+      <trans-unit id="occurrenceEvidence" datatype="html">
+        <source>Evidence</source>
+        <target>Nachweis</target>
+      </trans-unit>
+      <trans-unit id="occurrenceNotFound" datatype="html">
+        <source>Occurrence not found</source>
+        <target>Beobachtung nicht gefunden</target>
+      </trans-unit>
+      <trans-unit id="occurrenceUnavailable" datatype="html">
+        <source>This occurrence may have been removed or is unavailable.</source>
+        <target>Diese Beobachtung wurde möglicherweise entfernt oder ist nicht verfügbar.</target>
+      </trans-unit>
+      <trans-unit id="occurrencePublic" datatype="html">
+        <source>Public</source>
+        <target>Öffentlich</target>
+      </trans-unit>
+      <trans-unit id="occurrencePrivate" datatype="html">
+        <source>Private</source>
+        <target>Privat</target>
+      </trans-unit>
+      <trans-unit id="occurrencePublicAudience" datatype="html">
+        <source>Visible to everyone</source>
+        <target>Für alle sichtbar</target>
+      </trans-unit>
+      <trans-unit id="occurrencePrivateAudience" datatype="html">
+        <source>Only visible to you</source>
+        <target>Nur für dich sichtbar</target>
+      </trans-unit>
+      <trans-unit id="occurrencePrivateAudienceOther" datatype="html">
+        <source>Not publicly shared</source>
+        <target>Nicht öffentlich geteilt</target>
+      </trans-unit>
+      <trans-unit id="occurrenceChangeVisibility" datatype="html">
+        <source>Change</source>
+        <target>Ändern</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVisibilityDetails" datatype="html">
+        <source>Details</source>
+        <target>Details</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVerification" datatype="html">
+        <source>Verification</source>
+        <target>Überprüfung</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVerificationProgress" datatype="html">
+        <source>Verification progress</source>
+        <target>Fortschritt der Überprüfung</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVerificationExplanation" datatype="html">
+        <source>Verification checks the observation’s name and location. It does not make the observation public.</source>
+        <target>Bei der Überprüfung werden Name und Standort der Beobachtung geprüft. Dadurch wird die Beobachtung nicht veröffentlicht.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVisibilitySettings" datatype="html">
+        <source>Visibility settings</source>
+        <target>Sichtbarkeit ändern</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVisibilityQuestion" datatype="html">
+        <source>Who can see this observation?</source>
+        <target>Wer kann diese Beobachtung sehen?</target>
+      </trans-unit>
+      <trans-unit id="occurrencePublicExplanation" datatype="html">
+        <source>Anyone can see this observation and its location.</source>
+        <target>Alle können diese Beobachtung und ihren Standort sehen.</target>
+      </trans-unit>
+      <trans-unit id="occurrencePrivateExplanation" datatype="html">
+        <source>This observation is not shared publicly.</source>
+        <target>Diese Beobachtung wird nicht öffentlich geteilt.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceOwnerOnly" datatype="html">
+        <source>Only the observer can change its visibility.</source>
+        <target>Nur die beobachtende Person kann die Sichtbarkeit ändern.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePrivateExplanation" datatype="html">
+        <source>Make it private to remove it from public view.</source>
+        <target>Wenn du sie auf privat stellst, ist sie nicht mehr öffentlich sichtbar.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceMakingPrivate" datatype="html">
+        <source>Making private…</source>
+        <target>Wird auf privat gestellt…</target>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePrivate" datatype="html">
+        <source>Make private</source>
+        <target>Auf privat stellen</target>
+      </trans-unit>
+      <trans-unit id="occurrenceReadyToShare" datatype="html">
+        <source>Location verified. Ready to share.</source>
+        <target>Standort überprüft. Bereit zum Teilen.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePublicExplanation" datatype="html">
+        <source>Making it public will share this observation and its location with everyone.</source>
+        <target>Wenn du sie veröffentlichst, werden diese Beobachtung und ihr Standort für alle sichtbar.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceMakingPublic" datatype="html">
+        <source>Making public…</source>
+        <target>Wird veröffentlicht…</target>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePublic" datatype="html">
+        <source>Make public</source>
+        <target>Veröffentlichen</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVerifyBeforeSharing" datatype="html">
+        <source>Verify this observation before making it public. It stays private until you choose to share it.</source>
+        <target>Lass diese Beobachtung vor dem Veröffentlichen überprüfen. Sie bleibt privat, bis du sie selbst teilst.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVerifying" datatype="html">
+        <source>Verifying…</source>
+        <target>Wird überprüft…</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVerifyObservation" datatype="html">
+        <source>Verify observation</source>
+        <target>Beobachtung überprüfen</target>
+      </trans-unit>
+      <trans-unit id="occurrenceRejectedSharing" datatype="html">
+        <source>This observation could not be verified. It stays private.</source>
+        <target>Diese Beobachtung konnte nicht bestätigt werden. Sie bleibt privat.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceDeletedSharing" datatype="html">
+        <source>This observation has been deleted and cannot be made public.</source>
+        <target>Diese Beobachtung wurde gelöscht und kann nicht veröffentlicht werden.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceUnknownSharing" datatype="html">
+        <source>Its verification status is unavailable. This observation cannot be made public yet.</source>
+        <target>Der Prüfstatus ist nicht verfügbar. Diese Beobachtung kann noch nicht veröffentlicht werden.</target>
+      </trans-unit>
+      <trans-unit id="occurrencePendingSharing" datatype="html">
+        <source>This observation stays private while verification is in progress. You can make it public once its location is verified.</source>
+        <target>Diese Beobachtung bleibt während der Überprüfung privat. Sobald ihr Standort überprüft ist, kannst du sie veröffentlichen.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePublicError" datatype="html">
+        <source>Could not make this observation public. It is still private. Please try again.</source>
+        <target>Diese Beobachtung konnte nicht veröffentlicht werden. Sie ist weiterhin privat. Bitte versuche es erneut.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePrivateError" datatype="html">
+        <source>Could not make this observation private. It is still public. Please try again.</source>
+        <target>Diese Beobachtung konnte nicht auf privat gestellt werden. Sie ist weiterhin öffentlich. Bitte versuche es erneut.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVerifyError" datatype="html">
+        <source>Verification failed. This observation is still private. Please try again.</source>
+        <target>Die Überprüfung ist fehlgeschlagen. Diese Beobachtung ist weiterhin privat. Bitte versuche es erneut.</target>
+      </trans-unit>
+      <trans-unit id="occurrenceViewVerification" datatype="html">
+        <source>View verification details</source>
+        <target>Details zur Überprüfung</target>
+      </trans-unit>
+      <trans-unit id="closeDialog" datatype="html">
+        <source>Close dialog</source>
+        <target>Dialog schließen</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_draft" datatype="html">
+        <source>Draft</source>
+        <target>Entwurf</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_inReview" datatype="html">
+        <source>In review</source>
+        <target>In Prüfung</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_nameVerified" datatype="html">
+        <source>Name verified</source>
+        <target>Name überprüft</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_continentVerified" datatype="html">
+        <source>Continent verified</source>
+        <target>Kontinent überprüft</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_countryVerified" datatype="html">
+        <source>Country verified</source>
+        <target>Land überprüft</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_regionVerified" datatype="html">
+        <source>Region verified</source>
+        <target>Region überprüft</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_localityVerified" datatype="html">
+        <source>Locality verified</source>
+        <target>Ort überprüft</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_verified" datatype="html">
+        <source>Verified</source>
+        <target>Bestätigt</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_rejected" datatype="html">
+        <source>Rejected</source>
+        <target>Abgelehnt</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_deleted" datatype="html">
+        <source>Deleted</source>
+        <target>Gelöscht</target>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_unknown" datatype="html">
+        <source>Unknown</source>
+        <target>Unbekannt</target>
+      </trans-unit>
+      <trans-unit id="2593136628042282287" datatype="html">
+        <source>Verification progress</source>
+        <target>Fortschritt der Überprüfung</target>
+      </trans-unit>
+      <trans-unit id="8384225360105280028" datatype="html">
+        <source>Complete</source>
+        <target>Abgeschlossen</target>
+      </trans-unit>
+      <trans-unit id="5350820591963791796" datatype="html">
+        <source>Not complete</source>
+        <target>Nicht abgeschlossen</target>
+      </trans-unit>
+      <trans-unit id="8953033926734869941" datatype="html">
+        <source>Name</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="6252958452340857251" datatype="html">
+        <source>Continent</source>
+        <target>Kontinent</target>
+      </trans-unit>
+      <trans-unit id="2612153957528769606" datatype="html">
+        <source>Area</source>
+        <target>Region</target>
+      </trans-unit>
+      <trans-unit id="8731629588762729279" datatype="html">
+        <source>Locality</source>
+        <target>Ort</target>
+      </trans-unit>
+      <trans-unit id="8890553633144307762" datatype="html">
+        <source>Back</source>
+        <target>Zurück</target>
+      </trans-unit>
+      <trans-unit id="5028777105388019087" datatype="html">
+        <source>Details</source>
+        <target>Details</target>
+      </trans-unit>
+      <trans-unit id="occurrenceVerify" datatype="html">
+        <source>Verify</source>
+        <target>Prüfen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

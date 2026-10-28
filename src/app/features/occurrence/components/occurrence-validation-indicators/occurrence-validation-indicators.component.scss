@@ -37,7 +37,7 @@
   color: color-mix(in srgb, var(--color-text) 52%, transparent);
 
   &--complete {
-    color: color.$success;
+    color: var(--color-success);
   }
 }
 
@@ -56,12 +56,8 @@
 }
 
 .validation-step--complete .validation-step-dot {
-  border-color: color.$success;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, #{color.$success} 78%, white),
-    color.$success
-  );
+  border-color: var(--color-success);
+  background: var(--color-success);
   color: var(--color-background);
 }
 
