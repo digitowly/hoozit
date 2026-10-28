@@ -25,6 +25,10 @@ export class SubmittedOccurrencesComponent {
   private validationReloadPending = false;
   private readonly validationService = inject(OccurrenceValidationService);
 
+  protected readonly hasLoadedOccurrences = computed(
+    () => this.userOccurrencesService.resource.status() === 'resolved',
+  );
+
   protected readonly occurrences = computed<Occurrence[]>(() => {
     const occurrences = this.userOccurrencesService.resource.value() || [];
     if (this.validationService.resource.status() !== 'resolved') {
