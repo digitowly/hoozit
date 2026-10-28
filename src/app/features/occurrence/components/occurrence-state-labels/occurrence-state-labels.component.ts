@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, input, output } from '@angular/core';
 
 import { IconComponent } from '../../../../components/icon/icon.component';
@@ -14,23 +15,24 @@ import {
 import { OccurrenceValidationIndicatorsComponent } from '../occurrence-validation-indicators/occurrence-validation-indicators.component';
 
 const STATUS_LABELS: Record<SubmissionStatus, string> = {
-  [SubmissionStatus.DRAFT]: 'Draft',
-  [SubmissionStatus.IN_REVIEW]: 'In review',
-  [SubmissionStatus.NAME_VERIFIED]: 'Name verified',
-  [SubmissionStatus.GEO_CONTINENT_VERIFIED]: 'Continent verified',
-  [SubmissionStatus.GEO_COUNTRY_VERIFIED]: 'Country verified',
-  [SubmissionStatus.GEO_REGION_VERIFIED]: 'Region verified',
-  [SubmissionStatus.GEO_LOCALITY_VERIFIED]: 'Locality verified',
-  [SubmissionStatus.VERIFIED]: 'Verified',
-  [SubmissionStatus.REJECTED]: 'Rejected',
-  [SubmissionStatus.DELETED]: 'Deleted',
-  [SubmissionStatus.UNKNOWN]: 'Unknown',
+  [SubmissionStatus.DRAFT]: $localize`:@@occurrenceStatus_draft:Draft`,
+  [SubmissionStatus.IN_REVIEW]: $localize`:@@occurrenceStatus_inReview:In review`,
+  [SubmissionStatus.NAME_VERIFIED]: $localize`:@@occurrenceStatus_nameVerified:Name verified`,
+  [SubmissionStatus.GEO_CONTINENT_VERIFIED]: $localize`:@@occurrenceStatus_continentVerified:Continent verified`,
+  [SubmissionStatus.GEO_COUNTRY_VERIFIED]: $localize`:@@occurrenceStatus_countryVerified:Country verified`,
+  [SubmissionStatus.GEO_REGION_VERIFIED]: $localize`:@@occurrenceStatus_regionVerified:Region verified`,
+  [SubmissionStatus.GEO_LOCALITY_VERIFIED]: $localize`:@@occurrenceStatus_localityVerified:Locality verified`,
+  [SubmissionStatus.VERIFIED]: $localize`:@@occurrenceStatus_verified:Verified`,
+  [SubmissionStatus.REJECTED]: $localize`:@@occurrenceStatus_rejected:Rejected`,
+  [SubmissionStatus.DELETED]: $localize`:@@occurrenceStatus_deleted:Deleted`,
+  [SubmissionStatus.UNKNOWN]: $localize`:@@occurrenceStatus_unknown:Unknown`,
 };
 
 @Component({
   selector: 'occurrence-state-labels',
   imports: [
     IconComponent,
+    NgTemplateOutlet,
     ModalComponent,
     OccurrenceValidationIndicatorsComponent,
   ],
@@ -62,6 +64,24 @@ export class OccurrenceStateLabelsComponent {
       authorId.length > 0 &&
       userId === authorId
     );
+  });
+
+  protected readonly canVerify = computed(
+    () => this.isOwner() && this.occurrence().status === SubmissionStatus.DRAFT,
+  );
+
+  protected readonly visibilityLabel = computed(() =>
+    this.occurrence().is_visible
+      ? $localize`:@@occurrencePublic:Public`
+      : $localize`:@@occurrencePrivate:Private`,
+  );
+  protected readonly audienceLabel = computed(() => {
+    if (this.occurrence().is_visible) {
+      return $localize`:@@occurrencePublicAudience:Visible to everyone`;
+    }
+    return this.isOwner()
+      ? $localize`:@@occurrencePrivateAudience:Only visible to you`
+      : $localize`:@@occurrencePrivateAudienceOther:Not publicly shared`;
   });
 
   protected readonly validationModalId = computed(
@@ -102,7 +122,7 @@ export class OccurrenceStateLabelsComponent {
   }
 
   protected async updateVisibility(): Promise<void> {
-    if (!this.isOwner()) return;
+    if (!this.isOwner() || this.publicationService.isLoading()) return;
 
     const occurrence = this.occurrence();
     const succeeded = occurrence.is_visible
@@ -116,6 +136,8 @@ export class OccurrenceStateLabelsComponent {
   }
 
   protected validateOccurrence(): void {
+    if (!this.canVerify() || this.validationService.resource.isLoading())
+      return;
     this.validationService.validate(this.occurrence());
   }
 }

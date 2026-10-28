@@ -4,46 +4,62 @@
   }
   <div
     class="modal"
+    role="dialog"
+    [id]="modalId()"
+    [attr.aria-label]="title() || null"
+    [attr.aria-modal]="showBackdrop() ? 'true' : null"
+    [attr.aria-hidden]="open() ? null : 'true'"
+    [inert]="!open()"
+    [cdkTrapFocus]="open() && showBackdrop()"
+    [cdkTrapFocusAutoCapture]="showBackdrop()"
     [ngClass]="{ closed: !open(), compact: modalType() === 'compact' }"
   >
-    @if (heroImage()?.url && !isLoading()) {
-      <div class="hero-image">
-        <img [src]="heroImage()?.url" alt="{{ heroImage()?.alt }}" />
-        <div class="hero-image-source">
-          <span>{{ heroImage()?.origin }}</span>
-          <span>{{ " | " }}</span>
-          @if (heroImage()?.photographer && heroImage()?.photographer_url) {
-            <a [href]="heroImage()?.photographer_url" target="_blank">
-              {{ heroImage()?.photographer }}
-            </a>
-          } @else if (heroImage()?.photographer) {
-            <span>{{ heroImage()?.photographer }}</span>
-          }
-        </div>
-      </div>
-    }
-    <div class="header">
-      @if (modalType() === "compact" && title()) {
+    <div class="header" [class.scrolled]="hasScrolled()">
+      @if (title()) {
         <h2 class="header-title">{{ title() }}</h2>
       }
-      <button class="close-button" (click)="close()">
+      <button
+        class="close-button"
+        type="button"
+        aria-label="Close dialog"
+        i18n-aria-label="@@closeDialog"
+        (click)="close()"
+      >
         <app-icon name="cross" size="size-medium" />
       </button>
     </div>
     <div
       class="content"
-      [ngClass]="{
-        'with-hero-image': !!heroImage()?.url,
-      }"
+      #scrollContent
+      (scroll)="hasScrolled.set(scrollContent.scrollTop > 0)"
     >
-      @if (isLoading()) {
-        <p>Loading...</p>
-      } @else {
-        @if (modalType() === "large") {
-          <h2>{{ title() }}</h2>
-        }
-        <ng-content />
+      @if (heroImage()?.url && !isLoading()) {
+        <div class="hero-image">
+          <img [src]="heroImage()?.url" alt="{{ heroImage()?.alt }}" />
+          <div class="hero-image-source">
+            <span>{{ heroImage()?.origin }}</span>
+            <span>{{ " | " }}</span>
+            @if (heroImage()?.photographer && heroImage()?.photographer_url) {
+              <a
+                [href]="heroImage()?.photographer_url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {{ heroImage()?.photographer }}
+              </a>
+            } @else if (heroImage()?.photographer) {
+              <span>{{ heroImage()?.photographer }}</span>
+            }
+          </div>
+        </div>
       }
+      <div class="content-body">
+        @if (isLoading()) {
+          <p>Loading...</p>
+        } @else {
+          <ng-content />
+        }
+      </div>
     </div>
   </div>
 </ng-template>

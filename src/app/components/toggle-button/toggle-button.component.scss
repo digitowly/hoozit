@@ -1,67 +1,76 @@
-@use '../../style/color' ;
-
 .toggle-button-container {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  width: 100%;
+  gap: 0.5rem;
 }
 
 .toggle-switch {
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 20px;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 24px;
   cursor: pointer;
 
   &.disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 
   input {
+    position: absolute;
     opacity: 0;
-    width: 0;
-    height: 0;
-    display: none;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
 
     &:checked + .slider {
-      background-color: color.$info;
-
-      &:before {
+      background: var(--color-primary);
+      &::before {
         transform: translateX(20px);
       }
     }
 
-    &:focus + .slider {
-      box-shadow: 0 0 1px color.$info;
-    }
-  }
-
-  .slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    border-radius: 10px;
-    transition: .3s;
-
-    &:before {
-      content: "";
-      position: absolute;
-      height: 16px;
-      width: 16px;
-      left: 2px;
-      bottom: 2px;
-      background-color: white;
-      border-radius: 50%;
-      transition: .3s;
+    &:focus-visible + .slider {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 3px;
     }
   }
 }
 
+.slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  background: color-mix(
+    in srgb,
+    var(--color-outline) 24%,
+    var(--color-background)
+  );
+  transition: background-color 0.15s ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    bottom: 3px;
+    border-radius: 50%;
+    background: var(--color-on-primary);
+    box-shadow: 0 1px 2px #131d1620;
+    transition: transform 0.15s ease;
+  }
+}
+
 .toggle-label {
-  font-size: 14px;
+  font-size: 0.875rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slider,
+  .slider::before {
+    transition: none;
+  }
 }

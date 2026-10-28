@@ -1,5 +1,5 @@
 @use "./app/style/color";
-@use "./app/style/shadow";
+@use "./app/style/theme";
 @use "./app/style/breakpoint";
 
 @import url("leaflet/dist/leaflet.css");
@@ -14,17 +14,18 @@
 
 * {
   box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 160%;
 }
 
 body {
   padding: 0;
   margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
   background-color: var(--color-background);
   color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
 }
 
 app-icon .icon-wrapper > svg {
@@ -39,184 +40,176 @@ h2,
 h3,
 h4 {
   margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 400;
   line-height: 1.2;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
 }
 
 h1 {
-  font-size: 1.75rem;
+  font-size: 2rem;
 }
 h2 {
-  font-size: 1.35rem;
+  font-size: 1.5rem;
 }
 h3 {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
 }
 h4 {
-  font-size: 1rem;
+  font-size: 1.125rem;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-body);
+  line-height: 1.5;
 }
 
 button {
   cursor: pointer;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
-  box-shadow: shadow.$sm;
-  background-color: var(--color-background-overlay);
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--control-radius);
+  background: var(--color-background-overlay);
   color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: var(--control-shadow);
+  transition: var(--control-transition);
 
-  &:hover {
-    background-color: color-mix(
+  &:hover:not(:disabled) {
+    background-color: var(--control-hover-background);
+    border-color: color-mix(
       in srgb,
-      var(--color-background-overlay) 90%,
-      white
+      var(--color-outline) 22%,
+      var(--color-background)
     );
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
 }
 
 .btn-primary,
 .btn-link,
 .btn-secondary {
+  display: inline-flex;
   width: 100%;
+  min-height: 2.875rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--control-radius);
+  background: var(--gradient-surface);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+  text-decoration: none;
+  box-shadow: var(--control-shadow);
+  transition: var(--control-transition);
 
   @media (min-width: breakpoint.$xs) {
     width: fit-content;
   }
+
+  &:hover:not(:disabled) {
+    background-color: var(--control-hover-background);
+    border-color: color-mix(
+      in srgb,
+      var(--color-outline) 22%,
+      var(--color-background)
+    );
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: var(--control-shadow-pressed);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .btn-primary {
-  min-height: 3.25rem;
-  padding: 0.7rem 1.75rem;
-  border: 2px solid color-mix(in srgb, #{color.$primary-light} 45%, transparent);
-  border-radius: 0.9rem;
-  background-color: color.$primary-base;
-  color: #fff;
-  font-weight: 700;
-  letter-spacing: 0.035em;
-  line-height: 1.2;
-  box-shadow:
-    0 5px 0 color-mix(in srgb, #{color.$primary-base} 72%, black),
-    0 8px 14px color-mix(in srgb, #{color.$primary-base} 22%, transparent);
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.1s ease;
+  --control-hover-background: var(--color-primary-hover);
+  background: var(--gradient-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
 
   &:hover:not(:disabled) {
-    background-color: color.$primary-light;
-    border-color: color-mix(in srgb, white 35%, transparent);
-    box-shadow:
-      0 5px 0 color-mix(in srgb, #{color.$primary-base} 72%, black),
-      0 9px 16px color-mix(in srgb, #{color.$primary-base} 28%, transparent);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(4px);
-    box-shadow:
-      0 1px 0 color-mix(in srgb, #{color.$primary-base} 72%, black),
-      0 3px 7px color-mix(in srgb, #{color.$primary-base} 20%, transparent);
-  }
-
-  &:focus-visible {
-    outline: 3px solid
-      color-mix(in srgb, #{color.$primary-light} 45%, transparent);
-    outline-offset: 3px;
-  }
-
-  &:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    box-shadow: none;
+    background-color: var(--control-hover-background);
+    border-color: var(--control-hover-background);
   }
 }
 
-.btn-link,
-.btn-secondary {
-  display: inline-flex;
-  min-height: 3.25rem;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 0.7rem 1.25rem;
-  border: 2px solid currentColor;
-  border-radius: 0.9rem;
-  background-color: var(--color-background-overlay);
-  color: color-mix(in srgb, #{color.$primary-base} 78%, var(--color-text));
-  cursor: pointer;
-  font-weight: 700;
-  letter-spacing: 0.025em;
-  line-height: 1.2;
-  text-decoration: none;
-  box-shadow:
-    0 5px 0 color-mix(in srgb, currentColor 30%, var(--color-background)),
-    0 8px 14px color-mix(in srgb, currentColor 10%, transparent);
-  transition:
-    background-color 0.15s ease,
-    transform 0.1s ease;
-
-  &:hover:not(:disabled) {
-    background-color: var(--color-background);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(4px);
-    box-shadow:
-      0 1px 0 color-mix(in srgb, currentColor 34%, var(--color-background)),
-      0 3px 7px color-mix(in srgb, currentColor 9%, transparent);
-  }
-
-  &:focus-visible {
-    outline: 3px solid
-      color-mix(in srgb, #{color.$primary-light} 45%, transparent);
-    outline-offset: 3px;
-  }
-
-  &:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    box-shadow: none;
-  }
-}
-
-html[data-theme="dark"] .btn-link,
-html[data-theme="dark"] .btn-secondary {
-  color: color.$primary-light;
-}
-
-input {
+input:not([type="checkbox"]):not([type="range"]),
+select,
+textarea {
   width: 100%;
+  min-height: 2.875rem;
   padding: 0.75rem;
-  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-  border-radius: 0.25rem;
-  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--control-radius);
+  background: var(--color-background-overlay);
   color: var(--color-text);
+  font-size: 1rem;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+input[type="range"],
+input[type="checkbox"] {
+  accent-color: var(--color-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
 }
 
 select {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-  border-radius: 0.25rem;
-  background-color: var(--color-background);
-  color: var(--color-text);
-  font-size: inherit;
   cursor: pointer;
 }
-
 a {
   color: inherit;
 }
-
 ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-
 p {
   margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button,
+  .btn-primary,
+  .btn-secondary,
+  .btn-link {
+    transition: none;
+  }
 }
 
 .marker-icon {
@@ -229,7 +222,7 @@ p {
 }
 
 .default-marker-icon {
-  background: #2f6fed;
+  background: var(--color-primary);
   border: 2px solid white;
   border-radius: 50% 50% 50% 0;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);

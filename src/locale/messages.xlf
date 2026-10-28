@@ -72,6 +72,210 @@
           <context context-type="linenumber">90,91</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="occurrenceDetailTitle" datatype="html">
+        <source>Occurrence details</source>
+      </trans-unit>
+      <trans-unit id="occurrenceNotProvided" datatype="html">
+        <source>Not provided</source>
+      </trans-unit>
+      <trans-unit id="occurrenceObservationDetails" datatype="html">
+        <source>Observation details</source>
+      </trans-unit>
+      <trans-unit id="occurrenceObserverConfidence" datatype="html">
+        <source>Observer confidence</source>
+      </trans-unit>
+      <trans-unit id="occurrenceCoordinates" datatype="html">
+        <source>Coordinates</source>
+      </trans-unit>
+      <trans-unit id="occurrenceLoading" datatype="html">
+        <source>Loading occurrence…</source>
+      </trans-unit>
+      <trans-unit id="occurrenceObservedBy" datatype="html">
+        <source>Observed by</source>
+      </trans-unit>
+      <trans-unit id="occurrenceLocation" datatype="html">
+        <source>Location</source>
+      </trans-unit>
+      <trans-unit id="occurrenceKingdom" datatype="html">
+        <source>Kingdom</source>
+      </trans-unit>
+      <trans-unit id="occurrenceDetectionMethod" datatype="html">
+        <source>Detection method</source>
+      </trans-unit>
+      <trans-unit id="occurrenceEvidence" datatype="html">
+        <source>Evidence</source>
+      </trans-unit>
+      <trans-unit id="occurrenceNotFound" datatype="html">
+        <source>Occurrence not found</source>
+      </trans-unit>
+      <trans-unit id="occurrenceUnavailable" datatype="html">
+        <source>This occurrence may have been removed or is unavailable.</source>
+      </trans-unit>
+      <trans-unit id="occurrencePublic" datatype="html">
+        <source>Public</source>
+      </trans-unit>
+      <trans-unit id="occurrencePrivate" datatype="html">
+        <source>Private</source>
+      </trans-unit>
+      <trans-unit id="occurrencePublicAudience" datatype="html">
+        <source>Visible to everyone</source>
+      </trans-unit>
+      <trans-unit id="occurrencePrivateAudience" datatype="html">
+        <source>Only visible to you</source>
+      </trans-unit>
+      <trans-unit id="occurrencePrivateAudienceOther" datatype="html">
+        <source>Not publicly shared</source>
+      </trans-unit>
+      <trans-unit id="occurrenceChangeVisibility" datatype="html">
+        <source>Change</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVisibilityDetails" datatype="html">
+        <source>Details</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVerification" datatype="html">
+        <source>Verification</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVerificationProgress" datatype="html">
+        <source>Verification progress</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVerificationExplanation" datatype="html">
+        <source>Verification checks the observation’s name and location. It does not make the observation public.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVisibilitySettings" datatype="html">
+        <source>Visibility settings</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVisibilityQuestion" datatype="html">
+        <source>Who can see this observation?</source>
+      </trans-unit>
+      <trans-unit id="occurrencePublicExplanation" datatype="html">
+        <source>Anyone can see this observation and its location.</source>
+      </trans-unit>
+      <trans-unit id="occurrencePrivateExplanation" datatype="html">
+        <source>This observation is not shared publicly.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceOwnerOnly" datatype="html">
+        <source>Only the observer can change its visibility.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePrivateExplanation" datatype="html">
+        <source>Make it private to remove it from public view.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceMakingPrivate" datatype="html">
+        <source>Making private…</source>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePrivate" datatype="html">
+        <source>Make private</source>
+      </trans-unit>
+      <trans-unit id="occurrenceReadyToShare" datatype="html">
+        <source>Location verified. Ready to share.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePublicExplanation" datatype="html">
+        <source>Making it public will share this observation and its location with everyone.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceMakingPublic" datatype="html">
+        <source>Making public…</source>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePublic" datatype="html">
+        <source>Make public</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVerifyBeforeSharing" datatype="html">
+        <source>Verify this observation before making it public. It stays private until you choose to share it.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVerifying" datatype="html">
+        <source>Verifying…</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVerifyObservation" datatype="html">
+        <source>Verify observation</source>
+      </trans-unit>
+      <trans-unit id="occurrenceRejectedSharing" datatype="html">
+        <source>This observation could not be verified. It stays private.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceDeletedSharing" datatype="html">
+        <source>This observation has been deleted and cannot be made public.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceUnknownSharing" datatype="html">
+        <source>Its verification status is unavailable. This observation cannot be made public yet.</source>
+      </trans-unit>
+      <trans-unit id="occurrencePendingSharing" datatype="html">
+        <source>This observation stays private while verification is in progress. You can make it public once its location is verified.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePublicError" datatype="html">
+        <source>Could not make this observation public. It is still private. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceMakePrivateError" datatype="html">
+        <source>Could not make this observation private. It is still public. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVerifyError" datatype="html">
+        <source>Verification failed. This observation is still private. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="occurrenceViewVerification" datatype="html">
+        <source>View verification details</source>
+      </trans-unit>
+      <trans-unit id="closeDialog" datatype="html">
+        <source>Close dialog</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_draft" datatype="html">
+        <source>Draft</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_inReview" datatype="html">
+        <source>In review</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_nameVerified" datatype="html">
+        <source>Name verified</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_continentVerified" datatype="html">
+        <source>Continent verified</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_countryVerified" datatype="html">
+        <source>Country verified</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_regionVerified" datatype="html">
+        <source>Region verified</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_localityVerified" datatype="html">
+        <source>Locality verified</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_verified" datatype="html">
+        <source>Verified</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_rejected" datatype="html">
+        <source>Rejected</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_deleted" datatype="html">
+        <source>Deleted</source>
+      </trans-unit>
+      <trans-unit id="occurrenceStatus_unknown" datatype="html">
+        <source>Unknown</source>
+      </trans-unit>
+      <trans-unit id="2593136628042282287" datatype="html">
+        <source>Verification progress</source>
+      </trans-unit>
+      <trans-unit id="8384225360105280028" datatype="html">
+        <source>Complete</source>
+      </trans-unit>
+      <trans-unit id="5350820591963791796" datatype="html">
+        <source>Not complete</source>
+      </trans-unit>
+      <trans-unit id="8953033926734869941" datatype="html">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="6252958452340857251" datatype="html">
+        <source>Continent</source>
+      </trans-unit>
+      <trans-unit id="2612153957528769606" datatype="html">
+        <source>Area</source>
+      </trans-unit>
+      <trans-unit id="8731629588762729279" datatype="html">
+        <source>Locality</source>
+      </trans-unit>
+      <trans-unit id="8890553633144307762" datatype="html">
+        <source>Back</source>
+      </trans-unit>
+      <trans-unit id="5028777105388019087" datatype="html">
+        <source>Details</source>
+      </trans-unit>
+      <trans-unit id="occurrenceVerify" datatype="html">
+        <source>Verify</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

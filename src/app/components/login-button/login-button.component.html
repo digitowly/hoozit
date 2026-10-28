@@ -1,9 +1,9 @@
 @if (config().isLink) {
-  <a class="login-button" [href]="href()">
+  <a class="login-button btn-secondary" [href]="href()">
     <ng-container *ngTemplateOutlet="loginButtonTemplate" />
   </a>
 } @else {
-  <button class="login-button" (click)="onClick($event)">
+  <button class="login-button btn-secondary" (click)="onClick($event)">
     <ng-container *ngTemplateOutlet="loginButtonTemplate" />
   </button>
 }

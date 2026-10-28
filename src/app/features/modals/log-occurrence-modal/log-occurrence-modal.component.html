@@ -71,30 +71,36 @@
 
         <div class="type-row">
           <field-container label="Detection type" name="detection_type">
-            <select
-              id="detection_type"
-              [value]="detectionType()"
-              [disabled]="submissionState() === SubmissionState.LOADING"
-              (change)="setDetectionType($event)"
-            >
-              @for (option of detectionTypeOptions; track option.value) {
-                <option [value]="option.value">{{ option.label }}</option>
-              }
-            </select>
+            <div class="select-field">
+              <select
+                id="detection_type"
+                [value]="detectionType()"
+                [disabled]="submissionState() === SubmissionState.LOADING"
+                (change)="setDetectionType($event)"
+              >
+                @for (option of detectionTypeOptions; track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+              <app-icon name="chevron" size="size-small" aria-hidden="true" />
+            </div>
           </field-container>
 
           @if (detectionType() === "visual") {
             <field-container label="Evidence type" name="evidence_type">
-              <select
-                id="evidence_type"
-                [value]="evidenceType()"
-                [disabled]="submissionState() === SubmissionState.LOADING"
-                (change)="setEvidenceType($event)"
-              >
-                @for (option of evidenceTypeOptions; track option.value) {
-                  <option [value]="option.value">{{ option.label }}</option>
-                }
-              </select>
+              <div class="select-field">
+                <select
+                  id="evidence_type"
+                  [value]="evidenceType()"
+                  [disabled]="submissionState() === SubmissionState.LOADING"
+                  (change)="setEvidenceType($event)"
+                >
+                  @for (option of evidenceTypeOptions; track option.value) {
+                    <option [value]="option.value">{{ option.label }}</option>
+                  }
+                </select>
+                <app-icon name="chevron" size="size-small" aria-hidden="true" />
+              </div>
             </field-container>
           }
         </div>

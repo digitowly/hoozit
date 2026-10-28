@@ -13,8 +13,8 @@
     align-items: center;
 
     .page-title {
-      font-size: 1.5rem;
-      font-weight: 600;
+      font-size: 2rem;
+      font-weight: 400;
       margin: 0;
     }
   }
@@ -28,9 +28,9 @@
     .spinner {
       width: 40px;
       height: 40px;
-      border: 3px solid rgba(0, 0, 0, 0.1);
+      border: 3px solid var(--color-border);
       border-radius: 50%;
-      border-top-color: var(--color-primary, #007bff);
+      border-top-color: var(--color-primary);
       animation: spin 1s ease-in-out infinite;
     }
   }
@@ -79,8 +79,8 @@
 
       .nickname {
         margin: 0;
-        font-size: 1.1rem;
-        font-weight: 700;
+        font-size: 1.5rem;
+        font-weight: 400;
         letter-spacing: -0.02em;
         white-space: nowrap;
         overflow: hidden;
@@ -90,7 +90,7 @@
       .email {
         margin: 0.1rem 0 0;
         font-size: 0.825rem;
-        opacity: 0.65;
+        color: var(--color-text-muted);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -124,7 +124,7 @@
 
   .actions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     gap: 0.75rem;
 
     .profile-action {
@@ -141,7 +141,7 @@
 
         .action-description {
           font-size: 0.825rem;
-          opacity: 0.65;
+          opacity: 0.9;
         }
       }
     }
@@ -155,11 +155,8 @@
 
     .section-title {
       margin: 0;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      opacity: 0.5;
+      font-size: 1.25rem;
+      font-weight: 400;
     }
   }
 
@@ -180,7 +177,7 @@
 
       .setting-description {
         font-size: 0.825rem;
-        opacity: 0.65;
+        color: var(--color-text-muted);
       }
     }
   }

@@ -2,7 +2,7 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { vi } from 'vitest';
 
 import { OccurrenceViewComponent } from './occurrence-view.component';
@@ -21,6 +21,7 @@ import { UserProfileService } from '../../../services/user/user-data/user-profil
 describe('OccurrenceViewComponent', () => {
   let component: OccurrenceViewComponent;
   let fixture: ComponentFixture<OccurrenceViewComponent>;
+  const routeParams = new BehaviorSubject({ id: 'test-id' });
   const occurrenceValue = signal<Occurrence | undefined>(undefined);
   const isLoading = signal(false);
   const occurrenceId = signal('');
@@ -38,6 +39,7 @@ describe('OccurrenceViewComponent', () => {
   const clearValidationResult = vi.fn();
 
   beforeEach(async () => {
+    routeParams.next({ id: 'test-id' });
     occurrenceValue.set(undefined);
     isLoading.set(false);
     occurrenceId.set('');
@@ -67,7 +69,7 @@ describe('OccurrenceViewComponent', () => {
         },
         {
           provide: ActivatedRoute,
-          useValue: { params: of({ id: 'test-id' }) },
+          useValue: { params: routeParams },
         },
         {
           provide: UserOccurrenceService,
@@ -172,6 +174,122 @@ describe('OccurrenceViewComponent', () => {
     expect(
       fixture.nativeElement.querySelector('.status-chip').textContent,
     ).toContain('Country verified');
+  });
+
+  it('groups the observation identity in one header', () => {
+    occurrenceValue.set(occurrence());
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('h1')).toHaveLength(1);
+    const header = fixture.nativeElement.querySelector('.occurrence-summary');
+    expect(header.querySelector('h1').textContent).toContain('Red fox');
+    expect(header.querySelector('time').getAttribute('datetime')).toBe(
+      occurrence().observed_at,
+    );
+    expect(header.querySelector('.observer-byline').textContent).toContain(
+      'Scout',
+    );
+    expect(header.querySelector('.observer-avatar app-icon')).toBeTruthy();
+    expect(header.textContent).not.toContain('Field observation');
+    expect(fixture.nativeElement.querySelector('footer')).toBeNull();
+  });
+
+  it('keeps supporting fields visible in a labelled section', () => {
+    occurrenceValue.set(occurrence());
+    fixture.detectChanges();
+
+    const details = fixture.nativeElement.querySelector('.observation-details');
+    expect(details.querySelector('h2').textContent).toContain(
+      'Observation details',
+    );
+    expect(details.textContent).toContain('Observer confidence');
+    expect(details.textContent).toContain('90%');
+    expect(details.textContent).toContain('52.52');
+    expect(fixture.nativeElement.querySelector('details, summary')).toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('[role="progressbar"]'),
+    ).toBeNull();
+  });
+
+  it('updates the observation when navigating to another route id', async () => {
+    occurrenceValue.set(occurrence());
+    await fixture.whenStable();
+
+    routeParams.next({ id: 'next-id' });
+    occurrenceValue.set({
+      ...occurrence(),
+      id: 'next-id',
+      submitted_name: 'Badger',
+    });
+    await fixture.whenStable();
+
+    expect(occurrenceId()).toBe('next-id');
+    expect(fixture.nativeElement.querySelector('h1').textContent).toContain(
+      'Badger',
+    );
+    expect(
+      fixture.nativeElement.querySelector('.observation-details').textContent,
+    ).toContain('90%');
+  });
+
+  it.each(['', '   '])('omits empty observation notes (%j)', (description) => {
+    occurrenceValue.set({ ...occurrence(), description });
+    fixture.detectChanges();
+
+    expect(
+      fixture.nativeElement.querySelector('.occurrence-description'),
+    ).toBeNull();
+    expect(fixture.nativeElement.textContent).not.toContain(
+      'No description provided',
+    );
+  });
+
+  it('preserves paragraphs and uses an image when the observer has one', () => {
+    const description = 'Near the forest edge.\n\nCrossed the path.';
+    occurrenceValue.set({
+      ...occurrence(),
+      description,
+      author: { ...occurrence().author, image: '/scout.jpg' },
+    });
+    fixture.detectChanges();
+
+    expect(
+      fixture.nativeElement.querySelector('.occurrence-description')
+        .textContent,
+    ).toBe(description);
+    expect(
+      fixture.nativeElement
+        .querySelector('.observer-avatar img')
+        .getAttribute('src'),
+    ).toBe('/scout.jpg');
+  });
+
+  it('uses readable fallbacks for missing metadata and formats detection values', () => {
+    occurrenceValue.set({
+      ...occurrence(),
+      kingdom: '',
+      evidence_type: ' ',
+      detection_method: 'human_observation',
+    });
+    fixture.detectChanges();
+
+    const details = fixture.nativeElement.querySelector('.observation-details');
+    expect(details.textContent.match(/Not provided/g)).toHaveLength(2);
+    expect(details.textContent).toContain('human observation');
+  });
+
+  it('keeps the current observation and controls visible during a refresh', async () => {
+    occurrenceValue.set(occurrence());
+    await fixture.whenStable();
+    isLoading.set(true);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('h1').textContent).toContain(
+      'Red fox',
+    );
+    expect(
+      fixture.nativeElement.querySelector('.visibility-chip'),
+    ).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.loading-orbit')).toBeNull();
   });
 
   it('shows a loading state while the occurrence is loading', () => {
