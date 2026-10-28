@@ -6,6 +6,21 @@
       <h1 class="greeting" i18n>Welcome to Hoozit</h1>
     }
 
+    @if (!isUserLoading() && profile() === null) {
+      <a routerLink="/user" class="login-card">
+        <app-icon name="user" />
+        <span class="login-card-text">
+          <span class="login-card-title" i18n="@@homeLoginTitle">
+            Ready to get spotting?
+          </span>
+          <span class="login-card-description" i18n="@@homeLoginDescription">
+            Sign in and keep your wildlife discoveries in one place.
+          </span>
+        </span>
+        <app-icon name="chevron" size="size-small" />
+      </a>
+    }
+
     <div class="notice">
       <p i18n>
         This app is in early development. Some features may be missing or

@@ -51,7 +51,7 @@ describe('LoginComponent', () => {
     const heading = fixture.debugElement.query(
       By.css('[data-test-id="login-title"]'),
     ).nativeElement;
-    expect(heading.textContent).toContain('Welcome back');
+    expect(heading.textContent).toContain('Hello, explorer!');
   });
 
   it('should have social login buttons', () => {
