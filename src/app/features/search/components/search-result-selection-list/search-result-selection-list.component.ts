@@ -1,8 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { SearchResultSelectionService } from '../../services/search-result-selection/search-result-selection.service';
 import { AnimalSearchResult } from '../../../../services/animal-search/animal-search.model';
-import { IconComponent } from '../../../../components/icon/icon.component';
-import { NgClass } from '@angular/common';
+import { SearchResultSelectionDockComponent } from '../search-result-selection-dock/search-result-selection-dock.component';
 import { SpeciesContentService } from '../../../../services/species-content/species-content.service';
 import { SpeciesOverviewModalComponent } from '../../../modals/species-overview-modal/species-overview-modal.component';
 import { ModalService } from '../../../../services/modal/modal.service';
@@ -11,7 +10,7 @@ const MODAL_ID = 'species-overview';
 
 @Component({
   selector: 'search-result-selection-list',
-  imports: [IconComponent, NgClass, SpeciesOverviewModalComponent],
+  imports: [SearchResultSelectionDockComponent, SpeciesOverviewModalComponent],
   templateUrl: './search-result-selection-list.component.html',
   styleUrl: './search-result-selection-list.component.scss',
 })
@@ -22,11 +21,9 @@ export class SearchResultSelectionListComponent {
 
   readonly modalId = MODAL_ID;
 
-  readonly isListExpanded = signal(false);
-
   readonly selections = computed(() => this.selectionService.selections());
 
-  readonly isVisible = computed(() => this.selectionService.selections().length > 0);
+  readonly isVisible = computed(() => this.selections().length > 0);
 
   readonly selected = signal<AnimalSearchResult | null>(null);
 
@@ -37,10 +34,6 @@ export class SearchResultSelectionListComponent {
   readonly isIntroductionLoading = computed(() =>
     this.speciesContentService.introductionResource.isLoading(),
   );
-
-  toggleList() {
-    this.isListExpanded.update((o) => !o);
-  }
 
   select(selection: AnimalSearchResult) {
     this.speciesContentService.getIntroduction(selection.id);
