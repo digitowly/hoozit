@@ -10,6 +10,18 @@
       <div class="loading-state">
         <div class="spinner"></div>
       </div>
+    } @else if (hasProfileError()) {
+      <div class="loading-state" role="alert">
+        <p i18n="@@profileLoadError">Couldn't load your profile</p>
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="reloadProfile()"
+          i18n="@@occurrencesRetry"
+        >
+          Try again
+        </button>
+      </div>
     } @else if (!profile()) {
       <login />
     } @else {

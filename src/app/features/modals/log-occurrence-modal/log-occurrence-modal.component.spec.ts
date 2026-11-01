@@ -42,6 +42,7 @@ describe('LogOccurrenceModalComponent', () => {
   let mockUserProfileService: {
     profileResource: {
       value: typeof userValue;
+      status: ReturnType<typeof signal<string>>;
       reload: ReturnType<typeof vi.fn>;
     };
   };
@@ -84,6 +85,7 @@ describe('LogOccurrenceModalComponent', () => {
     mockUserProfileService = {
       profileResource: {
         value: userValue,
+        status: signal('resolved'),
         reload: vi.fn(),
       },
     };

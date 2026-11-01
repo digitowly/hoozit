@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { UserOccurrencesService } from '../../../services/occurrence/user-occurrences/user-occurrences.service';
 import { SubmittedOccurrencesComponent } from '../submitted-occurrences/submitted-occurrences.component';
 import { ContentContainerComponent } from '../../../components/content-container/content-container.component';
 
@@ -8,4 +9,8 @@ import { ContentContainerComponent } from '../../../components/content-container
   templateUrl: './occurrences-view.component.html',
   styleUrl: './occurrences-view.component.scss',
 })
-export class OccurrencesViewComponent {}
+export class OccurrencesViewComponent {
+  constructor() {
+    inject(UserOccurrencesService).resource.reload();
+  }
+}
