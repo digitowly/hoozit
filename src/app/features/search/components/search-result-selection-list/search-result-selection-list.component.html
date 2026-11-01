@@ -1,61 +1,14 @@
+<search-result-selection-dock
+  [selections]="selections()"
+  (selectionOpened)="select($event)"
+  (selectionRemoved)="removeSelection($event)"
+/>
 @if (isVisible()) {
-  <div>
-    <button class="toggle-button" (click)="toggleList()">
-      <div class="chevron" [ngClass]="{ 'chevron--open': isListExpanded() }">
-        <app-icon name="chevron" size="size-small" />
-      </div>
-      @if (!isListExpanded()) {
-        <ul class="list-collapsed">
-          @for (
-            selection of selections();
-            track selection;
-            let index = $index
-          ) {
-            <li
-              [style.padding-left]="index === 0 ? '15px' : '0px'"
-              [style.width]="index === 0 ? '55px' : '40px'"
-              [style.border-bottom-right-radius]="
-                index === selections().length - 1 ? '10rem' : ''
-              "
-              [style.border-top-right-radius]="
-                index === selections().length - 1 ? '10rem' : ''
-              "
-            >
-              <img [src]="selection.thumbnail" alt="{{ selection.name }}" />
-            </li>
-          }
-        </ul>
-      }
-    </button>
-    @if (isListExpanded()) {
-      <ul class="list-expanded">
-        @for (selection of selections(); track selection) {
-          <div class="item">
-            <button class="item-open-button" (click)="select(selection)">
-              <img [src]="selection.thumbnail" alt="{{ selection.name }}" />
-              <div>
-                <p>
-                  {{ selection.name }}
-                </p>
-              </div>
-            </button>
-            <button
-              class="item-remove-button"
-              (click)="removeSelection(selection.id)"
-            >
-              <app-icon name="cross" size="size-small" />
-            </button>
-          </div>
-        }
-      </ul>
-    }
-
-    <species-overview-modal
-      [modalId]="modalId"
-      [isLoading]="isIntroductionLoading()"
-      [title]="selected()?.name || ''"
-      [introduction]="introduction()"
-      (handleClose)="closeModal()"
-    />
-  </div>
+  <species-overview-modal
+    [modalId]="modalId"
+    [isLoading]="isIntroductionLoading()"
+    [title]="selected()?.name || ''"
+    [introduction]="introduction()"
+    (handleClose)="closeModal()"
+  />
 }

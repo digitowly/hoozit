@@ -27,10 +27,13 @@
 }
 
 .map-search-selection-list {
+  pointer-events: none;
   z-index: 999;
   position: absolute;
   top: layout.$safe-area-inset-md + 3.5rem;
   left: layout.$safe-area-inset-md;
+  right: layout.$safe-area-inset-md;
+  max-width: 31.25rem;
 
   @media (min-width: breakpoint.$md) {
     top: layout.$safe-area-inset-md + 4.5rem;

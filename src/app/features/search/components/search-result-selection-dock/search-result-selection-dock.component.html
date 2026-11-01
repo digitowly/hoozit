@@ -1,0 +1,67 @@
+@if (selections().length > 0) {
+  <div
+    #dock
+    class="selection-dock"
+    [class.selection-dock--expanded]="isListExpanded()"
+    animate.leave="dock-leave"
+  >
+    <span class="toggle-slot" aria-hidden="true"></span>
+    <button
+      type="button"
+      class="toggle-button"
+      aria-label="Toggle saved searches"
+      i18n-aria-label="@@toggleSavedSearches"
+      [attr.aria-expanded]="isListExpanded()"
+      (click)="toggleList()"
+    >
+      <span
+        class="chevron"
+        [class.chevron--open]="isListExpanded()"
+        aria-hidden="true"
+      >
+        <app-icon name="chevron" size="size-small" />
+      </span>
+    </button>
+    <div class="results-surface">
+      <ul
+        class="list-expanded"
+        [class.list-expanded--pair]="selections().length === 2"
+        [attr.aria-hidden]="!isListExpanded()"
+        [attr.inert]="isListExpanded() ? null : ''"
+      >
+        @for (selection of selections(); track selection.id) {
+          <li
+            class="item"
+            animate.enter="item-enter"
+            animate.leave="item-leave"
+          >
+            <span class="item-surface" aria-hidden="true"></span>
+            <button
+              type="button"
+              class="item-open-button"
+              (click)="select(selection)"
+            >
+              <img [src]="selection.thumbnail" alt="" />
+              <span class="item-label-clip">
+                <span class="item-label" [title]="selection.name">{{
+                  selection.name
+                }}</span>
+              </span>
+            </button>
+            <span class="item-remove-clip">
+              <button
+                type="button"
+                class="item-remove-button"
+                aria-label="Remove saved search"
+                i18n-aria-label="@@removeSavedSearch"
+                (click)="selectionRemoved.emit(selection.id)"
+              >
+                <app-icon name="cross" size="size-small" />
+              </button>
+            </span>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+}
