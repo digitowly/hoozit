@@ -107,7 +107,9 @@ export class LogOccurrenceModalComponent {
   readonly isOpen = computed(() => this.modalService.isOpen(this.modalId()));
 
   readonly isLoggedIn = computed(
-    () => !!this.userDataService.profileResource.value(),
+    () =>
+      this.userDataService.profileResource.status() !== 'error' &&
+      !!this.userDataService.profileResource.value(),
   );
   readonly submissionState = this.occurrenceService.submissionState;
 

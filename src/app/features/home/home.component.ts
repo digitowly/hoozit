@@ -14,7 +14,9 @@ export class HomeComponent {
   private readonly userProfileService = inject(UserProfileService);
 
   readonly profile = computed(() =>
-    this.userProfileService.profileResource.value(),
+    this.userProfileService.profileResource.status() === 'error'
+      ? undefined
+      : this.userProfileService.profileResource.value(),
   );
   readonly isUserLoading = computed(() =>
     this.userProfileService.profileResource.isLoading(),

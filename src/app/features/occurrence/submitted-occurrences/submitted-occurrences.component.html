@@ -32,7 +32,23 @@
       </div>
     </div>
   } @empty {
-    @if (hasLoadedOccurrences()) {
+    @if (hasLoadError()) {
+      <div class="occurrence-empty" role="alert">
+        <h2 i18n="@@occurrencesLoadError">Couldn't load your sightings</h2>
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="reloadOccurrences()"
+          i18n="@@occurrencesRetry"
+        >
+          Try again
+        </button>
+      </div>
+    } @else if (isLoading()) {
+      <div class="occurrence-empty" role="status" i18n="@@occurrencesLoading">
+        Loading sightings…
+      </div>
+    } @else if (hasLoadedOccurrences()) {
       <div class="occurrence-empty" role="status">
         <span class="occurrence-empty-icon" aria-hidden="true">
           <app-icon name="binoculars" size="size-large" />

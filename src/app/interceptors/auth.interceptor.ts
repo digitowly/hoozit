@@ -1,25 +1,26 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
-
-const refreshUrl = `${environment.scoutUrl}/auth/refresh/web`;
+import {
+  SESSION_REFRESH_URL,
+  SessionRefreshService,
+} from '../services/session-refresh/session-refresh.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const http = inject(HttpClient);
+  const sessionRefresh = inject(SessionRefreshService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Only handle 401s, and never retry the refresh call itself.
-      if (error.status !== 401 || req.url === refreshUrl) {
+      if (
+        error.status !== 401 ||
+        req.url === SESSION_REFRESH_URL ||
+        !req.url.startsWith(`${environment.scoutUrl}/`)
+      ) {
         return throwError(() => error);
       }
 
-      return http.post(refreshUrl, {}, { withCredentials: true }).pipe(
-        switchMap(() => next(req)),
-        catchError(() => throwError(() => error)),
-      );
+      return sessionRefresh.refresh().pipe(switchMap(() => next(req)));
     }),
   );
 };

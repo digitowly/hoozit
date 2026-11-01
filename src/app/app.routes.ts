@@ -25,7 +25,6 @@ export const routes: Routes = [
       import("./features/profile/profile.component").then(
         ({ ProfileComponent }) => ProfileComponent,
       ),
-    data: { reuse: true },
   },
   {
     path: "user/occurrence/:id",

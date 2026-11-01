@@ -29,7 +29,17 @@ export class SubmittedOccurrencesComponent {
     () => this.userOccurrencesService.resource.status() === 'resolved',
   );
 
+  protected readonly hasLoadError = computed(
+    () => this.userOccurrencesService.resource.status() === 'error',
+  );
+
+  protected readonly isLoading = computed(() => {
+    const status = this.userOccurrencesService.resource.status();
+    return status === 'loading' || status === 'reloading';
+  });
+
   protected readonly occurrences = computed<Occurrence[]>(() => {
+    if (this.hasLoadError()) return [];
     const occurrences = this.userOccurrencesService.resource.value() || [];
     if (this.validationService.resource.status() !== 'resolved') {
       return occurrences;

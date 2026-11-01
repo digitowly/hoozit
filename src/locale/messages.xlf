@@ -2,6 +2,18 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="profileLoadError" datatype="html">
+        <source>Couldn't load your profile</source>
+      </trans-unit>
+      <trans-unit id="occurrencesLoadError" datatype="html">
+        <source>Couldn't load your sightings</source>
+      </trans-unit>
+      <trans-unit id="occurrencesRetry" datatype="html">
+        <source>Try again</source>
+      </trans-unit>
+      <trans-unit id="occurrencesLoading" datatype="html">
+        <source>Loading sightings…</source>
+      </trans-unit>
       <trans-unit id="toggleSavedSearches" datatype="html">
         <source>Toggle saved searches</source>
       </trans-unit>

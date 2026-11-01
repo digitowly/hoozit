@@ -29,8 +29,14 @@ export class ProfileComponent {
 
   private readonly themeService = inject(UiThemeService);
 
+  readonly hasProfileError = computed(
+    () => this.userProfileService.profileResource.status() === 'error',
+  );
+
   readonly profile = computed(() =>
-    this.userProfileService.profileResource.value(),
+    this.hasProfileError()
+      ? null
+      : this.userProfileService.profileResource.value(),
   );
 
   readonly isProfileLoading = computed(() =>
@@ -45,6 +51,14 @@ export class ProfileComponent {
     this.permissionsService.hasUserPermissions([Permission.RESOURCE_SUBMIT]),
     { initialValue: false },
   );
+
+  constructor() {
+    this.reloadProfile();
+  }
+
+  reloadProfile() {
+    this.userProfileService.profileResource.reload();
+  }
 
   async logoutUser() {
     await this.userProfileService.logout();
