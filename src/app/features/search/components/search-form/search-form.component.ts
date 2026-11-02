@@ -12,7 +12,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { of } from 'rxjs';
 import { IconComponent } from '../../../../components/icon/icon.component';
 
 @Component({
@@ -23,14 +22,15 @@ import { IconComponent } from '../../../../components/icon/icon.component';
 })
 export class SearchFormComponent {
   isActive = input(false);
+  isLoading = input(false);
 
   defaultTerm = input('');
 
   searchForm = new FormGroup({
-    query: new FormControl<string>(this.defaultTerm(), [
-      Validators.required,
-      Validators.minLength(3),
-    ]),
+    query: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(3)],
+    }),
   });
 
   onSearch = output<string>();
@@ -73,12 +73,13 @@ export class SearchFormComponent {
   }
 
   get query() {
-    return this.searchForm.get('query');
+    return this.searchForm.controls.query;
   }
 
   onQueryChange() {
-    this.onSearchTermChange.emit(this.query?.value ?? '');
-    this.onSubmit();
+    const term = this.query.value;
+    this.onSearchTermChange.emit(term);
+    this.onSearch.emit(term.trim());
   }
 
   onQueryFocus() {
@@ -86,11 +87,8 @@ export class SearchFormComponent {
   }
 
   onSubmit() {
-    if (!this.query?.value) return;
-
-    this.validateTerm(this.query.value).subscribe((term) => {
-      if (term) this.onSearch.emit(term);
-    });
+    const term = this.query.value.trim();
+    if (term.length >= 3) this.onSearch.emit(term);
   }
 
   hideResultList(event: Event) {
@@ -100,13 +98,8 @@ export class SearchFormComponent {
   }
 
   clearInput() {
-    this.searchForm.reset();
-  }
-
-  private validateTerm(term: string | null) {
-    if (!this.query?.valid || !term) {
-      return of('');
-    }
-    return of(term);
+    this.query.setValue('');
+    this.onQueryChange();
+    this.searchInputRef.nativeElement.focus();
   }
 }

@@ -21,6 +21,7 @@ export class SearchResultListComponent {
   list = input<AnimalSearchResult[]>([]);
 
   isLoading = input(false);
+  hasError = input(false);
 
   readonly onItemSelect = output<AnimalSearchResult>();
 

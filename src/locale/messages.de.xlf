@@ -2,6 +2,38 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="closeSearchResults" datatype="html">
+        <source>Close search results</source>
+        <target>Suchergebnisse schließen</target>
+      </trans-unit>
+      <trans-unit id="searchSpecies" datatype="html">
+        <source>Search species</source>
+        <target>Arten suchen</target>
+      </trans-unit>
+      <trans-unit id="searchSpeciesPlaceholder" datatype="html">
+        <source>E.g. tawny owl, duck…</source>
+        <target>Z. B. Waldkauz, Ente…</target>
+      </trans-unit>
+      <trans-unit id="searchSpeciesLoading" datatype="html">
+        <source>Searching species</source>
+        <target>Arten werden gesucht</target>
+      </trans-unit>
+      <trans-unit id="clearSpeciesSearch" datatype="html">
+        <source>Clear search</source>
+        <target>Suche leeren</target>
+      </trans-unit>
+      <trans-unit id="searchKeepTyping" datatype="html">
+        <source>Enter at least 3 characters</source>
+        <target>Gib mindestens 3 Zeichen ein</target>
+      </trans-unit>
+      <trans-unit id="searchNoResults" datatype="html">
+        <source>No species found. Try another name.</source>
+        <target>Keine Arten gefunden. Versuche einen anderen Namen.</target>
+      </trans-unit>
+      <trans-unit id="speciesSearchError" datatype="html">
+        <source>Search is unavailable. Please try again.</source>
+        <target>Die Suche ist nicht verfügbar. Bitte versuche es erneut.</target>
+      </trans-unit>
       <trans-unit id="profileLoadError" datatype="html">
         <source>Couldn't load your profile</source>
         <target>Dein Profil konnte nicht geladen werden</target>

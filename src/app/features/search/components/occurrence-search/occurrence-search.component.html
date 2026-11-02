@@ -2,6 +2,7 @@
   <search-form
     [defaultTerm]="defaultTerm()"
     [isActive]="isActive()"
+    [isLoading]="isLoading()"
     [isResultListVisible]="isResultListVisible()"
     (onSearch)="handleSearch($event)"
     (onSearchTermChange)="onSearchTermChange($event)"
@@ -10,6 +11,7 @@
   />
   <search-result-list
     [list]="occurrences()"
+    [hasError]="hasError()"
     [isLoading]="isLoading()"
     [searchInput]="searchTerm()"
     [isManuallyHidden]="isResultListManuallyHidden()"
