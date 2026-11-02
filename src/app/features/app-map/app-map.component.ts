@@ -1,5 +1,6 @@
 import {
   Component,
+  OnDestroy,
   computed,
   effect,
   inject,
@@ -49,7 +50,7 @@ const SETTLE_DEBOUNCE_MS = 600;
   templateUrl: './app-map.component.html',
   styleUrl: './app-map.component.scss',
 })
-export class AppMapComponent {
+export class AppMapComponent implements OnDestroy {
   readonly modalId = MODAL_ID;
   readonly logOccurrenceModalId = LOG_OCCURRENCE_MODAL_ID;
   readonly selectedMarker = signal<MapMarker | null>(null);
@@ -74,8 +75,6 @@ export class AppMapComponent {
   private activeSearchId = 0;
 
   constructor() {
-    this.userLocation.getLocation();
-
     this.loadAfterCameraSettles();
     this.setupMap();
     this.syncLensPhaseWithCamera();
@@ -86,8 +85,13 @@ export class AppMapComponent {
     this.repaintUserMarkerOnMove();
   }
 
+  ngOnDestroy() {
+    this.cancelActiveSearch();
+  }
+
   centerToUserLocation() {
-    this.mapService.setCenter(this.userLocation.coordinate());
+    const coordinate = this.userLocation.coordinate();
+    if (coordinate) this.mapService.setCenter(coordinate);
   }
 
   openLogOccurrenceModal() {
@@ -121,6 +125,7 @@ export class AppMapComponent {
   private setupMap() {
     const initialLocation = this.userLocation.coordinate();
     effect(() => {
+      if (!initialLocation) return;
       this.mapService.init(initialLocation, INITIAL_ZOOM);
       this.mapService.registerLongPress(() => this.openLogOccurrenceModal());
       this.mapService.onCameraSettle(() => this.settle$.next());
@@ -171,7 +176,8 @@ export class AppMapComponent {
   private centerOnFirstLocationFix() {
     effect(() => {
       if (this.userLocation.isValid() && !this.hasInitialCenter()) {
-        this.mapService.setCenter(this.userLocation.coordinate());
+        const coordinate = this.userLocation.coordinate();
+        if (coordinate) this.mapService.setCenter(coordinate);
         this.hasInitialCenter.set(true);
       }
     });
@@ -180,7 +186,8 @@ export class AppMapComponent {
   private repaintUserMarkerOnMove() {
     effect(() => {
       if (!this.userLocation.isValid()) return;
-      this.mapService.repaintUserMarker(this.userLocation.coordinate());
+      const coordinate = this.userLocation.coordinate();
+      if (coordinate) this.mapService.repaintUserMarker(coordinate);
     });
   }
 
@@ -189,6 +196,7 @@ export class AppMapComponent {
     coordinate = this.scoutSearch.searchHereCoordinate(),
     surface: PendingSearchSurface = 'active',
   ) {
+    if (!coordinate || !this.userLocation.isValid()) return;
     this.cancelActiveSearch();
 
     if (this.scoutSearch.isZoomedOut()) {

@@ -1,41 +1,68 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Injectable, OnDestroy, signal } from '@angular/core';
 import { Coordinate } from '../../../model/coordinate';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class UserLocationService {
-  coordinate = signal<Coordinate>({ latitude: 50, longitude: 50 });
-  private isInitialized = signal<boolean>(false);
-  hasError = signal<boolean>(true);
-  isValid = computed(() => this.isInitialized() && !this.hasError());
-  hasResolved = computed(() => this.isInitialized());
+type LocationError = 'denied' | 'unavailable' | 'timeout' | 'unsupported';
 
+@Injectable({ providedIn: 'root' })
+export class UserLocationService implements OnDestroy {
+  readonly coordinate = signal<Coordinate | null>(null);
+  readonly error = signal<LocationError | null>(null);
+  readonly isLoading = signal(false);
+  readonly hasError = computed(() => this.error() !== null);
+  readonly isValid = computed(
+    () => this.coordinate() !== null && !this.hasError(),
+  );
+  readonly hasResolved = computed(() => this.isValid() || this.hasError());
   private watchId: number | null = null;
+  private requestId = 0;
 
   getLocation() {
+    if (this.watchId !== null) return;
+    this.error.set(null);
     if (!navigator.geolocation) {
-      console.error('Geolocation is not supported by your browser');
+      this.error.set('unsupported');
       return;
     }
-
-    // Prevent starting multiple watchers
-    if (this.watchId !== null) return;
-
+    this.isLoading.set(true);
+    const requestId = ++this.requestId;
     this.watchId = navigator.geolocation.watchPosition(
-      (position) => {
+      ({ coords }) => {
+        if (requestId !== this.requestId) return;
         this.coordinate.set({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          latitude: coords.latitude,
+          longitude: coords.longitude,
         });
-        this.hasError.set(false);
-        this.isInitialized.set(true);
+        this.error.set(null);
+        this.isLoading.set(false);
       },
       (error) => {
-        console.error('Error getting location:', error);
-        this.hasError.set(true);
-        this.isInitialized.set(true);
+        if (requestId !== this.requestId) return;
+        this.coordinate.set(null);
+        this.error.set(
+          error.code === 1
+            ? 'denied'
+            : error.code === 3
+              ? 'timeout'
+              : 'unavailable',
+        );
+        this.isLoading.set(false);
       },
+      { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 },
     );
+  }
+
+  retry() {
+    this.stopWatching();
+    this.getLocation();
+  }
+
+  ngOnDestroy() {
+    this.stopWatching();
+  }
+
+  private stopWatching() {
+    ++this.requestId;
+    if (this.watchId !== null) navigator.geolocation?.clearWatch(this.watchId);
+    this.watchId = null;
   }
 }

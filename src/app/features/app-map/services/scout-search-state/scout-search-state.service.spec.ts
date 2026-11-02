@@ -164,4 +164,10 @@ describe('ScoutSearchStateService', () => {
     expect(service.canDecreaseRadius()).toBe(true);
     expect(service.canIncreaseRadius()).toBe(false);
   });
+  it('does not search after location resolves with an error', () => {
+    userIsValid.set(false);
+    expect(service.canStartInitialSearch()).toBe(false);
+    userIsValid.set(true);
+    expect(service.canStartInitialSearch()).toBe(true);
+  });
 });

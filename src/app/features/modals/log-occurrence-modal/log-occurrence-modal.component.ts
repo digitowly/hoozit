@@ -115,7 +115,7 @@ export class LogOccurrenceModalComponent {
 
   readonly locationLabel = computed(() => {
     const c = this.userLocation.coordinate();
-    return `${c.latitude.toFixed(4)}, ${c.longitude.toFixed(4)}`;
+    return c ? `${c.latitude.toFixed(4)}, ${c.longitude.toFixed(4)}` : '';
   });
 
   readonly confidenceLabel = computed(
@@ -181,6 +181,7 @@ export class LogOccurrenceModalComponent {
     if (!this.isSubmittable()) return;
 
     const coord = this.userLocation.coordinate();
+    if (!coord) return;
 
     const observed_at = this.buildIsoDate(
       this.observationDate(),
