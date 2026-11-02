@@ -1,38 +1,57 @@
-<div (click)="searchInput.focus()">
-  <form class="search-form" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
-    <button
-      class="search-form-back-button"
-      [disabled]="!isResultListVisible()"
-      (click)="hideResultList($event)"
-    >
-      <app-icon class="back-chevron" name="chevron" size="size-medium" />
-    </button>
-    <input
-      #searchInput
-      class="search-input"
-      [class.with-list]="isResultListVisible()"
-      type="text"
-      placeholder="E.g tawny owl, duck..."
-      formControlName="query"
-      (keyup)="onQueryChange()"
-      (focus)="onQueryFocus()"
-    />
-
-    @if (query?.value) {
+<form
+  class="search-form"
+  role="search"
+  [formGroup]="searchForm"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="search-form-leading">
+    @if (isResultListVisible()) {
       <button
-        class="search-form-submit-button"
-        [disabled]="searchForm.pending"
-        (click)="clearInput()"
+        type="button"
+        class="search-form-back-button"
+        aria-label="Close search results"
+        i18n-aria-label="@@closeSearchResults"
+        (click)="hideResultList($event)"
       >
-        <app-icon name="cross" size="size-medium" />
+        <app-icon class="back-chevron" name="chevron" size="size-medium" />
       </button>
     } @else {
-      <div class="search-form-search-icon">
-        <app-icon name="search" size="size-medium" />
-      </div>
+      <app-icon name="search" size="size-medium" aria-hidden="true" />
     }
-  </form>
-  @if (searchForm.hasError("requestError")) {
-    {{ searchForm.getError("requestError") }}
-  }
-</div>
+  </div>
+  <input
+    #searchInput
+    class="search-input"
+    type="search"
+    aria-label="Search species"
+    i18n-aria-label="@@searchSpecies"
+    placeholder="E.g. tawny owl, duck…"
+    i18n-placeholder="@@searchSpeciesPlaceholder"
+    autocomplete="off"
+    enterkeyhint="search"
+    formControlName="query"
+    (input)="onQueryChange()"
+    (focus)="onQueryFocus()"
+  />
+  <div class="search-form-actions">
+    @if (isLoading() && query.value.trim().length >= 3) {
+      <span
+        class="search-spinner"
+        role="status"
+        aria-label="Searching species"
+        i18n-aria-label="@@searchSpeciesLoading"
+      ></span>
+    }
+    @if (query.value) {
+      <button
+        type="button"
+        class="search-form-clear-button"
+        aria-label="Clear search"
+        i18n-aria-label="@@clearSpeciesSearch"
+        (click)="clearInput()"
+      >
+        <app-icon name="cross" size="size-small" />
+      </button>
+    }
+  </div>
+</form>

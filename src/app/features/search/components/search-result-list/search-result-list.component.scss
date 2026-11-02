@@ -5,14 +5,17 @@ $animated-transition-height: -50px;
 
 .search-result-list {
   padding: 1rem 0.5rem 0 0.5rem;
-  overflow-y: scroll;
+  overflow-y: auto;
+  max-height: min(28rem, 60dvh);
+  overscroll-behavior: contain;
   opacity: 1;
-  transition: all 0.3s ease-in;
-  border-radius: 0  0 border.$radius border.$radius ;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+  border-radius: 0 0 border.$radius border.$radius;
   background-color: var(--color-background);
   transform: translateY(-10px);
   box-shadow: 0 2px 4px color.$shadow;
-
 
   ul {
     list-style-type: none;
@@ -31,5 +34,65 @@ $animated-transition-height: -50px;
 .leaving {
   opacity: 0;
   transform: translateY($animated-transition-height);
-  transition: all 0.3s ease-in;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.search-state {
+  padding: 1rem 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.search-skeletons {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0 0.5rem 1rem;
+}
+
+.search-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: search-pulse 1.4s ease-in-out infinite alternate;
+}
+
+.search-skeleton-image,
+.search-skeleton-lines {
+  display: block;
+  background: var(--color-surface-raised);
+  border-radius: 0.5rem;
+}
+
+.search-skeleton-image {
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+}
+.search-skeleton-lines {
+  width: 55%;
+  height: 0.875rem;
+}
+.search-skeleton:nth-child(2) .search-skeleton-lines {
+  width: 40%;
+}
+
+@keyframes search-pulse {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-result-list,
+  .leaving {
+    transition: none;
+  }
+  .search-skeleton {
+    animation: none;
+  }
 }

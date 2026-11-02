@@ -7,6 +7,7 @@
       (onResultSelection)="isSearchModalOpen.set(false)"
       (onSearch)="handleSearch($event)"
       [isLoading]="isSearchLoading()"
+      [hasError]="hasSearchError()"
     />
   </div>
   <div class="map-search-selection-list">

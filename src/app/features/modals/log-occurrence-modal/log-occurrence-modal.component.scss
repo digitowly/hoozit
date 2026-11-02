@@ -5,6 +5,11 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  min-width: 0;
+
+  > field-container {
+    min-width: 0;
+  }
 }
 
 textarea {
@@ -19,25 +24,38 @@ textarea {
 }
 
 .when-row {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: 0.75rem;
 }
 
 .when-time-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  min-width: 0;
   gap: 0.5rem;
   align-items: center;
 }
 
 .when-input {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-height: 3rem;
+  appearance: none;
   padding: 0.75rem;
   border: 1px solid var(--color-border);
   border-radius: var(--control-radius);
   background-color: var(--color-background-overlay);
   color: var(--color-text);
-  font-size: inherit;
+  font-size: 1rem;
   min-width: 0;
+
+  &::-webkit-date-and-time-value {
+    min-width: 0;
+    text-align: start;
+  }
 }
 
 .confidence-row {

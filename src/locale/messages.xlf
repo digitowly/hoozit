@@ -2,6 +2,30 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="closeSearchResults" datatype="html">
+        <source>Close search results</source>
+      </trans-unit>
+      <trans-unit id="searchSpecies" datatype="html">
+        <source>Search species</source>
+      </trans-unit>
+      <trans-unit id="searchSpeciesPlaceholder" datatype="html">
+        <source>E.g. tawny owl, duck…</source>
+      </trans-unit>
+      <trans-unit id="searchSpeciesLoading" datatype="html">
+        <source>Searching species</source>
+      </trans-unit>
+      <trans-unit id="clearSpeciesSearch" datatype="html">
+        <source>Clear search</source>
+      </trans-unit>
+      <trans-unit id="searchKeepTyping" datatype="html">
+        <source>Enter at least 3 characters</source>
+      </trans-unit>
+      <trans-unit id="searchNoResults" datatype="html">
+        <source>No species found. Try another name.</source>
+      </trans-unit>
+      <trans-unit id="speciesSearchError" datatype="html">
+        <source>Search is unavailable. Please try again.</source>
+      </trans-unit>
       <trans-unit id="profileLoadError" datatype="html">
         <source>Couldn't load your profile</source>
       </trans-unit>

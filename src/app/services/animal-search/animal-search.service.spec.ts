@@ -92,6 +92,31 @@ describe('AnimalSearchService', () => {
     );
   });
 
+  it('shows loading during debounce and cancels a queued search when cleared', () => {
+    service.searchAnimals('owl');
+    expect(service.isLoading()).toBe(true);
+    service.searchAnimals('');
+    vi.advanceTimersByTime(300);
+    TestBed.tick();
+    expect(service.isLoading()).toBe(false);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('aborts an in-flight request and hides its results when cleared', async () => {
+    vi.mocked(fetch).mockImplementation(() => new Promise(() => {}));
+    service.searchAnimals('owl');
+    vi.advanceTimersByTime(300);
+    TestBed.tick();
+    const requestSignal = vi.mocked(fetch).mock.calls[0][1]?.signal;
+    expect(requestSignal?.aborted).toBe(false);
+
+    service.searchAnimals('');
+    TestBed.tick();
+    await vi.waitFor(() => expect(requestSignal?.aborted).toBe(true));
+    expect(service.resource.value()).toBeUndefined();
+    expect(service.isLoading()).toBe(false);
+  });
+
   it('should handle error', async () => {
     (fetch as any).mockRejectedValue(new Error('Network error'));
 

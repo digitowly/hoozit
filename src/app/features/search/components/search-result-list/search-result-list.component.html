@@ -5,15 +5,35 @@
     animate.leave="leaving"
     [style]="{ height: height() }"
   >
-    @if (isLoading()) {
-      <p>Loading...</p>
-    } @else if (searchInput().length < 3) {
-      <p>Keep typing</p>
+    @if (searchInput().trim().length < 3) {
+      <p class="search-state" role="status" i18n="@@searchKeepTyping">
+        Enter at least 3 characters
+      </p>
+    } @else if (isLoading()) {
+      <div class="search-loading" role="status">
+        <p class="search-state" i18n="@@searchSpeciesLoading">
+          Searching species
+        </p>
+        <div class="search-skeletons" aria-hidden="true">
+          @for (row of [0, 1, 2]; track row) {
+            <div class="search-skeleton">
+              <span class="search-skeleton-image"></span
+              ><span class="search-skeleton-lines"></span>
+            </div>
+          }
+        </div>
+      </div>
+    } @else if (hasError()) {
+      <p class="search-state" role="alert" i18n="@@speciesSearchError">
+        Search is unavailable. Please try again.
+      </p>
     } @else if (list().length === 0) {
-      <p>No results found</p>
+      <p class="search-state" role="status" i18n="@@searchNoResults">
+        No species found. Try another name.
+      </p>
     } @else {
       <ul>
-        @for (item of list(); track $index) {
+        @for (item of list(); track item.id) {
           <li (click)="handleItemSelection(item)">
             <occurrence-item [occurrence]="item"></occurrence-item>
           </li>

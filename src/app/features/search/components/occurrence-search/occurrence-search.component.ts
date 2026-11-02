@@ -14,6 +14,7 @@ export class OccurrenceSearchComponent {
   occurrences = input<AnimalSearchResult[]>([]);
   searchTerm = signal('');
   isLoading = input(false);
+  hasError = input(false);
   isActive = input(false);
   isResultListManuallyHidden = signal(false);
   isResultListVisible = signal(false);
@@ -36,6 +37,7 @@ export class OccurrenceSearchComponent {
   onSearchTermChange(searchTerm: string) {
     this.showResultList();
     this.searchTerm.set(searchTerm);
+    if (!searchTerm) this.defaultTerm.set('');
   }
 
   showResultList() {
@@ -53,7 +55,6 @@ export class OccurrenceSearchComponent {
   }
 
   handleSearch(searchTerm: string) {
-    console.log({ searchTerm });
     this.onSearch.emit(searchTerm);
   }
 }
