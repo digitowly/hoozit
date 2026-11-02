@@ -1,6 +1,7 @@
 import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { UserLocationService } from '../../services/user/user-location/user-location.service';
 import { AppMapComponent } from './app-map.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -27,6 +28,10 @@ describe('MapComponent', () => {
       ],
     }).compileComponents();
 
+    TestBed.inject(UserLocationService).coordinate.set({
+      latitude: 56,
+      longitude: 13,
+    });
     fixture = TestBed.createComponent(AppMapComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -90,5 +95,14 @@ describe('MapComponent', () => {
       expect.any(Function),
       expect.objectContaining({ force: true, radiusLevel }),
     );
+  });
+  it('does not request occurrences without a valid location', () => {
+    const markerService = fixture.debugElement.injector.get(
+      OccurrenceMarkerService,
+    );
+    const createMarkers = vi.spyOn(markerService, 'createMarkers');
+    TestBed.inject(UserLocationService).coordinate.set(null);
+    (component as any).loadOccurrences(true, { latitude: 56, longitude: 13 });
+    expect(createMarkers).not.toHaveBeenCalled();
   });
 });

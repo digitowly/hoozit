@@ -23,7 +23,7 @@ describe('UserLocationService', () => {
     });
     service = TestBed.inject(UserLocationService);
 
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   it('should be created', () => {
@@ -77,5 +77,67 @@ describe('UserLocationService', () => {
     service.getLocation();
 
     expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1);
+  });
+  it('starts without fabricated coordinates', () => {
+    expect(service.coordinate()).toBeNull();
+    expect(service.isValid()).toBe(false);
+    expect(service.hasResolved()).toBe(false);
+  });
+
+  it('resolves unsupported browsers to an actionable error', () => {
+    Object.defineProperty(navigator, 'geolocation', {
+      value: undefined,
+      writable: true,
+    });
+    service.getLocation();
+    expect(service.error()).toBe('unsupported');
+    expect(service.hasResolved()).toBe(true);
+    expect(service.isLoading()).toBe(false);
+  });
+
+  it.each([
+    [1, 'denied'],
+    [2, 'unavailable'],
+    [3, 'timeout'],
+  ])('invalidates a previous fix on error %s', (code, reason) => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    const [success, failure] = mockGeolocation.watchPosition.mock.calls[0];
+    success({ coords: { latitude: 52, longitude: 13 } });
+    failure({ code });
+    expect(service.coordinate()).toBeNull();
+    expect(service.isValid()).toBe(false);
+    expect(service.error()).toBe(reason);
+    expect(service.isLoading()).toBe(false);
+  });
+
+  it('restarts a failed watcher and ignores callbacks from the old request', () => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    const [oldSuccess, oldFailure] =
+      mockGeolocation.watchPosition.mock.calls[0];
+    oldFailure({ code: 1 });
+    service.retry();
+    expect(mockGeolocation.clearWatch).toHaveBeenCalledWith(123);
+    expect(service.isLoading()).toBe(true);
+    expect(service.error()).toBeNull();
+    oldSuccess({ coords: { latitude: 1, longitude: 2 } });
+    expect(service.coordinate()).toBeNull();
+    const [success] = mockGeolocation.watchPosition.mock.calls[1];
+    success({ coords: { latitude: 52, longitude: 13 } });
+    expect(service.isValid()).toBe(true);
+    expect(service.coordinate()).toEqual({ latitude: 52, longitude: 13 });
+    expect(mockGeolocation.watchPosition).toHaveBeenLastCalledWith(
+      expect.any(Function),
+      expect.any(Function),
+      { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 },
+    );
+  });
+
+  it('cleans up its watcher on destruction', () => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    service.ngOnDestroy();
+    expect(mockGeolocation.clearWatch).toHaveBeenCalledWith(123);
   });
 });

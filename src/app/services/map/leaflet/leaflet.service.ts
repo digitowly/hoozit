@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, OnDestroy, signal } from '@angular/core';
 import { Coordinate } from '../../../model/coordinate';
 import { MapService, MapMarker, MapCamera } from '../map-service';
 import * as L from 'leaflet';
@@ -6,12 +6,19 @@ import * as L from 'leaflet';
 const MIN_ZOOM = 8;
 
 @Injectable({ providedIn: 'root' })
-export class LeafletService extends MapService {
+export class LeafletService extends MapService implements OnDestroy {
   private map: L.Map | null = null;
   private settleCallbacks: (() => void)[] = [];
   private isZooming = false;
   override selectedMarker = signal<MapMarker | null>(null);
   override readonly camera = signal<MapCamera | null>(null);
+
+  ngOnDestroy() {
+    this.settleCallbacks = [];
+    this.map?.remove();
+    this.map = null;
+    this.camera.set(null);
+  }
 
   override init(coordinate: Coordinate, zoom: number = 13) {
     if (this.map) {

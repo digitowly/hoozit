@@ -69,11 +69,11 @@ export class ScoutSearchStateService {
     const camera = this.mapService.camera();
     if (!camera) return this.emptyLens();
 
+    const coordinate =
+      this.committedCoordinate() ?? this.initialSearchTargetCoordinate();
+    if (!coordinate) return this.emptyLens();
     return {
-      ...this.project(
-        this.committedCoordinate() ?? this.initialSearchTargetCoordinate(),
-        camera,
-      ),
+      ...this.project(coordinate, camera),
       radius: this.radiusPixels(this.activeLensRadiusLevel()),
       loading: this.isLoading() && !this.isGhostLoading(),
       failed: this.markerService.lastLoadFailed(),
@@ -86,11 +86,11 @@ export class ScoutSearchStateService {
     const camera = this.mapService.camera();
     if (!camera) return null;
 
+    const coordinate =
+      this.pendingGhostCoordinate() ?? this.searchHereCoordinate();
+    if (!coordinate) return null;
     return {
-      ...this.project(
-        this.pendingGhostCoordinate() ?? this.searchHereCoordinate(),
-        camera,
-      ),
+      ...this.project(coordinate, camera),
       radius: this.radiusPixels(this.requestedRadiusLevel()),
       loading: this.isGhostLoading(),
     };
@@ -99,7 +99,8 @@ export class ScoutSearchStateService {
   readonly userIndicator = computed<ScoutLensPoint | null>(() => {
     const camera = this.mapService.camera();
     if (!camera || !this.userLocation.isValid()) return null;
-    return this.project(this.userLocation.coordinate(), camera);
+    const coordinate = this.userLocation.coordinate();
+    return coordinate ? this.project(coordinate, camera) : null;
   });
 
   readonly isGhostLoading = computed(
@@ -136,7 +137,7 @@ export class ScoutSearchStateService {
       !this.isZoomedOut() &&
       this.needsInitialSearch() &&
       !this.isLoading() &&
-      this.userLocation.hasResolved()
+      this.userLocation.isValid()
     );
   }
 
@@ -201,8 +202,10 @@ export class ScoutSearchStateService {
       occurrenceSearchRadiusMetersForLevel(
         this.markerService.activeRadiusLevel(),
       ) / 1_000;
+    const searchCoordinate = this.searchHereCoordinate();
+    if (!searchCoordinate) return false;
     const movedOutsideCommittedLens =
-      GeoHelper.getDistance(this.searchHereCoordinate(), committedCoordinate) >
+      GeoHelper.getDistance(searchCoordinate, committedCoordinate) >
       committedRadiusKm;
     const requestedDifferentRadius =
       this.requestedRadiusLevel() !== this.markerService.activeRadiusLevel();
@@ -244,9 +247,9 @@ export class ScoutSearchStateService {
   private userOffset(camera: MapCamera) {
     if (!this.userLocation.isValid()) return null;
     if (camera.width === 0 || camera.height === 0) return null;
-    const point = this.mapService.projectToContainer(
-      this.userLocation.coordinate(),
-    );
+    const coordinate = this.userLocation.coordinate();
+    if (!coordinate) return null;
+    const point = this.mapService.projectToContainer(coordinate);
     if (!point) return null;
     return {
       nx: Math.abs(point.x - camera.width / 2) / camera.width,
