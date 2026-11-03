@@ -120,6 +120,10 @@ describe('MapComponent', () => {
     expect(
       indicator()?.querySelector('.location-approximate__dot'),
     ).not.toBeNull();
+    expect(indicator()?.getAttribute('tabindex')).toBe('0');
+    expect(
+      indicator()?.querySelector('.location-approximate__label')?.textContent,
+    ).toContain('Approximate location');
     location.isStale.set(false);
     location.error.set('unavailable');
     fixture.detectChanges();

@@ -16,11 +16,14 @@
   <div
     class="location-approximate"
     role="status"
+    tabindex="0"
     title="Your location may be inaccurate"
     i18n-title="@@locationApproximate"
   >
     <span class="location-approximate__dot" aria-hidden="true"></span>
-    <span i18n="@@locationApproximateBadge">Approximate location</span>
+    <span class="location-approximate__label" i18n="@@locationApproximateBadge"
+      >Approximate location</span
+    >
   </div>
 }
 @if (!isAnyModalOpen()) {
