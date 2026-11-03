@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { UserLocationService } from './user-location.service';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('UserLocationService', () => {
   let service: UserLocationService;
@@ -12,6 +12,7 @@ describe('UserLocationService', () => {
   };
 
   beforeEach(() => {
+    vi.useFakeTimers();
     // Inject our mock into the global window/navigator object
     Object.defineProperty(window.navigator, 'geolocation', {
       value: mockGeolocation,
@@ -24,6 +25,11 @@ describe('UserLocationService', () => {
     service = TestBed.inject(UserLocationService);
 
     vi.resetAllMocks();
+  });
+
+  afterEach(() => {
+    service.ngOnDestroy();
+    vi.useRealTimers();
   });
 
   it('should be created', () => {
@@ -99,13 +105,15 @@ describe('UserLocationService', () => {
     [1, 'denied'],
     [2, 'unavailable'],
     [3, 'timeout'],
-  ])('invalidates a previous fix on error %s', (code, reason) => {
+  ])('handles a previous fix on error %s', (code, reason) => {
     mockGeolocation.watchPosition.mockReturnValue(123);
     service.getLocation();
     const [success, failure] = mockGeolocation.watchPosition.mock.calls[0];
     success({ coords: { latitude: 52, longitude: 13 } });
     failure({ code });
-    expect(service.coordinate()).toBeNull();
+    expect(service.coordinate()).toEqual(
+      code === 1 ? null : { latitude: 52, longitude: 13 },
+    );
     expect(service.isValid()).toBe(false);
     expect(service.error()).toBe(reason);
     expect(service.isLoading()).toBe(false);
@@ -120,7 +128,7 @@ describe('UserLocationService', () => {
     service.retry();
     expect(mockGeolocation.clearWatch).toHaveBeenCalledWith(123);
     expect(service.isLoading()).toBe(true);
-    expect(service.error()).toBeNull();
+    expect(service.error()).toBe('denied');
     oldSuccess({ coords: { latitude: 1, longitude: 2 } });
     expect(service.coordinate()).toBeNull();
     const [success] = mockGeolocation.watchPosition.mock.calls[1];
@@ -130,7 +138,7 @@ describe('UserLocationService', () => {
     expect(mockGeolocation.watchPosition).toHaveBeenLastCalledWith(
       expect.any(Function),
       expect.any(Function),
-      { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 },
+      { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 },
     );
   });
 
@@ -139,5 +147,57 @@ describe('UserLocationService', () => {
     service.getLocation();
     service.ngOnDestroy();
     expect(mockGeolocation.clearWatch).toHaveBeenCalledWith(123);
+  });
+  it.each([2, 3])(
+    'retries transient error %s with backoff and keeps the map position',
+    (code) => {
+      mockGeolocation.watchPosition.mockReturnValue(123);
+      service.getLocation();
+      const [success, failure] = mockGeolocation.watchPosition.mock.calls[0];
+      success({ coords: { latitude: 52, longitude: 13 } });
+      failure({ code });
+      vi.advanceTimersByTime(5000);
+      expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(2);
+      expect(service.coordinate()).toEqual({ latitude: 52, longitude: 13 });
+      expect(service.isValid()).toBe(false);
+      const [recover, failAgain] = mockGeolocation.watchPosition.mock.calls[1];
+      failAgain({ code });
+      vi.advanceTimersByTime(9999);
+      expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(2);
+      recover({ coords: { latitude: 53, longitude: 14 } });
+      vi.advanceTimersByTime(60000);
+      expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(2);
+      expect(service.error()).toBeNull();
+      expect(service.isValid()).toBe(true);
+      expect(service.coordinate()).toEqual({ latitude: 53, longitude: 14 });
+    },
+  );
+
+  it('retries initial failure without inventing a map position', () => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    mockGeolocation.watchPosition.mock.calls[0][1]({ code: 2 });
+    vi.advanceTimersByTime(5000);
+    expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(2);
+    expect(service.coordinate()).toBeNull();
+  });
+
+  it('does not retry permission denial automatically', () => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    const [, fail] = mockGeolocation.watchPosition.mock.calls[0];
+    fail({ code: 2 });
+    fail({ code: 1 });
+    vi.advanceTimersByTime(60000);
+    expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1);
+  });
+
+  it('cancels scheduled retries on destruction', () => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    mockGeolocation.watchPosition.mock.calls[0][1]({ code: 3 });
+    service.ngOnDestroy();
+    vi.advanceTimersByTime(60000);
+    expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1);
   });
 });

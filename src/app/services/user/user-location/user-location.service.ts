@@ -15,10 +15,11 @@ export class UserLocationService implements OnDestroy {
   readonly hasResolved = computed(() => this.isValid() || this.hasError());
   private watchId: number | null = null;
   private requestId = 0;
+  private retryTimer: ReturnType<typeof setTimeout> | null = null;
+  private retryDelay = 5000;
 
   getLocation() {
     if (this.watchId !== null) return;
-    this.error.set(null);
     if (!navigator.geolocation) {
       this.error.set('unsupported');
       return;
@@ -28,6 +29,8 @@ export class UserLocationService implements OnDestroy {
     this.watchId = navigator.geolocation.watchPosition(
       ({ coords }) => {
         if (requestId !== this.requestId) return;
+        this.clearRetry();
+        this.retryDelay = 5000;
         this.coordinate.set({
           latitude: coords.latitude,
           longitude: coords.longitude,
@@ -37,7 +40,14 @@ export class UserLocationService implements OnDestroy {
       },
       (error) => {
         if (requestId !== this.requestId) return;
-        this.coordinate.set(null);
+        // A provider outage does not invalidate the last known map position.
+        // Permission denial does: do not continue using it after access is revoked.
+        if (error.code === 1) {
+          this.coordinate.set(null);
+          this.clearRetry();
+        } else {
+          this.scheduleRetry();
+        }
         this.error.set(
           error.code === 1
             ? 'denied'
@@ -47,17 +57,33 @@ export class UserLocationService implements OnDestroy {
         );
         this.isLoading.set(false);
       },
-      { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 },
+      { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 },
     );
   }
 
   retry() {
+    this.clearRetry();
     this.stopWatching();
     this.getLocation();
   }
 
   ngOnDestroy() {
+    this.clearRetry();
     this.stopWatching();
+  }
+
+  private scheduleRetry() {
+    if (this.retryTimer !== null) return;
+    this.retryTimer = setTimeout(() => {
+      this.retryTimer = null;
+      this.retry();
+    }, this.retryDelay);
+    this.retryDelay = Math.min(this.retryDelay * 2, 60000);
+  }
+
+  private clearRetry() {
+    if (this.retryTimer !== null) clearTimeout(this.retryTimer);
+    this.retryTimer = null;
   }
 
   private stopWatching() {

@@ -4,6 +4,8 @@ import { AnimalSearchService } from '../../services/animal-search/animal-search.
 import { SearchResultSelectionListComponent } from '../search/components/search-result-selection-list/search-result-selection-list.component';
 import { AppMapComponent } from '../app-map/app-map.component';
 
+import { UserLocationService } from '../../services/user/user-location/user-location.service';
+
 @Component({
   selector: 'map-view',
   imports: [
@@ -15,6 +17,12 @@ import { AppMapComponent } from '../app-map/app-map.component';
   styleUrl: './map-view.component.scss',
 })
 export class MapViewComponent {
+  readonly location = inject(UserLocationService);
+
+  constructor() {
+    this.location.getLocation();
+  }
+
   private readonly animalSearchService = inject(AnimalSearchService);
 
   isSearchModalOpen = signal(false);

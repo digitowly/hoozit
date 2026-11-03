@@ -9,20 +9,3 @@
   position: relative;
   overflow-y: scroll;
 }
-
-.location-gate {
-  min-height: 100dvh;
-  display: grid;
-  place-items: center;
-  padding: 1.5rem;
-
-  section {
-    display: grid;
-    gap: 1.25rem;
-    width: min(100%, 30rem);
-    padding: 2rem;
-    border: 1px solid var(--color-border);
-    border-radius: 1rem;
-    background: var(--color-background-overlay);
-  }
-}

@@ -113,6 +113,8 @@ export class LogOccurrenceModalComponent {
   );
   readonly submissionState = this.occurrenceService.submissionState;
 
+  readonly hasCurrentLocation = this.userLocation.isValid;
+
   readonly locationLabel = computed(() => {
     const c = this.userLocation.coordinate();
     return c ? `${c.latitude.toFixed(4)}, ${c.longitude.toFixed(4)}` : '';
@@ -125,6 +127,7 @@ export class LogOccurrenceModalComponent {
   readonly isSubmittable = computed(() => {
     const state = this.submissionState();
     return (
+      this.hasCurrentLocation() &&
       this.isLoggedIn() &&
       state !== SubmissionState.LOADING &&
       state !== SubmissionState.SUCCESS &&
