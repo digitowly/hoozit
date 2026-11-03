@@ -1,11 +1,11 @@
 {
-  "name": "Hoozit",
-  "short_name": "Hoozit",
+  "name": "Skauz",
+  "short_name": "Skauz",
   "start_url": "./map",
   "display": "standalone",
   "background_color": "#0b1b19",
   "theme_color": "#0b1b19",
-  "description": "Hoozit Progressive Web App",
+  "description": "Skauz Progressive Web App",
   "icons": [
     {
       "src": "/app-icons/app-icon-72.png",

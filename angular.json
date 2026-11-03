@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "hoozit": {
+    "skauz-web": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -28,7 +28,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/hoozit",
+            "outputPath": "dist/skauz-web",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
@@ -85,10 +85,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "hoozit:build:production"
+              "buildTarget": "skauz-web:build:production"
             },
             "development": {
-              "buildTarget": "hoozit:build:development"
+              "buildTarget": "skauz-web:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -100,7 +100,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "runner": "vitest",
-            "buildTarget": "hoozit:build:development",
+            "buildTarget": "skauz-web:build:development",
             "tsConfig": "tsconfig.spec.json"
           }
         }

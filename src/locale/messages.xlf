@@ -2,6 +2,9 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="homeWelcome" datatype="html">
+        <source>Welcome to Skauz</source>
+      </trans-unit>
       <trans-unit id="locationRequired" datatype="html">
         <source>Location is required</source>
       </trans-unit>
@@ -15,7 +18,7 @@
         <source>Enable location access for this site in your browser settings and turn on location services on your device, then try again.</source>
       </trans-unit>
       <trans-unit id="locationUnsupported" datatype="html">
-        <source>Location is unavailable in this browser. Open Hoozit in a browser with location support over HTTPS.</source>
+        <source>Location is unavailable in this browser. Open Skauz in a browser with location support over HTTPS.</source>
       </trans-unit>
       <trans-unit id="locationUnavailable" datatype="html">
         <source>We couldn’t get your location. Check that your device’s location services are enabled, then try again.</source>

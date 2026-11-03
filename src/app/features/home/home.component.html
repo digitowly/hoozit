@@ -3,7 +3,7 @@
     @if (!isUserLoading() && profile()) {
       <h1 class="greeting" i18n>Hello, {{ profile()?.user?.nickname }}</h1>
     } @else {
-      <h1 class="greeting" i18n>Welcome to Hoozit</h1>
+      <h1 class="greeting" i18n="@@homeWelcome">Welcome to Skauz</h1>
     }
 
     @if (!isUserLoading() && profile() === null) {

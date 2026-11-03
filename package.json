@@ -1,5 +1,5 @@
 {
-  "name": "hoozit",
+  "name": "skauz-web",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "postbuild": "cp -r dist/hoozit/browser/en-US/assets dist/hoozit/browser/assets && cp -r dist/hoozit/browser/en-US/app-icons dist/hoozit/browser/app-icons && cp -r dist/hoozit/browser/en-US/media dist/hoozit/browser/media && rm -rf dist/hoozit/browser/*/assets dist/hoozit/browser/*/app-icons dist/hoozit/browser/*/media"
+    "postbuild": "cp -r dist/skauz-web/browser/en-US/assets dist/skauz-web/browser/assets && cp -r dist/skauz-web/browser/en-US/app-icons dist/skauz-web/browser/app-icons && cp -r dist/skauz-web/browser/en-US/media dist/skauz-web/browser/media && rm -rf dist/skauz-web/browser/*/assets dist/skauz-web/browser/*/app-icons dist/skauz-web/browser/*/media"
   },
   "private": true,
   "packageManager": "pnpm@12.15.0",
