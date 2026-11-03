@@ -14,7 +14,7 @@ describe('UserLocationService', () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
-    localStorage.clear();
+    localStorage.removeItem('LAST_LOCATION');
     // Inject our mock into the global window/navigator object
     Object.defineProperty(window.navigator, 'geolocation', {
       value: mockGeolocation,

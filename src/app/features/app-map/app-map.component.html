@@ -12,28 +12,25 @@
   (searchHere)="searchHere()"
   (retry)="retryLoadOccurrences()"
 />
+@if (isLocationApproximate() && !isAnyModalOpen()) {
+  <div
+    class="location-approximate"
+    role="status"
+    title="Your location may be inaccurate"
+    i18n-title="@@locationApproximate"
+  >
+    <span class="location-approximate__dot" aria-hidden="true"></span>
+    <span i18n="@@locationApproximateBadge">Approximate location</span>
+  </div>
+}
 @if (!isAnyModalOpen()) {
   <div class="map-controls">
     <app-button-container class="map-actions" direction="vertical">
       <button class="map-button log-button" (click)="openLogOccurrenceModal()">
         <app-icon name="plus" size="size-medium" />
       </button>
-      <button
-        class="map-button"
-        [class.is-approximate]="isLocationApproximate()"
-        (click)="centerToUserLocation()"
-      >
+      <button class="map-button" (click)="centerToUserLocation()">
         <app-icon name="map-arrow" size="size-medium" />
-        @if (isLocationApproximate()) {
-          <span
-            class="approximate-dot"
-            role="img"
-            aria-label="Your location may be inaccurate"
-            title="Your location may be inaccurate"
-            i18n-aria-label="@@locationApproximate"
-            i18n-title="@@locationApproximate"
-          ></span>
-        }
       </button>
     </app-button-container>
   </div>

@@ -18,6 +18,10 @@
         <source>Your location may be inaccurate</source>
         <target>Dein Standort ist möglicherweise ungenau</target>
       </trans-unit>
+      <trans-unit id="locationApproximateBadge" datatype="html">
+        <source>Approximate location</source>
+        <target>Ungefährer Standort</target>
+      </trans-unit>
       <trans-unit id="locationApproximateShort" datatype="html">
         <source>may be inaccurate</source>
         <target>möglicherweise ungenau</target>
