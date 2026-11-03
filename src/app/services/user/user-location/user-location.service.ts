@@ -3,6 +3,18 @@ import { Coordinate } from '../../../model/coordinate';
 
 type LocationError = 'denied' | 'unavailable' | 'timeout' | 'unsupported';
 
+const WATCH_OPTIONS: PositionOptions = {
+  enableHighAccuracy: false,
+  maximumAge: 60000,
+};
+
+// Resolves immediately with the browser's cached fix, if any.
+const CACHED_OPTIONS: PositionOptions = {
+  enableHighAccuracy: false,
+  maximumAge: Infinity,
+  timeout: 0,
+};
+
 @Injectable({ providedIn: 'root' })
 export class UserLocationService implements OnDestroy {
   readonly coordinate = signal<Coordinate | null>(null);
@@ -15,8 +27,6 @@ export class UserLocationService implements OnDestroy {
   readonly hasResolved = computed(() => this.isValid() || this.hasError());
   private watchId: number | null = null;
   private requestId = 0;
-  private retryTimer: ReturnType<typeof setTimeout> | null = null;
-  private retryDelay = 5000;
 
   getLocation() {
     if (this.watchId !== null) return;
@@ -26,28 +36,37 @@ export class UserLocationService implements OnDestroy {
     }
     this.isLoading.set(true);
     const requestId = ++this.requestId;
-    this.watchId = navigator.geolocation.watchPosition(
-      ({ coords }) => {
-        if (requestId !== this.requestId) return;
-        this.clearRetry();
-        this.retryDelay = 5000;
-        this.coordinate.set({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        });
-        this.error.set(null);
-        this.isLoading.set(false);
+    const onPosition = ({ coords }: GeolocationPosition) => {
+      if (requestId !== this.requestId) return;
+      this.coordinate.set({
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      });
+      this.error.set(null);
+      this.isLoading.set(false);
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        // Never let a stale cached fix override a live one.
+        if (this.coordinate() === null) onPosition(position);
       },
+      () => {
+        // No cached fix: the watcher below reports real failures.
+      },
+      CACHED_OPTIONS,
+    );
+
+    // Transient errors (unavailable/timeout) do not end a watch: the browser
+    // keeps trying and delivers a fix once the OS has one. Restarting the
+    // watcher here would discard that progress, so only report the state.
+    this.watchId = navigator.geolocation.watchPosition(
+      onPosition,
       (error) => {
         if (requestId !== this.requestId) return;
         // A provider outage does not invalidate the last known map position.
         // Permission denial does: do not continue using it after access is revoked.
-        if (error.code === 1) {
-          this.coordinate.set(null);
-          this.clearRetry();
-        } else {
-          this.scheduleRetry();
-        }
+        if (error.code === 1) this.coordinate.set(null);
         this.error.set(
           error.code === 1
             ? 'denied'
@@ -57,33 +76,17 @@ export class UserLocationService implements OnDestroy {
         );
         this.isLoading.set(false);
       },
-      { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 },
+      WATCH_OPTIONS,
     );
   }
 
   retry() {
-    this.clearRetry();
     this.stopWatching();
     this.getLocation();
   }
 
   ngOnDestroy() {
-    this.clearRetry();
     this.stopWatching();
-  }
-
-  private scheduleRetry() {
-    if (this.retryTimer !== null) return;
-    this.retryTimer = setTimeout(() => {
-      this.retryTimer = null;
-      this.retry();
-    }, this.retryDelay);
-    this.retryDelay = Math.min(this.retryDelay * 2, 60000);
-  }
-
-  private clearRetry() {
-    if (this.retryTimer !== null) clearTimeout(this.retryTimer);
-    this.retryTimer = null;
   }
 
   private stopWatching() {
