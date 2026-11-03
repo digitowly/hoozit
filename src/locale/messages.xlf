@@ -14,6 +14,9 @@
       <trans-unit id="locationApproximate" datatype="html">
         <source>Your location may be inaccurate</source>
       </trans-unit>
+      <trans-unit id="locationApproximateBadge" datatype="html">
+        <source>Approximate location</source>
+      </trans-unit>
       <trans-unit id="locationApproximateShort" datatype="html">
         <source>may be inaccurate</source>
       </trans-unit>

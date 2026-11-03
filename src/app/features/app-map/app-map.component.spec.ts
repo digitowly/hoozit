@@ -106,21 +106,26 @@ describe('MapComponent', () => {
     expect(createMarkers).not.toHaveBeenCalled();
   });
 
-  it('marks the center button while the location may be inaccurate', () => {
+  it('shows a blinking indicator while the location may be inaccurate', () => {
     const location = TestBed.inject(UserLocationService);
     const element: HTMLElement = fixture.nativeElement;
-    expect(element.querySelector('.approximate-dot')).toBeNull();
+    const indicator = () => element.querySelector('.location-approximate');
+    expect(indicator()).toBeNull();
     location.isStale.set(true);
     fixture.detectChanges();
+    expect(indicator()?.textContent).toContain('Approximate location');
+    expect(indicator()?.getAttribute('title')).toBe(
+      'Your location may be inaccurate',
+    );
     expect(
-      element.querySelector('.approximate-dot')?.getAttribute('aria-label'),
-    ).toBe('Your location may be inaccurate');
+      indicator()?.querySelector('.location-approximate__dot'),
+    ).not.toBeNull();
     location.isStale.set(false);
     location.error.set('unavailable');
     fixture.detectChanges();
-    expect(element.querySelector('.approximate-dot')).not.toBeNull();
+    expect(indicator()).not.toBeNull();
     location.error.set(null);
     fixture.detectChanges();
-    expect(element.querySelector('.approximate-dot')).toBeNull();
+    expect(indicator()).toBeNull();
   });
 });
