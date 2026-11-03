@@ -114,6 +114,11 @@
         <div class="location-chip">
           <span class="location-chip__label">Location</span>
           <span class="location-chip__value">{{ locationLabel() }}</span>
+          @if (isLocationApproximate()) {
+            <span class="location-chip__hint" i18n="@@locationApproximateShort"
+              >may be inaccurate</span
+            >
+          }
         </div>
 
         <div class="form-footer">

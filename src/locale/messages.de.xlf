@@ -14,9 +14,13 @@
         <source>Your browser couldn’t determine your location. We’ll retry automatically. You can still use Home and Profile.</source>
         <target>Dein Browser konnte deinen Standort nicht ermitteln. Wir versuchen es automatisch erneut. Startseite und Profil kannst du weiterhin nutzen.</target>
       </trans-unit>
-      <trans-unit id="locationLastKnown" datatype="html">
-        <source>Location updates are temporarily unavailable. Showing your last known position while we reconnect. Recording sightings will be available when location recovers.</source>
-        <target>Standortaktualisierungen sind vorübergehend nicht verfügbar. Wir zeigen deine letzte bekannte Position, während die Verbindung wiederhergestellt wird. Sichtungen kannst du erfassen, sobald dein Standort wieder verfügbar ist.</target>
+      <trans-unit id="locationApproximate" datatype="html">
+        <source>Your location may be inaccurate</source>
+        <target>Dein Standort ist möglicherweise ungenau</target>
+      </trans-unit>
+      <trans-unit id="locationApproximateShort" datatype="html">
+        <source>may be inaccurate</source>
+        <target>möglicherweise ungenau</target>
       </trans-unit>
       <trans-unit id="sightingLocationPending" datatype="html">
         <source>Waiting for your location to recover before recording this sighting. Your draft is saved here.</source>

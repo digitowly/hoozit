@@ -38,11 +38,14 @@ export class UserLocationService implements OnDestroy {
   /** True while `coordinate` is a remembered position, not a live fix. */
   readonly isStale = signal(false);
   readonly hasError = computed(() => this.error() !== null);
-  readonly isValid = computed(
-    () => this.coordinate() !== null && !this.hasError() && !this.isStale(),
-  );
-  readonly isShowingLastKnown = computed(
-    () => this.coordinate() !== null && !this.isValid(),
+  /**
+   * A usable position exists. It may be remembered or outdated while the
+   * browser fails to deliver fixes; see `isApproximate`.
+   */
+  readonly isValid = computed(() => this.coordinate() !== null);
+  /** The position is usable but may not reflect where the user is now. */
+  readonly isApproximate = computed(
+    () => this.isValid() && (this.isStale() || this.hasError()),
   );
   readonly hasResolved = computed(() => this.isValid() || this.hasError());
   private watchId: number | null = null;
@@ -63,7 +66,8 @@ export class UserLocationService implements OnDestroy {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         // Never let a stale cached fix override a live one.
-        if (!this.isValid()) this.handlePosition(requestId, position);
+        if (this.coordinate() === null || this.isStale())
+          this.handlePosition(requestId, position);
       },
       () => {
         // No cached fix: the watcher below reports real failures.

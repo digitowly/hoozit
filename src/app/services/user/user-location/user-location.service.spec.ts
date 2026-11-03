@@ -116,7 +116,8 @@ describe('UserLocationService', () => {
     expect(service.coordinate()).toEqual(
       code === 1 ? null : { latitude: 52, longitude: 13 },
     );
-    expect(service.isValid()).toBe(false);
+    expect(service.isValid()).toBe(code !== 1);
+    expect(service.isApproximate()).toBe(code !== 1);
     expect(service.error()).toBe(reason);
     expect(service.isLoading()).toBe(false);
   });
@@ -162,10 +163,12 @@ describe('UserLocationService', () => {
       expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1);
       expect(mockGeolocation.clearWatch).not.toHaveBeenCalled();
       expect(service.coordinate()).toEqual({ latitude: 52, longitude: 13 });
-      expect(service.isValid()).toBe(false);
+      expect(service.isValid()).toBe(true);
+      expect(service.isApproximate()).toBe(true);
       success({ coords: { latitude: 53, longitude: 14 } });
       expect(service.error()).toBeNull();
       expect(service.isValid()).toBe(true);
+      expect(service.isApproximate()).toBe(false);
       expect(service.coordinate()).toEqual({ latitude: 53, longitude: 14 });
     },
   );
@@ -238,14 +241,14 @@ describe('UserLocationService', () => {
     service.getLocation();
     expect(service.coordinate()).toEqual({ latitude: 48, longitude: 11 });
     expect(service.isStale()).toBe(true);
-    expect(service.isValid()).toBe(false);
-    expect(service.isShowingLastKnown()).toBe(true);
+    expect(service.isValid()).toBe(true);
+    expect(service.isApproximate()).toBe(true);
     mockGeolocation.watchPosition.mock.calls[0][0]({
       coords: { latitude: 52, longitude: 13 },
     });
     expect(service.isStale()).toBe(false);
     expect(service.isValid()).toBe(true);
-    expect(service.isShowingLastKnown()).toBe(false);
+    expect(service.isApproximate()).toBe(false);
   });
 
   it('lets a cached browser fix replace a remembered position', () => {

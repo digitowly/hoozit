@@ -11,8 +11,11 @@
       <trans-unit id="locationTemporaryFailure" datatype="html">
         <source>Your browser couldn’t determine your location. We’ll retry automatically. You can still use Home and Profile.</source>
       </trans-unit>
-      <trans-unit id="locationLastKnown" datatype="html">
-        <source>Location updates are temporarily unavailable. Showing your last known position while we reconnect. Recording sightings will be available when location recovers.</source>
+      <trans-unit id="locationApproximate" datatype="html">
+        <source>Your location may be inaccurate</source>
+      </trans-unit>
+      <trans-unit id="locationApproximateShort" datatype="html">
+        <source>may be inaccurate</source>
       </trans-unit>
       <trans-unit id="sightingLocationPending" datatype="html">
         <source>Waiting for your location to recover before recording this sighting. Your draft is saved here.</source>
