@@ -21,6 +21,7 @@ export type IconName =
   | 'clock'
   | 'eye-open'
   | 'eye-closed'
+  | 'gps'
   | 'logout'
   | 'mail'
   | 'google'

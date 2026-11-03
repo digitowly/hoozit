@@ -118,7 +118,7 @@ describe('MapComponent', () => {
       'Your location may be inaccurate',
     );
     expect(
-      indicator()?.querySelector('.location-approximate__dot'),
+      indicator()?.querySelector('app-icon.location-approximate__icon'),
     ).not.toBeNull();
     expect(indicator()?.getAttribute('tabindex')).toBe('0');
     expect(
