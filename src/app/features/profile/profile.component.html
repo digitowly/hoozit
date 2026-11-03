@@ -99,6 +99,14 @@
         </section>
 
         <footer class="profile-footer">
+          <a
+            routerLink="/privacy"
+            class="profile-action btn-secondary"
+            data-test-id="profile-privacy-link"
+          >
+            <app-icon name="arrow-link" size="size-medium" />
+            <span i18n="@@privacyLink">Privacy</span>
+          </a>
           <button class="profile-action btn-secondary" (click)="logoutUser()">
             <app-icon name="logout" size="size-medium" />
             <span i18n>Sign out</span>

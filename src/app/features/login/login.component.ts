@@ -4,6 +4,7 @@ import { LoginButtonComponent } from '../../components/login-button/login-button
 import { form, FormField } from '@angular/forms/signals';
 import { loginModel } from './login.model';
 import { LoginService } from '../../services/login/login.service';
+import { RouterLink } from '@angular/router';
 import { FormContainerComponent } from '../../components/forms/form-container/form-container.component';
 
 @Component({
@@ -13,6 +14,7 @@ import { FormContainerComponent } from '../../components/forms/form-container/fo
     LoginButtonComponent,
     FormField,
     FormContainerComponent,
+    RouterLink,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',

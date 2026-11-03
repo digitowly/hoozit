@@ -41,6 +41,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: "privacy",
+    loadComponent: () =>
+      import("./features/privacy/privacy.component").then(
+        ({ PrivacyComponent }) => PrivacyComponent,
+      ),
+  },
+  {
     path: "species-resources",
     loadComponent: () =>
       import("./features/species-resource/species-resource.component").then(

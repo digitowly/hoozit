@@ -21,6 +21,18 @@
     max-width: 350px;
   }
 
+  .privacy-note {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+
+    a {
+      color: var(--color-accent-text);
+    }
+  }
+
   hr {
     margin: 1rem 0;
     width: min(100%, 350px);

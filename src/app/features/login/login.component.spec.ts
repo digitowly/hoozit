@@ -6,6 +6,7 @@ import { LoginService } from '../../services/login/login.service';
 import { By } from '@angular/platform-browser';
 import { IconRegistryService } from '../../services/icon-registry/icon-registry.service';
 import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -32,6 +33,7 @@ describe('LoginComponent', () => {
       imports: [LoginComponent],
       providers: [
         provideHttpClient(),
+        provideRouter([]),
         { provide: LoginService, useValue: loginServiceMock },
         { provide: IconRegistryService, useValue: iconRegistryServiceMock },
       ],
@@ -45,6 +47,13 @@ describe('LoginComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should link to the privacy page', () => {
+    const link = fixture.debugElement.query(
+      By.css('[data-test-id="login-privacy-link"]'),
+    ).nativeElement as HTMLAnchorElement;
+    expect(link.getAttribute('href')).toBe('/privacy');
   });
 
   it('should display the welcome message', () => {
