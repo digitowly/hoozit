@@ -115,16 +115,18 @@ $approximate-color: #e0a100;
 
 .location-approximate__icon {
   color: $approximate-color;
-  animation: location-approximate-blink 1.6s ease-in-out infinite;
+  animation: location-approximate-blink 2.4s ease-in-out infinite;
 }
 
+// Stay fully readable most of the cycle with a short, soft dip.
 @keyframes location-approximate-blink {
   0%,
+  65%,
   100% {
     opacity: 1;
   }
-  50% {
-    opacity: 0.3;
+  82% {
+    opacity: 0.45;
   }
 }
 
