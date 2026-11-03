@@ -61,6 +61,7 @@ export class AppMapComponent implements OnDestroy {
   private readonly userLocation = inject(UserLocationService);
   private readonly markerService = inject(OccurrenceMarkerService);
   readonly scoutSearch = inject(ScoutSearchStateService);
+  readonly isLocationApproximate = this.userLocation.isApproximate;
 
   readonly isModalOpen = computed(() => this.modalService.isOpen(this.modalId));
   readonly isLogOccurrenceModalOpen = computed(() =>

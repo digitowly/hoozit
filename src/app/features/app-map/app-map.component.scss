@@ -28,6 +28,7 @@ $btn-size: 48px;
 }
 
 .map-button {
+  position: relative;
   width: $btn-size;
   height: $btn-size;
   border: none;
@@ -64,4 +65,15 @@ $btn-size: 48px;
   .map-button {
     transition: none;
   }
+}
+
+.approximate-dot {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #e0a100;
+  box-shadow: 0 0 0 2px var(--color-background-overlay);
 }

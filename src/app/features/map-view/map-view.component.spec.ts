@@ -55,11 +55,9 @@ describe('MapViewComponent', () => {
     location.error.set('timeout');
     fixture.detectChanges();
     expect(element.querySelector('app-map')).toBe(map);
-    expect(element.textContent).toContain('last known position');
     location.error.set(null);
     fixture.detectChanges();
     expect(element.querySelector('app-map')).toBe(map);
-    expect(element.querySelector('.location-notice')).toBeNull();
     location.coordinate.set(null);
     location.error.set('denied');
     fixture.detectChanges();
@@ -84,9 +82,6 @@ describe('MapViewComponent', () => {
     fixture.detectChanges();
     const element: HTMLElement = fixture.nativeElement;
     expect(element.querySelector('app-map')).not.toBeNull();
-    expect(element.textContent).toContain('last known position');
-    location.isStale.set(false);
-    fixture.detectChanges();
-    expect(element.querySelector('.location-notice')).toBeNull();
+    expect(element.querySelector('.location-gate')).toBeNull();
   });
 });

@@ -114,6 +114,7 @@ export class LogOccurrenceModalComponent {
   readonly submissionState = this.occurrenceService.submissionState;
 
   readonly hasCurrentLocation = this.userLocation.isValid;
+  readonly isLocationApproximate = this.userLocation.isApproximate;
 
   readonly locationLabel = computed(() => {
     const c = this.userLocation.coordinate();

@@ -136,6 +136,11 @@ textarea {
   font-variant-numeric: tabular-nums;
 }
 
+.location-chip__hint {
+  opacity: 0.6;
+  font-style: italic;
+}
+
 .form-footer {
   display: flex;
   align-items: center;

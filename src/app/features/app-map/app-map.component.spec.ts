@@ -105,4 +105,22 @@ describe('MapComponent', () => {
     (component as any).loadOccurrences(true, { latitude: 56, longitude: 13 });
     expect(createMarkers).not.toHaveBeenCalled();
   });
+
+  it('marks the center button while the location may be inaccurate', () => {
+    const location = TestBed.inject(UserLocationService);
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.querySelector('.approximate-dot')).toBeNull();
+    location.isStale.set(true);
+    fixture.detectChanges();
+    expect(
+      element.querySelector('.approximate-dot')?.getAttribute('aria-label'),
+    ).toBe('Your location may be inaccurate');
+    location.isStale.set(false);
+    location.error.set('unavailable');
+    fixture.detectChanges();
+    expect(element.querySelector('.approximate-dot')).not.toBeNull();
+    location.error.set(null);
+    fixture.detectChanges();
+    expect(element.querySelector('.approximate-dot')).toBeNull();
+  });
 });

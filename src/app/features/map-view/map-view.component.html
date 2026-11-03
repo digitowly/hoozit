@@ -15,14 +15,6 @@
       <search-result-selection-list />
     </div>
   </div>
-
-  @if (location.isShowingLastKnown()) {
-    <aside class="location-notice" role="status" i18n="@@locationLastKnown">
-      Location updates are temporarily unavailable. Showing your last known
-      position while we reconnect. Recording sightings will be available when
-      location recovers.
-    </aside>
-  }
 } @else {
   <div class="location-gate">
     <section aria-labelledby="location-title" aria-live="polite">

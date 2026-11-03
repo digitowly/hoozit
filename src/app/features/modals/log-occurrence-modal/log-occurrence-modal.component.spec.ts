@@ -108,7 +108,11 @@ describe('LogOccurrenceModalComponent', () => {
         { provide: OccurrenceService, useValue: mockOccurrenceService },
         {
           provide: UserLocationService,
-          useValue: { coordinate: signal(MOCK_COORD), isValid: signal(true) },
+          useValue: {
+            coordinate: signal(MOCK_COORD),
+            isValid: signal(true),
+            isApproximate: signal(false),
+          },
         },
         {
           provide: UserProfileService,
@@ -206,6 +210,16 @@ describe('LogOccurrenceModalComponent', () => {
     expect(mockOccurrenceService.submit).not.toHaveBeenCalled();
     expect(component.occurrenceForm.name().value()).toBe('Owl');
     (location.isValid as WritableSignal<boolean>).set(true);
+    expect(component.isSubmittable()).toBe(true);
+  });
+
+  it('allows submission with an approximate location and flags it', async () => {
+    const location = TestBed.inject(UserLocationService);
+    userValue.set({ nickname: 'user' });
+    (location.isApproximate as WritableSignal<boolean>).set(true);
+    component.occurrenceForm.name().value.set('Owl');
+    component.occurrenceForm.description().value.set('In a tree');
+    expect(component.isLocationApproximate()).toBe(true);
     expect(component.isSubmittable()).toBe(true);
   });
 

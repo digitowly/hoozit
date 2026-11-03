@@ -56,16 +56,3 @@
     background: var(--color-background-overlay);
   }
 }
-
-.location-notice {
-  position: absolute;
-  z-index: 1001;
-  bottom: 6rem;
-  left: 1rem;
-  right: 5rem;
-  max-width: 30rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--control-radius);
-  background: var(--color-background-overlay);
-}

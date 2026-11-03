@@ -18,8 +18,22 @@
       <button class="map-button log-button" (click)="openLogOccurrenceModal()">
         <app-icon name="plus" size="size-medium" />
       </button>
-      <button class="map-button" (click)="centerToUserLocation()">
+      <button
+        class="map-button"
+        [class.is-approximate]="isLocationApproximate()"
+        (click)="centerToUserLocation()"
+      >
         <app-icon name="map-arrow" size="size-medium" />
+        @if (isLocationApproximate()) {
+          <span
+            class="approximate-dot"
+            role="img"
+            aria-label="Your location may be inaccurate"
+            title="Your location may be inaccurate"
+            i18n-aria-label="@@locationApproximate"
+            i18n-title="@@locationApproximate"
+          ></span>
+        }
       </button>
     </app-button-container>
   </div>
