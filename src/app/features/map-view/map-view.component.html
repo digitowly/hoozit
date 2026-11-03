@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  @if (location.hasError()) {
+  @if (location.isShowingLastKnown()) {
     <aside class="location-notice" role="status" i18n="@@locationLastKnown">
       Location updates are temporarily unavailable. Showing your last known
       position while we reconnect. Recording sightings will be available when

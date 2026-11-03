@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 export enum ClientStorageKey {
   SEARCH_SELECTIONS = 'SEARCH_SELECTIONS',
+  LAST_LOCATION = 'LAST_LOCATION',
 }
 
 @Injectable({
