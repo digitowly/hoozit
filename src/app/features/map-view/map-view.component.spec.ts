@@ -76,4 +76,17 @@ describe('MapViewComponent', () => {
     fixture.nativeElement.querySelector('button').click();
     expect(retry).toHaveBeenCalledOnce();
   });
+
+  it('shows the map at a remembered position while waiting for a live fix', () => {
+    const location = TestBed.inject(UserLocationService);
+    location.coordinate.set({ latitude: 48, longitude: 11 });
+    location.isStale.set(true);
+    fixture.detectChanges();
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.querySelector('app-map')).not.toBeNull();
+    expect(element.textContent).toContain('last known position');
+    location.isStale.set(false);
+    fixture.detectChanges();
+    expect(element.querySelector('.location-notice')).toBeNull();
+  });
 });

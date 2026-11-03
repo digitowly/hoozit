@@ -14,6 +14,7 @@ describe('UserLocationService', () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
+    localStorage.clear();
     // Inject our mock into the global window/navigator object
     Object.defineProperty(window.navigator, 'geolocation', {
       value: mockGeolocation,
@@ -226,5 +227,159 @@ describe('UserLocationService', () => {
     fail({ code: 1 });
     vi.advanceTimersByTime(60000);
     expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1);
+  });
+
+  it('restores the last known position as stale until a live fix arrives', () => {
+    localStorage.setItem(
+      'LAST_LOCATION',
+      JSON.stringify({ latitude: 48, longitude: 11 }),
+    );
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    expect(service.coordinate()).toEqual({ latitude: 48, longitude: 11 });
+    expect(service.isStale()).toBe(true);
+    expect(service.isValid()).toBe(false);
+    expect(service.isShowingLastKnown()).toBe(true);
+    mockGeolocation.watchPosition.mock.calls[0][0]({
+      coords: { latitude: 52, longitude: 13 },
+    });
+    expect(service.isStale()).toBe(false);
+    expect(service.isValid()).toBe(true);
+    expect(service.isShowingLastKnown()).toBe(false);
+  });
+
+  it('lets a cached browser fix replace a remembered position', () => {
+    localStorage.setItem(
+      'LAST_LOCATION',
+      JSON.stringify({ latitude: 48, longitude: 11 }),
+    );
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    mockGeolocation.getCurrentPosition.mock.calls[0][0]({
+      coords: { latitude: 50, longitude: 10 },
+    });
+    expect(service.coordinate()).toEqual({ latitude: 50, longitude: 10 });
+    expect(service.isValid()).toBe(true);
+  });
+
+  it('does not overwrite an in-memory position with the remembered one', () => {
+    localStorage.setItem(
+      'LAST_LOCATION',
+      JSON.stringify({ latitude: 48, longitude: 11 }),
+    );
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.coordinate.set({ latitude: 52, longitude: 13 });
+    service.getLocation();
+    expect(service.coordinate()).toEqual({ latitude: 52, longitude: 13 });
+    expect(service.isStale()).toBe(false);
+  });
+
+  it.each([
+    ['garbage', 'not json'],
+    ['incomplete', JSON.stringify({ latitude: 48 })],
+  ])('ignores a %s remembered position', (_, value) => {
+    localStorage.setItem('LAST_LOCATION', value);
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    expect(service.coordinate()).toBeNull();
+    expect(service.isStale()).toBe(false);
+  });
+
+  it('remembers live fixes', () => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    mockGeolocation.watchPosition.mock.calls[0][0]({
+      coords: { latitude: 52, longitude: 13 },
+    });
+    expect(JSON.parse(localStorage.getItem('LAST_LOCATION')!)).toEqual({
+      latitude: 52,
+      longitude: 13,
+    });
+  });
+
+  it('forgets the remembered position when permission is denied', () => {
+    localStorage.setItem(
+      'LAST_LOCATION',
+      JSON.stringify({ latitude: 48, longitude: 11 }),
+    );
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    mockGeolocation.watchPosition.mock.calls[0][1]({ code: 1 });
+    expect(localStorage.getItem('LAST_LOCATION')).toBeNull();
+    expect(service.coordinate()).toBeNull();
+    expect(service.isStale()).toBe(false);
+  });
+
+  it('polls with backoff after transient errors without restarting the watcher', () => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    const pollOptions = {
+      enableHighAccuracy: false,
+      maximumAge: 60000,
+      timeout: 20000,
+    };
+    mockGeolocation.watchPosition.mock.calls[0][1]({ code: 2 });
+    expect(mockGeolocation.getCurrentPosition).toHaveBeenCalledTimes(1);
+    vi.advanceTimersByTime(5000);
+    expect(mockGeolocation.getCurrentPosition).toHaveBeenCalledTimes(2);
+    expect(mockGeolocation.getCurrentPosition).toHaveBeenLastCalledWith(
+      expect.any(Function),
+      expect.any(Function),
+      pollOptions,
+    );
+    mockGeolocation.getCurrentPosition.mock.calls[1][1]({ code: 3 });
+    expect(service.error()).toBe('timeout');
+    vi.advanceTimersByTime(9999);
+    expect(mockGeolocation.getCurrentPosition).toHaveBeenCalledTimes(2);
+    vi.advanceTimersByTime(1);
+    expect(mockGeolocation.getCurrentPosition).toHaveBeenCalledTimes(3);
+    mockGeolocation.getCurrentPosition.mock.calls[2][0]({
+      coords: { latitude: 52, longitude: 13 },
+    });
+    expect(service.isValid()).toBe(true);
+    vi.advanceTimersByTime(120000);
+    expect(mockGeolocation.getCurrentPosition).toHaveBeenCalledTimes(3);
+    expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1);
+    expect(mockGeolocation.clearWatch).not.toHaveBeenCalled();
+  });
+
+  it('caps the poll backoff', () => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    const fail = mockGeolocation.watchPosition.mock.calls[0][1];
+    for (const delay of [5000, 10000, 20000, 40000, 60000, 60000]) {
+      fail({ code: 2 });
+      const calls = mockGeolocation.getCurrentPosition.mock.calls.length;
+      vi.advanceTimersByTime(delay - 1);
+      expect(mockGeolocation.getCurrentPosition).toHaveBeenCalledTimes(calls);
+      vi.advanceTimersByTime(1);
+      expect(mockGeolocation.getCurrentPosition).toHaveBeenCalledTimes(
+        calls + 1,
+      );
+    }
+  });
+
+  it('cancels a scheduled poll on destruction and ignores late poll results', () => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    mockGeolocation.watchPosition.mock.calls[0][1]({ code: 3 });
+    vi.advanceTimersByTime(5000);
+    const [lateSuccess] = mockGeolocation.getCurrentPosition.mock.calls[1];
+    mockGeolocation.watchPosition.mock.calls[0][1]({ code: 3 });
+    service.ngOnDestroy();
+    vi.advanceTimersByTime(120000);
+    expect(mockGeolocation.getCurrentPosition).toHaveBeenCalledTimes(2);
+    lateSuccess({ coords: { latitude: 1, longitude: 2 } });
+    expect(service.coordinate()).toBeNull();
+  });
+
+  it('stops polling when permission is denied', () => {
+    mockGeolocation.watchPosition.mockReturnValue(123);
+    service.getLocation();
+    const fail = mockGeolocation.watchPosition.mock.calls[0][1];
+    fail({ code: 2 });
+    fail({ code: 1 });
+    vi.advanceTimersByTime(120000);
+    expect(mockGeolocation.getCurrentPosition).toHaveBeenCalledTimes(1);
   });
 });
