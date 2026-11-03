@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http/testing';
 import { provideRouter, RouteReuseStrategy } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { routes } from '../../app.routes';
 import { authInterceptor } from '../../interceptors/auth.interceptor';
 import { CustomRouteReuseStrategy } from '../../route-reuse-strategy';
@@ -52,7 +52,10 @@ describe('Profile navigation', () => {
     TestBed.tick();
   });
 
-  afterEach(() => requests.verify());
+  afterEach(() => {
+    requests.verify();
+    vi.useRealTimers();
+  });
 
   async function settle() {
     await TestBed.inject(ApplicationRef).whenStable();
@@ -97,9 +100,17 @@ describe('Profile navigation', () => {
     requests
       .expectOne(profileUrl)
       .flush(null, { status: 401, statusText: 'Unauthorized' });
+    vi.useFakeTimers();
     requests
       .expectOne(refreshUrl)
       .flush(null, { status: 503, statusText: 'Unavailable' });
+    for (const delay of [500, 1000]) {
+      vi.advanceTimersByTime(delay);
+      requests
+        .expectOne(profileUrl)
+        .flush(null, { status: 503, statusText: 'Unavailable' });
+    }
+    vi.useRealTimers();
     await settle();
     expect(harness.routeNativeElement?.querySelector('login')).toBeNull();
     expect(harness.routeNativeElement?.textContent).toContain(
@@ -113,5 +124,26 @@ describe('Profile navigation', () => {
     requests.expectOne(profileUrl).flush(profile);
     await settle();
     expect(harness.routeNativeElement?.textContent).toContain('Scout');
+  });
+  it('recovers on the profile page after a temporary first-load failure', async () => {
+    const initial = requests.expectOne(profileUrl);
+    await harness.navigateByUrl('/user');
+    TestBed.tick();
+    requests.expectOne(permissionsUrl).flush({ permissions: [] });
+    vi.useFakeTimers();
+    initial.flush(null, { status: 503, statusText: 'Unavailable' });
+    harness.detectChanges();
+    expect(
+      harness.routeNativeElement?.querySelector('[role="alert"]'),
+    ).toBeNull();
+    expect(
+      harness.routeNativeElement?.querySelector('.spinner'),
+    ).not.toBeNull();
+    vi.advanceTimersByTime(500);
+    requests.expectOne(profileUrl).flush(profile);
+    vi.useRealTimers();
+    await settle();
+    expect(harness.routeNativeElement?.textContent).toContain('Scout');
+    expect(harness.routeNativeElement?.querySelector('login')).toBeNull();
   });
 });

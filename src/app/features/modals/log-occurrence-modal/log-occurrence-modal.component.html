@@ -105,6 +105,12 @@
           }
         </div>
 
+        @if (!hasCurrentLocation()) {
+          <p role="status" i18n="@@sightingLocationPending">
+            Waiting for your location to recover before recording this sighting.
+            Your draft is saved here.
+          </p>
+        }
         <div class="location-chip">
           <span class="location-chip__label">Location</span>
           <span class="location-chip__value">{{ locationLabel() }}</span>

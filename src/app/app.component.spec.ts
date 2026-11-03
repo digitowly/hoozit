@@ -26,25 +26,17 @@ describe('App location requirement', () => {
     });
   });
 
-  it('withholds navigation and routed content until a real location is available', () => {
+  it('keeps navigation and routed content available without location permission', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const element: HTMLElement = fixture.nativeElement;
-    expect(location.getLocation).toHaveBeenCalledOnce();
-    expect(element.querySelector('router-outlet')).toBeNull();
-    expect(element.querySelector('navigation')).toBeNull();
-    expect(element.textContent).toContain('Finding your location');
-    location.isValid.set(true);
+    expect(location.getLocation).not.toHaveBeenCalled();
+    expect(element.querySelector('router-outlet')).not.toBeNull();
+    expect(element.querySelector('navigation')).not.toBeNull();
+    location.error.set('denied');
+    location.isLoading.set(false);
     fixture.detectChanges();
     expect(element.querySelector('router-outlet')).not.toBeNull();
-    expect(element.querySelector('.location-gate')).toBeNull();
-    location.isValid.set(false);
-    location.isLoading.set(false);
-    location.error.set('denied');
-    fixture.detectChanges();
-    expect(element.querySelector('router-outlet')).toBeNull();
-    expect(element.textContent).toContain('browser settings');
-    element.querySelector('button')!.click();
-    expect(location.retry).toHaveBeenCalledOnce();
+    expect(element.querySelector('navigation')).not.toBeNull();
   });
 });

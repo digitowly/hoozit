@@ -1,7 +1,11 @@
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideZonelessChangeDetection, signal } from '@angular/core';
+import {
+  provideZonelessChangeDetection,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { of, Observable } from 'rxjs';
 
 import { LogOccurrenceModalComponent } from './log-occurrence-modal.component';
@@ -104,7 +108,7 @@ describe('LogOccurrenceModalComponent', () => {
         { provide: OccurrenceService, useValue: mockOccurrenceService },
         {
           provide: UserLocationService,
-          useValue: { coordinate: signal(MOCK_COORD) },
+          useValue: { coordinate: signal(MOCK_COORD), isValid: signal(true) },
         },
         {
           provide: UserProfileService,
@@ -189,6 +193,20 @@ describe('LogOccurrenceModalComponent', () => {
       submissionState.set(SubmissionState.ERROR);
       expect(component.isSubmittable()).toBe(true);
     });
+  });
+
+  it('preserves the draft but prevents submission while location is interrupted', async () => {
+    const location = TestBed.inject(UserLocationService);
+    userValue.set({ nickname: 'user' });
+    (location.isValid as WritableSignal<boolean>).set(false);
+    component.occurrenceForm.name().value.set('Owl');
+    component.occurrenceForm.description().value.set('In a tree');
+    await component.onSubmit();
+    expect(component.isSubmittable()).toBe(false);
+    expect(mockOccurrenceService.submit).not.toHaveBeenCalled();
+    expect(component.occurrenceForm.name().value()).toBe('Owl');
+    (location.isValid as WritableSignal<boolean>).set(true);
+    expect(component.isSubmittable()).toBe(true);
   });
 
   describe('locationLabel', () => {

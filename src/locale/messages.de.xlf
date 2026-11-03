@@ -2,6 +2,27 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="mapLocationRequired" datatype="html">
+        <source>Location is required for the map</source>
+        <target>Für die Karte ist dein Standort erforderlich</target>
+      </trans-unit>
+      <trans-unit id="locationTimeout" datatype="html">
+        <source>Your browser is taking longer to find your location. We’ll retry automatically. You can still use Home and Profile.</source>
+        <target>Dein Browser braucht länger, um deinen Standort zu ermitteln. Wir versuchen es automatisch erneut. Startseite und Profil kannst du weiterhin nutzen.</target>
+      </trans-unit>
+      <trans-unit id="locationTemporaryFailure" datatype="html">
+        <source>Your browser couldn’t determine your location. We’ll retry automatically. You can still use Home and Profile.</source>
+        <target>Dein Browser konnte deinen Standort nicht ermitteln. Wir versuchen es automatisch erneut. Startseite und Profil kannst du weiterhin nutzen.</target>
+      </trans-unit>
+      <trans-unit id="locationLastKnown" datatype="html">
+        <source>Location updates are temporarily unavailable. Showing your last known position while we reconnect. Recording sightings will be available when location recovers.</source>
+        <target>Standortaktualisierungen sind vorübergehend nicht verfügbar. Wir zeigen deine letzte bekannte Position, während die Verbindung wiederhergestellt wird. Sichtungen kannst du erfassen, sobald dein Standort wieder verfügbar ist.</target>
+      </trans-unit>
+      <trans-unit id="sightingLocationPending" datatype="html">
+        <source>Waiting for your location to recover before recording this sighting. Your draft is saved here.</source>
+        <target>Wir warten auf deinen Standort, bevor diese Sichtung erfasst werden kann. Dein Entwurf bleibt hier erhalten.</target>
+      </trans-unit>
+
       <trans-unit id="homeWelcome" datatype="html">
         <source>Welcome to Skauz</source>
         <target>Willkommen bei Skauz</target>

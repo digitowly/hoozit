@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http/testing';
 import { provideRouter, RouteReuseStrategy } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { OccurrencesViewComponent } from './occurrences-view.component';
 import { UserOccurrencesService } from '../../../services/occurrence/user-occurrences/user-occurrences.service';
 import { UserProfileService } from '../../../services/user/user-data/user-profile.service';
@@ -65,7 +65,10 @@ describe('Occurrences view navigation', () => {
     TestBed.tick();
   });
 
-  afterEach(() => http.verify());
+  afterEach(() => {
+    http.verify();
+    vi.useRealTimers();
+  });
 
   async function settle() {
     await TestBed.inject(ApplicationRef).whenStable();
@@ -134,7 +137,15 @@ describe('Occurrences view navigation', () => {
     await settle();
     await harness.navigateByUrl('/user/occurrences');
     TestBed.tick();
+    vi.useFakeTimers();
     http.expectOne(url).flush(null, { status: 503, statusText: 'Unavailable' });
+    for (const delay of [500, 1000]) {
+      vi.advanceTimersByTime(delay);
+      http
+        .expectOne(url)
+        .flush(null, { status: 503, statusText: 'Unavailable' });
+    }
+    vi.useRealTimers();
     await settle();
 
     expect(harness.routeNativeElement?.textContent).toContain(
@@ -152,5 +163,24 @@ describe('Occurrences view navigation', () => {
     expect(harness.routeNativeElement?.textContent).toContain(
       'Your first discovery awaits',
     );
+  });
+  it('recovers the initial sightings request without leaving the page', async () => {
+    const initial = http.expectOne(url);
+    await harness.navigateByUrl('/user/occurrences');
+    TestBed.tick();
+    vi.useFakeTimers();
+    initial.flush(null, { status: 503, statusText: 'Unavailable' });
+    harness.detectChanges();
+    expect(harness.routeNativeElement?.textContent).toContain(
+      'Loading sightings',
+    );
+    expect(
+      harness.routeNativeElement?.querySelector('[role="alert"]'),
+    ).toBeNull();
+    vi.advanceTimersByTime(500);
+    http.expectOne(url).flush([occurrence]);
+    vi.useRealTimers();
+    await settle();
+    expect(harness.routeNativeElement?.textContent).toContain('Red fox');
   });
 });

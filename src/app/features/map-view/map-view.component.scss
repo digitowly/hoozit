@@ -39,3 +39,33 @@
     top: layout.$safe-area-inset-md + 4.5rem;
   }
 }
+
+.location-gate {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 1.5rem 7rem;
+
+  section {
+    display: grid;
+    gap: 1.25rem;
+    width: min(100%, 30rem);
+    padding: 2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    background: var(--color-background-overlay);
+  }
+}
+
+.location-notice {
+  position: absolute;
+  z-index: 1001;
+  bottom: 6rem;
+  left: 1rem;
+  right: 5rem;
+  max-width: 30rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--control-radius);
+  background: var(--color-background-overlay);
+}

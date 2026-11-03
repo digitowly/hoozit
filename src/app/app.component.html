@@ -1,60 +1,12 @@
-@if (location.isValid()) {
-  <div class="app-layout">
-    <navigation />
-    <div class="main-layout">
-      <app-banner
-        [message]="globalBannerMessage"
-        [variant]="globalBannerVariant"
-      />
-      <main>
-        <router-outlet />
-      </main>
-    </div>
+<div class="app-layout">
+  <navigation />
+  <div class="main-layout">
+    <app-banner
+      [message]="globalBannerMessage"
+      [variant]="globalBannerVariant"
+    />
+    <main>
+      <router-outlet />
+    </main>
   </div>
-} @else {
-  <main class="location-gate">
-    <section aria-labelledby="location-title" aria-live="polite">
-      <h1 id="location-title" i18n="@@locationRequired">
-        Location is required
-      </h1>
-      <p i18n="@@locationPurpose">
-        Allow location access to discover wildlife near you and record
-        sightings.
-      </p>
-      @if (location.isLoading()) {
-        <p role="status" i18n="@@locationLoading">
-          Finding your location… Please allow access when your browser asks.
-        </p>
-      } @else {
-        @switch (location.error()) {
-          @case ("denied") {
-            <p i18n="@@locationDenied">
-              Enable location access for this site in your browser settings and
-              turn on location services on your device, then try again.
-            </p>
-          }
-          @case ("unsupported") {
-            <p i18n="@@locationUnsupported">
-              Location is unavailable in this browser. Open Skauz in a browser
-              with location support over HTTPS.
-            </p>
-          }
-          @default {
-            <p i18n="@@locationUnavailable">
-              We couldn’t get your location. Check that your device’s location
-              services are enabled, then try again.
-            </p>
-          }
-        }
-        <button
-          type="button"
-          class="btn-primary"
-          (click)="location.retry()"
-          i18n="@@locationRetry"
-        >
-          Try again
-        </button>
-      }
-    </section>
-  </main>
-}
+</div>

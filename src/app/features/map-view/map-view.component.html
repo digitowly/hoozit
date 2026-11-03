@@ -1,16 +1,78 @@
-<div>
-  <app-map />
-  <div class="map-search-bar">
-    <occurrence-search
-      [occurrences]="occurrences()"
-      [isActive]="isSearchModalOpen()"
-      (onResultSelection)="isSearchModalOpen.set(false)"
-      (onSearch)="handleSearch($event)"
-      [isLoading]="isSearchLoading()"
-      [hasError]="hasSearchError()"
-    />
+@if (location.coordinate()) {
+  <div>
+    <app-map />
+    <div class="map-search-bar">
+      <occurrence-search
+        [occurrences]="occurrences()"
+        [isActive]="isSearchModalOpen()"
+        (onResultSelection)="isSearchModalOpen.set(false)"
+        (onSearch)="handleSearch($event)"
+        [isLoading]="isSearchLoading()"
+        [hasError]="hasSearchError()"
+      />
+    </div>
+    <div class="map-search-selection-list">
+      <search-result-selection-list />
+    </div>
   </div>
-  <div class="map-search-selection-list">
-    <search-result-selection-list />
+
+  @if (location.hasError()) {
+    <aside class="location-notice" role="status" i18n="@@locationLastKnown">
+      Location updates are temporarily unavailable. Showing your last known
+      position while we reconnect. Recording sightings will be available when
+      location recovers.
+    </aside>
+  }
+} @else {
+  <div class="location-gate">
+    <section aria-labelledby="location-title" aria-live="polite">
+      <h1 id="location-title" i18n="@@mapLocationRequired">
+        Location is required for the map
+      </h1>
+      <p i18n="@@locationPurpose">
+        Allow location access to discover wildlife near you and record
+        sightings.
+      </p>
+      @if (location.isLoading()) {
+        <p role="status" i18n="@@locationLoading">
+          Finding your location… Please allow access when your browser asks.
+        </p>
+      } @else {
+        @switch (location.error()) {
+          @case ("denied") {
+            <p i18n="@@locationDenied">
+              Enable location access for this site in your browser settings and
+              turn on location services on your device, then try again.
+            </p>
+          }
+          @case ("unsupported") {
+            <p i18n="@@locationUnsupported">
+              Location is unavailable in this browser. Open Skauz in a browser
+              with location support over HTTPS.
+            </p>
+          }
+          @case ("timeout") {
+            <p i18n="@@locationTimeout">
+              Your browser is taking longer to find your location. We’ll retry
+              automatically. You can still use Home and Profile.
+            </p>
+          }
+          @default {
+            <p i18n="@@locationTemporaryFailure">
+              Your browser couldn’t determine your location. We’ll retry
+              automatically. You can still use Home and Profile.
+            </p>
+          }
+        }
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="location.retry()"
+          i18n="@@locationRetry"
+        >
+          Try again
+        </button>
+      }
+    </section>
   </div>
-</div>
+}

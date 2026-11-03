@@ -196,7 +196,7 @@ export class AppMapComponent implements OnDestroy {
     coordinate = this.scoutSearch.searchHereCoordinate(),
     surface: PendingSearchSurface = 'active',
   ) {
-    if (!coordinate || !this.userLocation.isValid()) return;
+    if (!coordinate || !this.userLocation.coordinate()) return;
     this.cancelActiveSearch();
 
     if (this.scoutSearch.isZoomedOut()) {
