@@ -455,6 +455,138 @@
         <source>Verify</source>
         <target>Prüfen</target>
       </trans-unit>
+      <trans-unit id="privacyLink" datatype="html">
+        <source>Privacy</source>
+        <target>Datenschutz</target>
+      </trans-unit>
+      <trans-unit id="loginPrivacyNote" datatype="html">
+        <source>Curious what we store?</source>
+        <target>Neugierig, was wir speichern?</target>
+      </trans-unit>
+      <trans-unit id="loginPrivacyLink" datatype="html">
+        <source>Read our privacy notes</source>
+        <target>Zu unseren Datenschutzhinweisen</target>
+      </trans-unit>
+      <trans-unit id="privacyTitle" datatype="html">
+        <source>Privacy</source>
+        <target>Datenschutz</target>
+      </trans-unit>
+      <trans-unit id="privacyUpdated" datatype="html">
+        <source>Last updated: November 3, 2026</source>
+        <target>Zuletzt aktualisiert: 3. November 2026</target>
+      </trans-unit>
+      <trans-unit id="privacyIntro" datatype="html">
+        <source>This page explains what Skauz stores about you, what it doesn&apos;t, and which services are involved. It applies to skauz.com and the Skauz apps for Android and iOS.</source>
+        <target>Hier erklären wir, was Skauz über dich speichert, was nicht und welche Dienste beteiligt sind. Das gilt für skauz.com und die Skauz-Apps für Android und iOS.</target>
+      </trans-unit>
+      <trans-unit id="privacyStoredTitle" datatype="html">
+        <source>What we store</source>
+        <target>Was wir speichern</target>
+      </trans-unit>
+      <trans-unit id="privacyStoredAccount" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Account:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> your email address, nickname, how you sign in (email, Google or Apple) together with the ID that provider gives us, a profile picture link if Google or Apple provides one, and whether your email is verified.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Konto:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> deine E-Mail-Adresse, deinen Spitznamen, wie du dich anmeldest (E-Mail, Google oder Apple) samt der ID, die uns dieser Anbieter übermittelt, einen Link zu deinem Profilbild, falls Google oder Apple einen bereitstellt, und ob deine E-Mail-Adresse bestätigt ist.</target>
+      </trans-unit>
+      <trans-unit id="privacyStoredPassword" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Password:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> only if you sign up with email, and only as a one-way hash. We never store it in plain text.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Passwort:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> nur wenn du dich per E-Mail registrierst, und nur als Einweg-Hash. Im Klartext speichern wir es nie.</target>
+      </trans-unit>
+      <trans-unit id="privacyStoredObservations" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Observations:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> the species, date and time, location and any details you enter, such as count, sex, life stage, behavior and notes.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Beobachtungen:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> Art, Datum und Uhrzeit, Ort und alle Angaben, die du machst, etwa Anzahl, Geschlecht, Lebensstadium, Verhalten und Notizen.</target>
+      </trans-unit>
+      <trans-unit id="privacyStoredContributions" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Contributions:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> replies and identifications you add to observations and species links you submit.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Beiträge:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> Antworten und Bestimmungen, die du zu Beobachtungen hinzufügst, und Artenlinks, die du einreichst.</target>
+      </trans-unit>
+      <trans-unit id="privacyStoredTokens" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Sign-in tokens:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> so you stay signed in. They expire after 30 days at the latest and are removed when you sign out.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Anmelde-Tokens:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> damit du angemeldet bleibst. Sie laufen spätestens nach 30 Tagen ab und werden beim Abmelden entfernt.</target>
+      </trans-unit>
+      <trans-unit id="privacyVisibilityTitle" datatype="html">
+        <source>Who can see it</source>
+        <target>Wer es sehen kann</target>
+      </trans-unit>
+      <trans-unit id="privacyVisibilityPrivate" datatype="html">
+        <source>Your observations are private by default. Only you can see them.</source>
+        <target>Deine Beobachtungen sind standardmäßig privat. Nur du kannst sie sehen.</target>
+      </trans-unit>
+      <trans-unit id="privacyVisibilityPublic" datatype="html">
+        <source>If you publish an observation, other people can see it, including its location and your nickname. You can unpublish it at any time.</source>
+        <target>Wenn du eine Beobachtung veröffentlichst, können andere sie sehen, einschließlich Ort und deinem Spitznamen. Du kannst die Veröffentlichung jederzeit zurücknehmen.</target>
+      </trans-unit>
+      <trans-unit id="privacyVisibilityEmail" datatype="html">
+        <source>Your email address is never shown to other users.</source>
+        <target>Deine E-Mail-Adresse wird anderen Nutzenden nie angezeigt.</target>
+      </trans-unit>
+      <trans-unit id="privacyNotStoredTitle" datatype="html">
+        <source>What we don&apos;t do</source>
+        <target>Was wir nicht tun</target>
+      </trans-unit>
+      <trans-unit id="privacyNotStoredTracking" datatype="html">
+        <source>No analytics, no tracking, no advertising, and we don&apos;t sell your data.</source>
+        <target>Keine Analyse, kein Tracking, keine Werbung, und wir verkaufen deine Daten nicht.</target>
+      </trans-unit>
+      <trans-unit id="privacyNotStoredLocation" datatype="html">
+        <source>No location tracking. Your device&apos;s location is used to show the map around you and to fill in an observation&apos;s position. It is only saved when you save an observation.</source>
+        <target>Keine Standortverfolgung. Der Standort deines Geräts wird genutzt, um die Karte um dich herum zu zeigen und den Ort einer Beobachtung auszufüllen. Gespeichert wird er nur, wenn du eine Beobachtung speicherst.</target>
+      </trans-unit>
+      <trans-unit id="privacyNotStoredMedia" datatype="html">
+        <source>No photos or audio are uploaded.</source>
+        <target>Es werden keine Fotos oder Audioaufnahmen hochgeladen.</target>
+      </trans-unit>
+      <trans-unit id="privacyNotStoredProvider" datatype="html">
+        <source>We never see your Google or Apple password.</source>
+        <target>Dein Google- oder Apple-Passwort sehen wir nie.</target>
+      </trans-unit>
+      <trans-unit id="privacyDeviceTitle" datatype="html">
+        <source>On your device</source>
+        <target>Auf deinem Gerät</target>
+      </trans-unit>
+      <trans-unit id="privacyDeviceWeb" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Website:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> cookies that keep you signed in, a short-lived cookie during Google or Apple sign-in, a cookie for your light or dark theme, and local storage for your map search selections. There are no tracking cookies.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Website:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> Cookies, die dich angemeldet halten, ein kurzlebiges Cookie während der Anmeldung mit Google oder Apple, ein Cookie für dein helles oder dunkles Design und lokaler Speicher für deine Kartensuche. Tracking-Cookies gibt es nicht.</target>
+      </trans-unit>
+      <trans-unit id="privacyDeviceApps" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Apps:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> your sign-in tokens and map search selections are stored on your device.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Apps:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> deine Anmelde-Tokens und deine Kartensuche werden auf deinem Gerät gespeichert.</target>
+      </trans-unit>
+      <trans-unit id="privacyServicesTitle" datatype="html">
+        <source>Services we use</source>
+        <target>Dienste, die wir nutzen</target>
+      </trans-unit>
+      <trans-unit id="privacyServicesHosting" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Railway<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> hosts our servers and database.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Railway<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> betreibt unsere Server und die Datenbank.</target>
+      </trans-unit>
+      <trans-unit id="privacyServicesEmail" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Resend<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> sends account emails, such as email verification.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Resend<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> versendet Konto-E-Mails, etwa zur Bestätigung deiner E-Mail-Adresse.</target>
+      </trans-unit>
+      <trans-unit id="privacyServicesSignIn" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Google<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Apple<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, only if you choose to sign in with them.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Google<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> und <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Apple<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, nur wenn du dich darüber anmeldest.</target>
+      </trans-unit>
+      <trans-unit id="privacyServicesGbif" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>GBIF<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> provides public biodiversity records. We send it the map area you search, but no account data.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>GBIF<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> liefert öffentliche Biodiversitätsdaten. Wir übermitteln den Kartenbereich, den du durchsuchst, aber keine Kontodaten.</target>
+      </trans-unit>
+      <trans-unit id="privacyServicesMaps" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Maps<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> are loaded from OpenStreetMap on the website, Google Maps on Android and Apple Maps on iOS. These providers can see your IP address when map tiles load.</source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Karten<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> werden auf der Website von OpenStreetMap, unter Android von Google Maps und unter iOS von Apple Maps geladen. Diese Anbieter sehen beim Laden der Kartenkacheln deine IP-Adresse.</target>
+      </trans-unit>
+      <trans-unit id="privacyServicesLogs" datatype="html">
+        <source>Our servers keep technical logs, for example of requests and errors, to run and secure the service. They can include your email address when you sign up or sign in.</source>
+        <target>Unsere Server führen technische Protokolle, etwa über Anfragen und Fehler, um den Dienst zu betreiben und abzusichern. Sie können deine E-Mail-Adresse enthalten, wenn du dich registrierst oder anmeldest.</target>
+      </trans-unit>
+      <trans-unit id="privacyRightsTitle" datatype="html">
+        <source>Your data, your choice</source>
+        <target>Deine Daten, deine Entscheidung</target>
+      </trans-unit>
+      <trans-unit id="privacyRightsText" datatype="html">
+        <source>You can change your nickname and password in your profile. To get a copy of your data or to delete your account together with all your observations, email us at <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [href]=&quot;&apos;mailto:&apos; + contactEmail&quot; data-test-id=&quot;privacy-contact&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ contactEmail }}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
+        <target>Spitznamen und Passwort kannst du in deinem Profil ändern. Für eine Kopie deiner Daten oder die Löschung deines Kontos samt aller Beobachtungen schreib uns an <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [href]=&quot;&apos;mailto:&apos; + contactEmail&quot; data-test-id=&quot;privacy-contact&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ contactEmail }}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

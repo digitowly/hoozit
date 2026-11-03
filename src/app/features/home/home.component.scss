@@ -48,6 +48,16 @@
     color: var(--color-text-muted);
   }
 
+  .privacy-link {
+    align-self: flex-start;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+
+    &:hover {
+      color: var(--color-accent-text);
+    }
+  }
+
   .notice {
     background: var(--color-background-overlay);
     border-left: 3px solid var(--color-accent-text);

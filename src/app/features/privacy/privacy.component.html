@@ -1,0 +1,141 @@
+<content-container>
+  <article class="privacy-view" data-test-id="privacy">
+    <header class="privacy-header">
+      <h1 i18n="@@privacyTitle">Privacy</h1>
+      <p class="privacy-updated" i18n="@@privacyUpdated">
+        Last updated: November 3, 2026
+      </p>
+      <p i18n="@@privacyIntro">
+        This page explains what Skauz stores about you, what it doesn't, and
+        which services are involved. It applies to skauz.com and the Skauz apps
+        for Android and iOS.
+      </p>
+    </header>
+
+    <section data-test-id="privacy-stored">
+      <h2 i18n="@@privacyStoredTitle">What we store</h2>
+      <ul>
+        <li i18n="@@privacyStoredAccount">
+          <strong>Account:</strong> your email address, nickname, how you sign
+          in (email, Google or Apple) together with the ID that provider gives
+          us, a profile picture link if Google or Apple provides one, and
+          whether your email is verified.
+        </li>
+        <li i18n="@@privacyStoredPassword">
+          <strong>Password:</strong> only if you sign up with email, and only as
+          a one-way hash. We never store it in plain text.
+        </li>
+        <li i18n="@@privacyStoredObservations">
+          <strong>Observations:</strong> the species, date and time, location
+          and any details you enter, such as count, sex, life stage, behavior
+          and notes.
+        </li>
+        <li i18n="@@privacyStoredContributions">
+          <strong>Contributions:</strong> replies and identifications you add to
+          observations and species links you submit.
+        </li>
+        <li i18n="@@privacyStoredTokens">
+          <strong>Sign-in tokens:</strong> so you stay signed in. They expire
+          after 30 days at the latest and are removed when you sign out.
+        </li>
+      </ul>
+    </section>
+
+    <section data-test-id="privacy-visibility">
+      <h2 i18n="@@privacyVisibilityTitle">Who can see it</h2>
+      <ul>
+        <li i18n="@@privacyVisibilityPrivate">
+          Your observations are private by default. Only you can see them.
+        </li>
+        <li i18n="@@privacyVisibilityPublic">
+          If you publish an observation, other people can see it, including its
+          location and your nickname. You can unpublish it at any time.
+        </li>
+        <li i18n="@@privacyVisibilityEmail">
+          Your email address is never shown to other users.
+        </li>
+      </ul>
+    </section>
+
+    <section data-test-id="privacy-not-stored">
+      <h2 i18n="@@privacyNotStoredTitle">What we don't do</h2>
+      <ul>
+        <li i18n="@@privacyNotStoredTracking">
+          No analytics, no tracking, no advertising, and we don't sell your
+          data.
+        </li>
+        <li i18n="@@privacyNotStoredLocation">
+          No location tracking. Your device's location is used to show the map
+          around you and to fill in an observation's position. It is only saved
+          when you save an observation.
+        </li>
+        <li i18n="@@privacyNotStoredMedia">
+          No photos or audio are uploaded.
+        </li>
+        <li i18n="@@privacyNotStoredProvider">
+          We never see your Google or Apple password.
+        </li>
+      </ul>
+    </section>
+
+    <section data-test-id="privacy-device">
+      <h2 i18n="@@privacyDeviceTitle">On your device</h2>
+      <ul>
+        <li i18n="@@privacyDeviceWeb">
+          <strong>Website:</strong> cookies that keep you signed in, a
+          short-lived cookie during Google or Apple sign-in, a cookie for your
+          light or dark theme, and local storage for your map search
+          selections. There are no tracking cookies.
+        </li>
+        <li i18n="@@privacyDeviceApps">
+          <strong>Apps:</strong> your sign-in tokens and map search selections
+          are stored on your device.
+        </li>
+      </ul>
+    </section>
+
+    <section data-test-id="privacy-services">
+      <h2 i18n="@@privacyServicesTitle">Services we use</h2>
+      <ul>
+        <li i18n="@@privacyServicesHosting">
+          <strong>Railway</strong> hosts our servers and database.
+        </li>
+        <li i18n="@@privacyServicesEmail">
+          <strong>Resend</strong> sends account emails, such as email
+          verification.
+        </li>
+        <li i18n="@@privacyServicesSignIn">
+          <strong>Google</strong> and <strong>Apple</strong>, only if you choose
+          to sign in with them.
+        </li>
+        <li i18n="@@privacyServicesGbif">
+          <strong>GBIF</strong> provides public biodiversity records. We send it
+          the map area you search, but no account data.
+        </li>
+        <li i18n="@@privacyServicesMaps">
+          <strong>Maps</strong> are loaded from OpenStreetMap on the website,
+          Google Maps on Android and Apple Maps on iOS. These providers can see
+          your IP address when map tiles load.
+        </li>
+        <li i18n="@@privacyServicesLogs">
+          Our servers keep technical logs, for example of requests and errors,
+          to run and secure the service. They can include your email address
+          when you sign up or sign in.
+        </li>
+      </ul>
+    </section>
+
+    <section data-test-id="privacy-rights">
+      <h2 i18n="@@privacyRightsTitle">Your data, your choice</h2>
+      <p i18n="@@privacyRightsText">
+        You can change your nickname and password in your profile. To get a
+        copy of your data or to delete your account together with all your
+        observations, email us at
+        <a [href]="'mailto:' + contactEmail" data-test-id="privacy-contact">{{
+          contactEmail
+        }}</a
+        >.
+      </p>
+    </section>
+  </article>
+</content-container>
