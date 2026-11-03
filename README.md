@@ -1,9 +1,9 @@
 <div align="center">
     <br/>
     <p>
-        <img src=".github/assets/hoozit_logo.png"
-            title="Hoozit" alt="Hoozit logo" width="120" />
-        <h1>Hoozit</h1>
+        <img src=".github/assets/skauz_logo.png"
+            title="Skauz" alt="Skauz logo" width="120" />
+        <h1>Skauz</h1>
     </p>
 </div>
 
