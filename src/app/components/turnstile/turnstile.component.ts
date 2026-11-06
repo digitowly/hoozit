@@ -64,7 +64,11 @@ export class TurnstileComponent implements AfterViewInit, OnDestroy {
       this.failed.emit();
       return;
     }
-    if (this.isDestroyed || !window.turnstile) return;
+    if (this.isDestroyed) return;
+    if (!window.turnstile) {
+      this.failed.emit();
+      return;
+    }
 
     this.widgetId = window.turnstile.render(this.container().nativeElement, {
       sitekey: environment.turnstileSiteKey,
