@@ -50,7 +50,7 @@ describe('LoginService', () => {
         vi.fn().mockResolvedValue({
           ok: false,
           type: 'default',
-          json: async () => ({ message: 'Invalid credentials' }),
+          json: async () => ({ error: 'Invalid credentials' }),
         }),
       );
 

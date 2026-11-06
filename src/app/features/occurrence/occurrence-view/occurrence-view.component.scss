@@ -8,8 +8,6 @@
 }
 
 .occurrence-detail {
-  max-width: 48rem;
-  margin: 0 auto;
   padding: 0.5rem 0 calc(72px + #{layout.$safe-area-inset-md});
 
   @media (min-width: breakpoint.$xs) {

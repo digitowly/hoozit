@@ -96,6 +96,33 @@ describe('UserDataService', () => {
     expect(reload).toHaveBeenCalledOnce();
   });
 
+  it('should delete the account and reload the profile', async () => {
+    const httpTesting = TestBed.inject(HttpTestingController);
+    const reload = vi.spyOn(service.profileResource, 'reload');
+
+    const deletion = service.deleteAccount();
+    const request = httpTesting.expectOne('http://localhost:8080/users/me');
+    expect(request.request.method).toBe('DELETE');
+    expect(request.request.withCredentials).toBe(true);
+    request.flush(null, { status: 204, statusText: 'No Content' });
+    await deletion;
+
+    expect(reload).toHaveBeenCalledOnce();
+  });
+
+  it('should keep the profile when deleting the account fails', async () => {
+    const httpTesting = TestBed.inject(HttpTestingController);
+    const reload = vi.spyOn(service.profileResource, 'reload');
+
+    const deletion = service.deleteAccount();
+    httpTesting
+      .expectOne('http://localhost:8080/users/me')
+      .flush(null, { status: 500, statusText: 'Server Error' });
+
+    await expect(deletion).rejects.toBeTruthy();
+    expect(reload).not.toHaveBeenCalled();
+  });
+
   it('should reload the user profile when logout returns unauthorized', async () => {
     const reload = vi.spyOn(service.profileResource, 'reload');
     (fetch as any).mockResolvedValue({

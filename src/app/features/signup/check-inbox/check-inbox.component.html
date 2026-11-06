@@ -1,0 +1,62 @@
+<content-container [hideBackButton]="true">
+<div class="signup">
+  <app-icon name="mail" size="size-large" />
+  @if (hasSentMail()) {
+    <h2 i18n="@@inboxTitle" data-test-id="inbox-title">Check your inbox</h2>
+    <p class="intro" i18n="@@inboxDescription">
+      If this address can be registered, we've sent you a mail. Open the link in
+      it, then sign in here.
+    </p>
+  } @else {
+    <h2 i18n="@@inboxResendTitle" data-test-id="inbox-title">Resend verification email</h2>
+    <p class="intro" i18n="@@inboxResendDescription">
+      Enter the address you signed up with, and we'll send a new link if it's
+      waiting for confirmation.
+    </p>
+  }
+
+  <form-container>
+    @if (registeredEmail === null) {
+      <input
+        type="email"
+        placeholder="Email"
+        i18n-placeholder="@@signupEmail"
+        autocomplete="email"
+        [formField]="emailForm.email"
+        data-test-id="inbox-email"
+      />
+    }
+
+    <!-- Tokens expire after 5 minutes, so only fetch one when the button can use it. -->
+    @if (!isCoolingDown()) {
+      <app-turnstile
+        #captcha
+        (tokenChange)="turnstileToken.set($event)"
+        (failed)="onCaptchaFailed()"
+      />
+    }
+
+    @if (errorMessage()) {
+      <p class="error-message" role="alert" data-test-id="error-message">
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <button
+      type="button"
+      class="btn-primary"
+      [disabled]="!canResend()"
+      (click)="resend()"
+      data-test-id="inbox-resend"
+    >
+      @if (isCoolingDown()) {
+        <span i18n="@@inboxResendWait">Resend mail in {{ countdownLabel() }}</span>
+      } @else {
+        <span i18n="@@inboxResend">Resend mail</span>
+      }
+    </button>
+  </form-container>
+
+  <a routerLink="/user" i18n="@@signupBackToLogin">Back to sign in</a>
+</div>
+</content-container>

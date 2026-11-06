@@ -1,0 +1,101 @@
+.signup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  .intro {
+    max-width: 350px;
+    color: var(--color-text-muted);
+  }
+
+  form-container {
+    max-width: 350px;
+  }
+
+  a {
+    color: var(--color-accent-text);
+    font-size: 0.875rem;
+  }
+
+  .error-message {
+    width: 100%;
+    margin-top: -0.5rem;
+    text-align: left;
+  }
+
+  .password-field {
+    position: relative;
+    width: 100%;
+
+    input {
+      padding-right: 4rem;
+    }
+  }
+
+  .toggle-visibility {
+    position: absolute;
+    top: 50%;
+    right: 0.25rem;
+    transform: translateY(-50%);
+    padding: 0.25rem 0.5rem;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--color-accent-text);
+  }
+
+  .password-rules {
+    display: grid;
+    gap: 0.125rem;
+    width: 100%;
+    margin-top: -0.25rem;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    text-align: left;
+
+    li {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    li::before {
+      content: "○";
+      flex: none;
+      width: 1rem;
+      text-align: center;
+    }
+
+    li.met {
+      color: var(--color-success);
+    }
+
+    li.met::before {
+      content: "✓";
+    }
+
+    li.too-long {
+      color: var(--color-error);
+    }
+
+    li.too-long::before {
+      content: "✕";
+    }
+  }
+
+  app-turnstile {
+    display: block;
+    width: 100%;
+    min-height: 65px;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+}

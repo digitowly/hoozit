@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ToggleButtonComponent } from '../../components/toggle-button/toggle-button.component';
 import { UiThemeService } from '../../services/ui-theme/ui-theme.service';
 import { UserProfileService } from '../../services/user/user-data/user-profile.service';
@@ -9,6 +9,8 @@ import { IconComponent } from '../../components/icon/icon.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
+import { ModalComponent } from '../../components/modal/modal.component';
+import { ModalService } from '../../services/modal/modal.service';
 
 @Component({
   selector: 'user',
@@ -20,6 +22,7 @@ import { LoginComponent } from '../login/login.component';
     IconComponent,
     RouterLink,
     LoginComponent,
+    ModalComponent,
   ],
 })
 export class ProfileComponent {
@@ -28,6 +31,22 @@ export class ProfileComponent {
   private readonly permissionsService = inject(PermissionsService);
 
   private readonly themeService = inject(UiThemeService);
+
+  private readonly modalService = inject(ModalService);
+
+  protected readonly deleteModalId = 'delete-account';
+
+  readonly isDeleting = signal(false);
+
+  readonly hasDeleteFailed = signal(false);
+
+  readonly deleteWord = $localize`:@@profileDeleteWord:DELETE`;
+
+  readonly typedDeleteWord = signal('');
+
+  readonly isDeleteWordTyped = computed(
+    () => this.typedDeleteWord().trim().toUpperCase() === this.deleteWord,
+  );
 
   readonly hasProfileError = computed(
     () => this.userProfileService.profileResource.status() === 'error',
@@ -62,6 +81,28 @@ export class ProfileComponent {
 
   async logoutUser() {
     await this.userProfileService.logout();
+  }
+
+  openDeleteConfirmation() {
+    this.modalService.open(this.deleteModalId, 'compact');
+  }
+
+  cancelDelete() {
+    this.modalService.close(this.deleteModalId);
+    this.typedDeleteWord.set('');
+    this.hasDeleteFailed.set(false);
+  }
+
+  async deleteAccount() {
+    this.isDeleting.set(true);
+    this.hasDeleteFailed.set(false);
+    try {
+      await this.userProfileService.deleteAccount();
+      this.cancelDelete();
+    } catch {
+      this.hasDeleteFailed.set(true);
+    }
+    this.isDeleting.set(false);
   }
 
   toggleTheme() {

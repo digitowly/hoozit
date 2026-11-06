@@ -22,6 +22,15 @@ export class UserProfileService {
     this.profileResource.reload();
   }
 
+  async deleteAccount() {
+    await firstValueFrom(
+      this.http.delete(`${environment.scoutUrl}/users/me`, {
+        withCredentials: true,
+      }),
+    );
+    this.profileResource.reload();
+  }
+
   private async fetchProfile(): Promise<ProfileResponse | null> {
     try {
       return await firstValueFrom(
