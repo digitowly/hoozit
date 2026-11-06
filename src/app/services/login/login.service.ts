@@ -28,7 +28,7 @@ export class LoginService {
     } else {
       this.isLoginSuccessful.set(false);
       const body = await res.json().catch(() => ({}));
-      this.errorMessage.set(body?.message || 'Login failed');
+      this.errorMessage.set(body?.error || 'Login failed');
     }
   }
 

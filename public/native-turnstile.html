@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Verification</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: transparent;
+      }
+    </style>
+    <script>
+      // The Android and iOS apps show this page in a WebView, because Turnstile has no native widget.
+      function postToApp(message) {
+        if (window.webkit?.messageHandlers?.turnstile) {
+          window.webkit.messageHandlers.turnstile.postMessage(message);
+        } else if (window.SkauzTurnstile) {
+          window.SkauzTurnstile.postMessage(JSON.stringify(message));
+        }
+      }
+
+      function renderWidget() {
+        const sitekey = new URLSearchParams(location.search).get('sitekey');
+        if (!sitekey) {
+          postToApp({ type: 'error', code: 'missing-sitekey' });
+          return;
+        }
+
+        turnstile.render('#widget', {
+          sitekey,
+          size: 'flexible',
+          'refresh-expired': 'auto',
+          callback: (token) => postToApp({ type: 'token', token }),
+          'expired-callback': () => postToApp({ type: 'expired' }),
+          'timeout-callback': () => postToApp({ type: 'expired' }),
+          'error-callback': (code) => {
+            postToApp({ type: 'error', code: String(code) });
+          },
+        });
+      }
+    </script>
+    <script
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=renderWidget"
+      async
+      defer
+    ></script>
+  </head>
+  <body>
+    <div id="widget"></div>
+  </body>
+</html>

@@ -37,11 +37,19 @@
     />
 
     @if (errorMessage()) {
-      <p class="error-message" data-test-id="error-message">
+      <p class="error-message" role="alert" data-test-id="error-message">
         {{ errorMessage() }}
       </p>
     }
   </form-container>
+
+  <hr />
+
+  <section class="signup-section">
+    <p i18n="@@loginNewHere">New here?</p>
+    <a routerLink="/signup" class="btn-primary" data-test-id="login-signup-link" i18n="@@loginCreateAccount">Create account</a>
+    <a routerLink="/signup/check-inbox" class="resend-link" data-test-id="login-resend-link" i18n="@@loginResendVerification">Resend verification email</a>
+  </section>
 
   <p class="privacy-note" data-test-id="login-privacy-note">
     <span i18n="@@loginPrivacyNote">Curious what we store?</span>

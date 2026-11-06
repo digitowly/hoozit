@@ -616,6 +616,154 @@
         <source>You can change your nickname and password in your profile. To get a copy of your data or to delete your account together with all your observations, email us at <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [href]=&quot;&apos;mailto:&apos; + contactEmail&quot; data-test-id=&quot;privacy-contact&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ contactEmail }}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
         <target>Spitznamen und Passwort kannst du in deinem Profil ändern. Für eine Kopie deiner Daten oder die Löschung deines Kontos samt aller Beobachtungen schreib uns an <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [href]=&quot;&apos;mailto:&apos; + contactEmail&quot; data-test-id=&quot;privacy-contact&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ contactEmail }}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</target>
       </trans-unit>
+      <trans-unit id="loginNewHere" datatype="html">
+        <source>New here?</source>
+        <target>Neu hier?</target>
+      </trans-unit>
+      <trans-unit id="loginCreateAccount" datatype="html">
+        <source>Create account</source>
+        <target>Konto erstellen</target>
+      </trans-unit>
+      <trans-unit id="loginResendVerification" datatype="html">
+        <source>Resend verification email</source>
+        <target>Bestätigungs-E-Mail erneut senden</target>
+      </trans-unit>
+      <trans-unit id="signupTitle" datatype="html">
+        <source>Create your account</source>
+        <target>Erstelle dein Konto</target>
+      </trans-unit>
+      <trans-unit id="signupEmail" datatype="html">
+        <source>Email</source>
+        <target>E-Mail</target>
+      </trans-unit>
+      <trans-unit id="signupPassword" datatype="html">
+        <source>Password</source>
+        <target>Passwort</target>
+      </trans-unit>
+      <trans-unit id="signupConfirmPassword" datatype="html">
+        <source>Confirm password</source>
+        <target>Passwort bestätigen</target>
+      </trans-unit>
+      <trans-unit id="signupShowPassword" datatype="html">
+        <source>Show</source>
+        <target>Anzeigen</target>
+      </trans-unit>
+      <trans-unit id="signupHidePassword" datatype="html">
+        <source>Hide</source>
+        <target>Verbergen</target>
+      </trans-unit>
+      <trans-unit id="signupInvalidEmail" datatype="html">
+        <source>Please enter a valid email address.</source>
+        <target>Bitte gib eine gültige E-Mail-Adresse ein.</target>
+      </trans-unit>
+      <trans-unit id="signupPasswordsDiffer" datatype="html">
+        <source>The passwords don't match.</source>
+        <target>Die Passwörter stimmen nicht überein.</target>
+      </trans-unit>
+      <trans-unit id="signupRuleLength" datatype="html">
+        <source>At least 8 characters</source>
+        <target>Mindestens 8 Zeichen</target>
+      </trans-unit>
+      <trans-unit id="signupRuleUppercase" datatype="html">
+        <source>An uppercase letter</source>
+        <target>Ein Großbuchstabe</target>
+      </trans-unit>
+      <trans-unit id="signupRuleLowercase" datatype="html">
+        <source>A lowercase letter</source>
+        <target>Ein Kleinbuchstabe</target>
+      </trans-unit>
+      <trans-unit id="signupRuleNumber" datatype="html">
+        <source>A number</source>
+        <target>Eine Zahl</target>
+      </trans-unit>
+      <trans-unit id="signupRuleSpecial" datatype="html">
+        <source>A special character</source>
+        <target>Ein Sonderzeichen</target>
+      </trans-unit>
+      <trans-unit id="signupRuleTooLong" datatype="html">
+        <source>This password is too long</source>
+        <target>Dieses Passwort ist zu lang</target>
+      </trans-unit>
+      <trans-unit id="signupSubmit" datatype="html">
+        <source>Create account</source>
+        <target>Konto erstellen</target>
+      </trans-unit>
+      <trans-unit id="signupBackToLogin" datatype="html">
+        <source>Back to sign in</source>
+        <target>Zurück zur Anmeldung</target>
+      </trans-unit>
+      <trans-unit id="signupCaptchaFailed" datatype="html">
+        <source>We couldn't verify you're human. Please try again.</source>
+        <target>Wir konnten nicht bestätigen, dass du ein Mensch bist. Bitte versuche es erneut.</target>
+      </trans-unit>
+      <trans-unit id="signupUnavailable" datatype="html">
+        <source>Something went wrong. Please check your connection and try again.</source>
+        <target>Etwas ist schiefgelaufen. Bitte prüfe deine Verbindung und versuche es erneut.</target>
+      </trans-unit>
+      <trans-unit id="signupTooManyAttempts" datatype="html">
+        <source>Too many attempts. Please try again later.</source>
+        <target>Zu viele Versuche. Bitte versuche es später erneut.</target>
+      </trans-unit>
+      <trans-unit id="signupTooManyAttemptsWait" datatype="html">
+        <source>Too many attempts. Please try again in <x id="minutes" equiv-text="Math.ceil(result.retryAfterSeconds / 60)"/> min.</source>
+        <target>Zu viele Versuche. Bitte versuche es in <x id="minutes" equiv-text="Math.ceil(result.retryAfterSeconds / 60)"/> Min. erneut.</target>
+      </trans-unit>
+      <trans-unit id="inboxTitle" datatype="html">
+        <source>Check your inbox</source>
+        <target>Prüfe dein Postfach</target>
+      </trans-unit>
+      <trans-unit id="inboxDescription" datatype="html">
+        <source>If this address can be registered, we've sent you a mail. Open the link in it, then sign in here.</source>
+        <target>Falls diese Adresse registriert werden kann, haben wir dir eine E-Mail geschickt. Öffne den Link darin und melde dich dann hier an.</target>
+      </trans-unit>
+      <trans-unit id="inboxResendTitle" datatype="html">
+        <source>Resend verification email</source>
+        <target>Bestätigungs-E-Mail erneut senden</target>
+      </trans-unit>
+      <trans-unit id="inboxResendDescription" datatype="html">
+        <source>Enter the address you signed up with, and we'll send a new link if it's waiting for confirmation.</source>
+        <target>Gib die Adresse ein, mit der du dich registriert hast. Wartet sie auf eine Bestätigung, schicken wir dir einen neuen Link.</target>
+      </trans-unit>
+      <trans-unit id="inboxResend" datatype="html">
+        <source>Resend mail</source>
+        <target>E-Mail erneut senden</target>
+      </trans-unit>
+      <trans-unit id="inboxResendWait" datatype="html">
+        <source>Resend mail in <x id="INTERPOLATION" equiv-text="{{ countdownLabel() }}"/></source>
+        <target>E-Mail erneut senden in <x id="INTERPOLATION" equiv-text="{{ countdownLabel() }}"/></target>
+      </trans-unit>
+      <trans-unit id="profileDeleteTitle" datatype="html">
+        <source>Delete your account?</source>
+        <target>Konto löschen?</target>
+      </trans-unit>
+      <trans-unit id="profileDeleteAccount" datatype="html">
+        <source>Delete account</source>
+        <target>Konto löschen</target>
+      </trans-unit>
+      <trans-unit id="profileDeleteDescription" datatype="html">
+        <source>This permanently deletes your account and all your sightings. It can't be undone.</source>
+        <target>Damit werden dein Konto und alle deine Sichtungen endgültig gelöscht. Das kann nicht rückgängig gemacht werden.</target>
+      </trans-unit>
+      <trans-unit id="profileDeleteWord" datatype="html">
+        <source>DELETE</source>
+        <target>LÖSCHEN</target>
+      </trans-unit>
+      <trans-unit id="profileDeleteTypeWord" datatype="html">
+        <source>Type <x id="INTERPOLATION" equiv-text="{{ deleteWord }}"/> to confirm</source>
+        <target>Gib <x id="INTERPOLATION" equiv-text="{{ deleteWord }}"/> ein, um zu bestätigen</target>
+      </trans-unit>
+      <trans-unit id="profileDeleteConfirm" datatype="html">
+        <source>Yes, delete my account</source>
+        <target>Ja, mein Konto löschen</target>
+      </trans-unit>
+      <trans-unit id="profileDeleteCancel" datatype="html">
+        <source>Cancel</source>
+        <target>Abbrechen</target>
+      </trans-unit>
+      <trans-unit id="profileDeleteFailed" datatype="html">
+        <source>Your account couldn't be deleted. Please try again.</source>
+        <target>Dein Konto konnte nicht gelöscht werden. Bitte versuche es erneut.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
