@@ -41,6 +41,20 @@ export const routes: Routes = [
       ),
   },
   {
+    path: "signup",
+    loadComponent: () =>
+      import("./features/signup/signup.component").then(
+        ({ SignupComponent }) => SignupComponent,
+      ),
+  },
+  {
+    path: "signup/check-inbox",
+    loadComponent: () =>
+      import("./features/signup/check-inbox/check-inbox.component").then(
+        ({ CheckInboxComponent }) => CheckInboxComponent,
+      ),
+  },
+  {
     path: "privacy",
     loadComponent: () =>
       import("./features/privacy/privacy.component").then(

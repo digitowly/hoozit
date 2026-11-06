@@ -1,11 +1,5 @@
 <content-container [hideBackButton]="true">
   <div class="user-profile-view">
-    @if (profile()) {
-      <div class="page-header">
-        <h1 i18n class="page-title">Profile</h1>
-      </div>
-    }
-
     @if (isProfileLoading()) {
       <div class="loading-state">
         <div class="spinner"></div>
@@ -43,76 +37,117 @@
           <div class="user-info">
             <h2 class="nickname">{{ profile()?.user?.nickname }}</h2>
             <p class="email">{{ profile()?.user?.email }}</p>
-            <div class="badges">
-              <span class="badge">{{ profile()?.user?.role }}</span>
-              <span class="badge">{{ profile()?.user?.account_tier }}</span>
-            </div>
           </div>
         </section>
 
-        <section>
-          <a routerLink="/user/occurrences" class="btn-link">
-            <app-icon name="binoculars" />
-            <span>
-              <span>
-                {{ profile()?.occurrences_count }}
-              </span>
-              <span>Logged Occurrences</span>
-            </span>
-            <app-icon name="chevron" />
-          </a>
-        </section>
+        <a routerLink="/user/occurrences" class="occurrences-card">
+          <span class="occurrences-icon">
+            <app-icon name="binoculars" size="size-medium" />
+          </span>
+          <span class="occurrences-text">
+            <span class="occurrences-count">{{ profile()?.occurrences_count }}</span>
+            <span class="occurrences-label">Logged Occurrences</span>
+          </span>
+          <app-icon name="chevron" />
+        </a>
 
         @if (hasSpeciesResourcePermission()) {
-          <section class="actions-section">
-            <div class="actions-grid">
-              <a
-                routerLink="/species-resources"
-                class="profile-action btn-primary"
-              >
-                <app-icon name="arrow-link" size="size-medium" />
-                <div class="action-text">
-                  <span i18n class="action-label">Submit Resource</span>
-                  <span i18n class="action-description">
-                    Add new species data to our database.
-                  </span>
-                </div>
-              </a>
-            </div>
+          <section class="profile-list">
+            <a routerLink="/species-resources" class="list-row">
+              <span i18n>Submit Resource</span>
+              <span class="list-row-end"><app-icon name="chevron" /></span>
+            </a>
           </section>
         }
 
-        <section class="settings-section">
-          <h3 i18n class="section-title">Settings</h3>
-          <div class="setting-item">
-            <div class="setting-text">
-              <span i18n class="setting-label">Dark Mode</span>
-              <span i18n class="setting-description">
-                Toggle between light and dark theme.
-              </span>
-            </div>
-            <toggle-button
-              [isChecked]="isThemeToggleChecked()"
-              (onChange)="toggleTheme()"
-            />
+        <section class="profile-list">
+          <h2 i18n class="section-title">Settings</h2>
+          <div class="list-row">
+            <span i18n>Dark Mode</span>
+            <span class="list-row-end">
+              <toggle-button
+                [isChecked]="isThemeToggleChecked()"
+                (onChange)="toggleTheme()"
+              />
+            </span>
           </div>
-        </section>
-
-        <footer class="profile-footer">
           <a
             routerLink="/privacy"
-            class="profile-action btn-secondary"
+            class="list-row"
             data-test-id="profile-privacy-link"
           >
-            <app-icon name="arrow-link" size="size-medium" />
             <span i18n="@@privacyLink">Privacy</span>
+            <span class="list-row-end"><app-icon name="chevron" /></span>
           </a>
-          <button class="profile-action btn-secondary" (click)="logoutUser()">
-            <app-icon name="logout" size="size-medium" />
+          <button type="button" class="list-row" (click)="logoutUser()">
             <span i18n>Sign out</span>
           </button>
-        </footer>
+          <button
+            type="button"
+            class="list-row list-row-danger"
+            (click)="openDeleteConfirmation()"
+            i18n="@@profileDeleteAccount"
+            data-test-id="profile-delete-account"
+          >
+            Delete account
+          </button>
+        </section>
       </div>
     }
   </div>
 </content-container>
+
+<app-modal
+  modalType="compact"
+  [modalId]="deleteModalId"
+  [hasBackdrop]="true"
+  title="Delete your account?"
+  i18n-title="@@profileDeleteTitle"
+  (handleClose)="cancelDelete()"
+>
+  <div class="delete-confirmation">
+    <p i18n="@@profileDeleteDescription">
+      This permanently deletes your account and all your sightings. It can't be
+      undone.
+    </p>
+    <label class="delete-word">
+      <span i18n="@@profileDeleteTypeWord">Type {{ deleteWord }} to confirm</span>
+      <input
+        type="text"
+        autocomplete="off"
+        autocapitalize="characters"
+        spellcheck="false"
+        [value]="typedDeleteWord()"
+        (input)="typedDeleteWord.set($any($event.target).value)"
+        data-test-id="profile-delete-word"
+      />
+    </label>
+    @if (hasDeleteFailed()) {
+      <p class="error-message" role="alert" i18n="@@profileDeleteFailed" data-test-id="profile-delete-error">
+        Your account couldn't be deleted. Please try again.
+      </p>
+    }
+    <div class="delete-actions">
+      <button
+        type="button"
+        class="btn-secondary"
+        [disabled]="isDeleting()"
+        (click)="cancelDelete()"
+        i18n="@@profileDeleteCancel"
+        data-test-id="profile-delete-cancel"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn-danger"
+        [disabled]="isDeleting() || !isDeleteWordTyped()"
+        (click)="deleteAccount()"
+        i18n="@@profileDeleteConfirm"
+        data-test-id="profile-delete-confirm"
+      >
+        Yes, delete my account
+      </button>
+    </div>
+  </div>
+</app-modal>

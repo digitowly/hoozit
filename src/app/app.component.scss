@@ -1,5 +1,8 @@
 .app-layout {
+  // 100vh in mobile Safari is the height with its toolbars hidden, pushing
+  // bottom-anchored controls behind the toolbar. dvh tracks the visible area.
   height: 100vh;
+  height: 100dvh;
   display: flex;
 }
 

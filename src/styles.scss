@@ -103,7 +103,8 @@ a:focus-visible {
 
 .btn-primary,
 .btn-link,
-.btn-secondary {
+.btn-secondary,
+.btn-danger {
   display: inline-flex;
   width: 100%;
   min-height: 2.875rem;
@@ -160,6 +161,26 @@ a:focus-visible {
   }
 }
 
+.btn-danger {
+  --control-hover-background: color-mix(
+    in srgb,
+    var(--color-error) 88%,
+    var(--color-text)
+  );
+  background: var(--color-error);
+  border-color: var(--color-error);
+  color: var(--color-on-error);
+
+  &:hover:not(:disabled) {
+    border-color: var(--control-hover-background);
+  }
+}
+
+.error-message {
+  color: var(--color-error);
+  font-size: 0.875rem;
+}
+
 input:not([type="checkbox"]):not([type="range"]),
 select,
 textarea {
@@ -207,7 +228,8 @@ p {
   button,
   .btn-primary,
   .btn-secondary,
-  .btn-link {
+  .btn-link,
+  .btn-danger {
     transition: none;
   }
 }

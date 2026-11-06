@@ -12,3 +12,14 @@
     color: var(--color-error);
   }
 }
+
+form-container {
+  display: block;
+  max-width: 350px;
+  margin-inline: auto;
+}
+
+field-container {
+  display: block;
+  width: 100%;
+}

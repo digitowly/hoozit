@@ -1,0 +1,95 @@
+<content-container [hideBackButton]="true">
+<div class="signup">
+  <app-icon name="user" size="size-large" />
+  <h2 i18n="@@signupTitle" data-test-id="signup-title">Create your account</h2>
+
+  <form-container>
+    <input
+      type="email"
+      placeholder="Email"
+      i18n-placeholder="@@signupEmail"
+      autocomplete="email"
+      [formField]="signupForm.email"
+      data-test-id="signup-email"
+    />
+    @if (showsEmailError()) {
+      <p class="error-message" i18n="@@signupInvalidEmail" data-test-id="signup-email-error">
+        Please enter a valid email address.
+      </p>
+    }
+
+    <div class="password-field">
+      <input
+        [type]="isPasswordVisible() ? 'text' : 'password'"
+        placeholder="Password"
+        i18n-placeholder="@@signupPassword"
+        autocomplete="new-password"
+        [formField]="signupForm.password"
+        data-test-id="signup-password"
+      />
+      <button
+        type="button"
+        class="toggle-visibility"
+        (click)="isPasswordVisible.set(!isPasswordVisible())"
+        data-test-id="signup-toggle-password"
+      >
+        @if (isPasswordVisible()) {
+          <span i18n="@@signupHidePassword">Hide</span>
+        } @else {
+          <span i18n="@@signupShowPassword">Show</span>
+        }
+      </button>
+    </div>
+
+    <ul class="password-rules" data-test-id="signup-password-rules">
+      <li [class.met]="checks().hasMinLength" i18n="@@signupRuleLength">At least 8 characters</li>
+      <li [class.met]="checks().hasUppercase" i18n="@@signupRuleUppercase">An uppercase letter</li>
+      <li [class.met]="checks().hasLowercase" i18n="@@signupRuleLowercase">A lowercase letter</li>
+      <li [class.met]="checks().hasNumber" i18n="@@signupRuleNumber">A number</li>
+      <li [class.met]="checks().hasSpecialCharacter" i18n="@@signupRuleSpecial">A special character</li>
+      @if (!checks().isWithinMaxLength) {
+        <li class="too-long" i18n="@@signupRuleTooLong" data-test-id="signup-too-long">This password is too long</li>
+      }
+    </ul>
+
+    <input
+      [type]="isPasswordVisible() ? 'text' : 'password'"
+      placeholder="Confirm password"
+      i18n-placeholder="@@signupConfirmPassword"
+      autocomplete="new-password"
+      [formField]="signupForm.passwordConfirm"
+      data-test-id="signup-password-confirm"
+    />
+    @if (showsMismatchError()) {
+      <p class="error-message" i18n="@@signupPasswordsDiffer" data-test-id="signup-mismatch-error">
+        The passwords don't match.
+      </p>
+    }
+
+    <app-turnstile
+      #captcha
+      (tokenChange)="turnstileToken.set($event)"
+      (failed)="onCaptchaFailed()"
+    />
+
+    @if (errorMessage()) {
+      <p class="error-message" role="alert" data-test-id="error-message">
+        {{ errorMessage() }}
+      </p>
+    }
+
+    <button
+      type="button"
+      class="btn-primary"
+      [disabled]="!canSubmit()"
+      (click)="submit()"
+      i18n="@@signupSubmit"
+      data-test-id="signup-submit"
+    >
+      Create account
+    </button>
+  </form-container>
+
+  <a routerLink="/user" i18n="@@signupBackToLogin">Back to sign in</a>
+</div>
+</content-container>
