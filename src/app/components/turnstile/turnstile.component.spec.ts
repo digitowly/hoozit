@@ -73,6 +73,41 @@ describe('TurnstileComponent', () => {
     expect(turnstile.reset).toHaveBeenCalledWith('widget-1');
   });
 
+  function loadScriptWithoutApi(): void {
+    delete window.turnstile;
+    fixture = TestBed.createComponent(TurnstileComponent);
+  }
+
+  function finishScriptLoad(): void {
+    document.head
+      .querySelectorAll('script[src*="turnstile"]')
+      .forEach((script) => script.dispatchEvent(new Event('load')));
+  }
+
+  it('reports a failure when the script loads without the API', async () => {
+    loadScriptWithoutApi();
+    const failed = vi.fn();
+    fixture.componentInstance.failed.subscribe(failed);
+
+    fixture.detectChanges();
+    finishScriptLoad();
+
+    await vi.waitFor(() => expect(failed).toHaveBeenCalledOnce());
+  });
+
+  it('stays silent when destroyed before the script loads', async () => {
+    loadScriptWithoutApi();
+    const failed = vi.fn();
+    fixture.componentInstance.failed.subscribe(failed);
+
+    fixture.detectChanges();
+    fixture.destroy();
+    finishScriptLoad();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(failed).not.toHaveBeenCalled();
+  });
+
   it('removes the widget when destroyed', async () => {
     await renderWidget();
 

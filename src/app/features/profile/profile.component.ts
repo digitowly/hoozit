@@ -88,21 +88,28 @@ export class ProfileComponent {
   }
 
   cancelDelete() {
+    if (this.isDeleting()) return;
+    this.closeDeleteConfirmation();
+  }
+
+  private closeDeleteConfirmation() {
     this.modalService.close(this.deleteModalId);
     this.typedDeleteWord.set('');
     this.hasDeleteFailed.set(false);
   }
 
   async deleteAccount() {
+    if (this.isDeleting()) return;
     this.isDeleting.set(true);
     this.hasDeleteFailed.set(false);
     try {
       await this.userProfileService.deleteAccount();
-      this.cancelDelete();
+      this.closeDeleteConfirmation();
     } catch {
       this.hasDeleteFailed.set(true);
+    } finally {
+      this.isDeleting.set(false);
     }
-    this.isDeleting.set(false);
   }
 
   toggleTheme() {

@@ -53,6 +53,26 @@ describe('UserComponent', () => {
     expect(component.hasDeleteFailed()).toBe(false);
   });
 
+  it('keeps the typed word when cancelling during a delete', () => {
+    component.typedDeleteWord.set('DELETE');
+    component.isDeleting.set(true);
+
+    component.cancelDelete();
+
+    expect(component.typedDeleteWord()).toBe('DELETE');
+  });
+
+  it('ignores a second delete while one is running', async () => {
+    const service = TestBed.inject(UserProfileService);
+    const deleteAccount = vi
+      .spyOn(service, 'deleteAccount')
+      .mockResolvedValue();
+
+    await Promise.all([component.deleteAccount(), component.deleteAccount()]);
+
+    expect(deleteAccount).toHaveBeenCalledOnce();
+  });
+
   it('closes the confirmation after deleting the account', async () => {
     const service = TestBed.inject(UserProfileService);
     vi.spyOn(service, 'deleteAccount').mockResolvedValue();
